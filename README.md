@@ -83,7 +83,7 @@ neighborhood-based embeddings. The original data is a matrix of shape `(70000,
 import pymde
 
 mnist = pymde.datasets.MNIST()
-embedding = pymde.preserve_neighbors(mnist.data).embed()
+embedding = pymde.preserve_neighbors(mnist.data, verbose=True).embed()
 pymde.plot(embedding, color_by=mnist.attributes['digits'])
 ```
 
@@ -93,7 +93,7 @@ Unlike most other embedding methods, PyMDE can compute embeddings that satisfy
 constraints. For example:
 
 ```python3
-embedding = pymde.preserve_neighbors(mnist.data, constraint=pymde.Standardized()).embed()
+embedding = pymde.preserve_neighbors(mnist.data, constraint=pymde.Standardized(), verbose=True).embed()
 pymde.plot(embedding, color_by=mnist.attributes['digits'])
 ```
 
@@ -116,7 +116,7 @@ one paper.
 import pymde
 
 google_scholar = pymde.datasets.google_scholar()
-embedding = pymde.preserve_distances(google_scholar.data).embed()
+embedding = pymde.preserve_distances(google_scholar.data, verbose=True).embed()
 pymde.plot(embedding, color_by=google_scholar.attributes['coauthors'], color_map='viridis', background_color='black')
 ```
 
