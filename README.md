@@ -86,7 +86,7 @@ embedding = pymde.preserve_neighbors(mnist.data).embed()
 pymde.plot(embedding, color_by=mnist.attributes['digits'])
 ```
 
-![](https://github.com/cvxgrp/pymde/blob/master/images/mnist.png?raw=true)
+![](https://github.com/cvxgrp/pymde/blob/main/images/mnist.png?raw=true)
 
 Unlike most other embedding methods, PyMDE can compute embeddings that satisfy
 constraints. For example:
@@ -96,7 +96,7 @@ embedding = pymde.preserve_neighbors(mnist.data, constraint=pymde.Standardized()
 pymde.plot(embedding, color_by=mnist.attributes['digits'])
 ```
 
-![](https://github.com/cvxgrp/pymde/blob/master/images/mnist_std.png?raw=true)
+![](https://github.com/cvxgrp/pymde/blob/main/images/mnist_std.png?raw=true)
 
 The standardization constraint enforces the embedding vectors to be centered
 and have uncorrelated features.
@@ -119,7 +119,7 @@ embedding = pymde.preserve_distances(google_scholar.data).embed()
 pymde.plot(embedding, color_by=google_scholar.attributes['coauthors'], color_map='viridis', background_color='black')
 ```
 
-![](https://github.com/cvxgrp/pymde/blob/master/images/scholar.jpg?raw=true)
+![](https://github.com/cvxgrp/pymde/blob/main/images/scholar.jpg?raw=true)
 
 More collaborative authors are colored brighter, and are near the center of the
 embedding.
@@ -242,7 +242,7 @@ Since this embedding is two-dimensional, we can also plot it:
 mde.plot(edges=mde.edges)
 ```
 
-![](https://github.com/cvxgrp/pymde/blob/master/images/cycle.jpg?raw=true)
+![](https://github.com/cvxgrp/pymde/blob/main/images/cycle.jpg?raw=true)
 
 The embedding vectors are the dots in this image. Notice that we passed the
 list of edges to the `plot` method, to visualize each edge along with the
