@@ -1,4 +1,5 @@
 # PyMDE
+![](https://github.com/cvxgrp/pymde/workflows/Test/badge.svg) ![](https://github.com/cvxgrp/pymde/workflows/Deploy/badge.svg)
 
 PyMDE is a Python library for computing vector embeddings for finite sets of
 items, such as images, biological cells, nodes in a network, or any other
