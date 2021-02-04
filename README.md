@@ -15,7 +15,7 @@ even faster.
 
 PyMDE can be enjoyed by beginners and experts alike. It can be used to:
 * reduce the dimensionality of vector data;
-* generate feature vectors for abstract items like words, US counties, or nodes in a graph;
+* generate feature vectors;
 * visualize datasets, small or large;
 * draw graphs in an aesthetically pleasing way;
 * find outliers in your original data;
