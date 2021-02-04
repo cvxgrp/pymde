@@ -1,0 +1,36 @@
+name: Test
+
+on: [push]
+
+jobs:
+  build_and_test:
+    name: Tests on ${{ matrix.os }} Python ${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-10.15, windows-latest]
+        # add 3.9 once llvmlite supports python 3.9
+        python-version: [3.7, 3.8]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install setuptools wheel
+        pip install flake8 pytest
+        pip install -r requirements.txt
+    - name: Lint with flake8
+      run: |
+        flake8 pymde/
+    - name: Install pymde
+      run: |
+        python setup.py build_ext --inplace
+        python setup.py install
+    - name: Test with pytest
+      run: |
+        pytest -v pymde/
