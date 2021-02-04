@@ -1,6 +1,8 @@
 # PyMDE
 ![](https://github.com/cvxgrp/pymde/workflows/Test/badge.svg) ![](https://github.com/cvxgrp/pymde/workflows/Deploy/badge.svg)
 
+This repository accompanies the monograph [*Minimum-Distortion Embedding*](https://web.stanford.edu/~boyd/papers/min_dist_emb.html).
+
 PyMDE is a Python library for computing vector embeddings for finite sets of
 items, such as images, biological cells, nodes in a network, or any other
 abstract object.
@@ -324,6 +326,7 @@ To cite our work, please use the following BibTex entry.
 @article{agrawal2020minimum,
   author  = {Agrawal, Akshay and Ali, Alnur and Boyd, Stephen},
   title   = {Minimum-Distortion Embedding},
+  url     = {https://web.stanford.edu/~boyd/papers/min_dist_emb.html},
   year    = {2020},
 }
 ```
