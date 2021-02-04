@@ -153,7 +153,7 @@ def adjacency_matrix(n, m, edges, weights):
     if isinstance(edges, torch.Tensor):
         edges = edges.detach().cpu().numpy()
     A = scipy.sparse.coo_matrix(
-        (weights, (edges[:, 0], edges[:, 1])), shape=(n, n), dtype=np.float
+        (weights, (edges[:, 0], edges[:, 1])), shape=(n, n), dtype=np.float32
     )
     A = A + A.T
     return A.tocoo()
@@ -221,11 +221,11 @@ def rotate(X, degrees):
 
     if X.shape[1] == 2:
         if len(degrees) != 2:
-            raise ValueError('`degrees` must be a length-2 sequence.')
+            raise ValueError("`degrees` must be a length-2 sequence.")
         return _rotate_2d(X, degrees)
     else:
         if len(degrees) != 3:
-            raise ValueError('`degrees` must be a length-3 sequence.')
+            raise ValueError("`degrees` must be a length-3 sequence.")
         return _rotate_3d(X, degrees[0], degrees[1], degrees[2])
 
 
