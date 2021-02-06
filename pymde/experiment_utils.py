@@ -503,7 +503,7 @@ def plot(
 
 
 def _plot_gif_frame(
-    mde,
+    snapshot,
     color_by,
     cmap,
     colors,
@@ -517,7 +517,7 @@ def _plot_gif_frame(
     s,
 ):
     _plot(
-        X=mde.solve_stats.snapshots[i],
+        X=snapshot,
         color_by=color_by,
         edges=edges,
         title=title,

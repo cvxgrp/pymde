@@ -17,12 +17,10 @@ import os
 
 import numpy as np
 from pymde.preprocess.graph import Graph
+from pymde.problem import LOGGER
 import scipy.sparse as sp
 import torch
 import torchvision
-
-
-LOGGER = logging.getLogger("__pymde__")
 
 
 def _is_cached(root, files):

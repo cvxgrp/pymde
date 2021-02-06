@@ -22,6 +22,7 @@ from pymde import optim
 
 
 LOGGER = logging.getLogger("__pymde__")
+LOGGER.propagate = False
 LOGGER.setLevel(logging.INFO)
 _stream_handler = logging.StreamHandler(sys.stdout)
 _stream_handler.setLevel(logging.INFO)
@@ -691,9 +692,9 @@ class MDE(torch.nn.Module):
             raise ImportError("Install PIL to use this method.")
 
         try:
-            from tqdm import tqdm
+            from tqdm.auto import tqdm
         except ImportError:
-            raise ImportError("Install tqdm to use this method.")
+            tqdm = lambda x: x
 
         if tmpdir is None:
             tmpdir_obj = tempfile.TemporaryDirectory()
@@ -701,9 +702,6 @@ class MDE(torch.nn.Module):
 
         mde = copy.deepcopy(self)
         mde.to("cpu")
-        ds = []
-        for shot in mde.solve_stats.snapshots:
-            ds.append(torch.max(mde.distances(shot).flatten()).item())
 
         if axis_limits is None:
             lim_low = torch.tensor(float("inf"))
@@ -717,12 +715,17 @@ class MDE(torch.nn.Module):
                     lim_high = high
             axis_limits = experiment_utils._square_lim(lim_low, lim_high)
 
-        for i in tqdm(range(len(mde.solve_stats.snapshots))):
+        for i in tqdm(range(len(mde.solve_stats.snapshots) + 1)):
+            # Repeat the last frame just once, to make the final embedding
+            # look sticky.
+            #
             # TODO: doing this in a multiprocessing map hangs when run under
             # a jupyter notebook, and disabling interactive mode (plt.ioff())
             # doesn't fix it
             experiment_utils._plot_gif_frame(
-                mde,
+                mde.solve_stats.snapshots[
+                    min(len(mde.solve_stats.snapshots) - 1, i)
+                ],
                 color_by=color_by,
                 cmap=color_map,
                 colors=colors,

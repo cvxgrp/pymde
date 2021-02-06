@@ -15,7 +15,7 @@ from pymde.preprocess import _graph
 __this_module = sys.modules[__name__]
 
 
-LOGGER = logging.getLogger("__pymde__")
+LOGGER = problem.LOGGER
 
 
 def _to_edges(graph):
