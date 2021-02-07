@@ -8,8 +8,8 @@ from pymde import datasets
 
 from pymde.preprocess.graph import Graph
 
-from pymde.util import align
 from pymde.util import all_edges
+from pymde.util import align
 from pymde.util import center
 from pymde.util import rotate
 

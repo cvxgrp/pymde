@@ -1,13 +1,28 @@
 """Penalties: distortion functions derived from weights.
 
-A penalty discouarages distances from being large when the weights are
-positive, and encourages them to be small. When the weights are negative, a
-penalty discouarges distances from being small, and encourages them to be
-large.
+A vector distortion function  :math:`f : \\mathbf{R}^{p} \\to \\mathbf{R}^p`
+derived from weights has component functions
+
+.. math::
+
+    f_k(d_k) = w_kp(d_k), \\quad k=1, \\ldots, p,
+
+where :math:`w_k` is a scalar weight, :math:`p` is a penalty function, (and
+:math:`d_k` is an embedding distance). The penalty discouarages distances from
+being large when the weights are positive, and encourages them to be small.
+When the weights are negative, a penalty discouarges distances from being
+small, and encourages them to be large.
+
+When an MDE problem calls a distortion function, :math:`d_k` is the Euclidean
+distance between the items paired by the k-th edge, so :math:`w_k` should
+be the weight associated with the k-th edge, and :math:`f_k(d_k)` is the
+distortion associated with the edge.
 
 Every penalty can be used with positive or negative weights. But when
 using negative weights, it is recommended to only use one of the following
 penalties, which we refer to as repulsive penalties:
+
+.. code:: python3
 
     pymde.penalties.Log
     pymde.penalties.InvPower
@@ -16,13 +31,45 @@ penalties, which we refer to as repulsive penalties:
 Using other penalties with negative weights can lead to pathological
 MDE problems if one is not careful.
 
-Penalties that are 0 when the distance is 0, and grow when the distance
-is larger than 0, are called attractive penalties. All the penalties in
-this module, other than the ones listed above, are attractive penalties.
+An attractive penalty is a penalty that is :math:`0` when the distance is
+:math:`0`, grows when the distance is larger than :math:`0`. All the penalties
+in this module, other than the ones listed above (and the function described
+below), are attractive penalties.
 
-The `PushAndPull` penalty can be used to combine two penalties, an attractive
+The ``PushAndPull`` function can be used to combine two penalties, an attractive
 penalty for use with positive weights, and a repulsive penalty for use with
-negative weights.
+negative weights. This leads to a distortion function of the form
+
+.. math::
+
+    f_k(d) = \\begin{cases}
+        w_k p_{\\text{attractive}}(d_k) & w_k > 0 \\\\
+        w_k p_{\\text{repulsive}}(d_k) & w_k < 0 \\\\
+    \\end{cases}.
+
+Distortion functions are created in a vectorized or elementwise fashion. The
+constructor takes a sequence (torch.Tensor) of weights, returning a callable
+object. The object takes a sequence of distances of the same length as the
+weights, and returns a sequence of distortions, one for each distance.
+
+For example:
+
+.. code:: python3
+
+    weights = torch.tensor([1., 2., 3.])
+    f = pymde.penalties.Quadratic(weights)
+
+    distances = torch.tensor([2., 1., 4.])
+    distortions = f(distances)
+    # the distortions are 1 * 2**2 == 4, 2 * 1**2 == 2, 3 * 4**2 = 48
+    print(distortions)
+
+prints
+
+.. code:: python3
+
+    torch.tensor([4., 2., 48.])
+
 """
 from pymde import util
 from pymde.functions.function import Function
@@ -30,6 +77,7 @@ import torch
 
 
 class Linear(Function):
+    """:math:`p(d) = d`"""
     def __init__(self, weights):
         super(Linear, self).__init__()
         self.weights = util.to_tensor(weights)
@@ -39,6 +87,7 @@ class Linear(Function):
 
 
 class Quadratic(Function):
+    """:math:`p(d) = d^2`"""
     def __init__(self, weights):
         super(Quadratic, self).__init__()
         self.weights = util.to_tensor(weights)
@@ -77,6 +126,7 @@ class _ClippedQuadratic(Function):
 
 
 class Cubic(Function):
+    """:math:`p(d) = d^3`"""
     def __init__(self, weights):
         super(Cubic, self).__init__()
         self.weights = util.to_tensor(weights)
@@ -103,6 +153,7 @@ class _DeadzoneCubic(Function):
 
 
 class Power(Function):
+    """:math:`p(d) = d^\\text{exponent}`"""
     def __init__(self, weights, exponent):
         super(Power, self).__init__()
         self.weights = util.to_tensor(weights)
@@ -115,17 +166,24 @@ class Power(Function):
 
 
 class Huber(Function):
-    def __init__(self, weights, threshold=0.5, slope=1.0):
+    """
+    .. math::
+
+        p(d) = \\begin{cases}
+            0.5 \\cdot d^2 & d < \\text{threshold} \\\\
+            \\text{threshold}(d - 0.5 \\cdot \\text{threshold})
+            & d \\geq \\text{threshold}
+        \\end{cases}
+
+    """
+    def __init__(self, weights, threshold=0.5):
         if threshold < 0:
             raise ValueError(
                 "Threshold must be nonnegative, received ", threshold
             )
-        if slope < 0:
-            raise ValueError("Slope must be nonnegative, received ", slope)
         super(Huber, self).__init__()
         self.weights = util.to_tensor(weights)
         self.threshold = threshold
-        self.slope = slope
 
     def forward(self, distances):
         output = torch.zeros(
@@ -139,18 +197,19 @@ class Huber(Function):
             lt_weights = self.weights[lt_idx]
             gt_weights = self.weights[~lt_idx]
         output[lt_idx] = (
-            lt_weights * 0.5 * self.slope * distances[lt_idx].pow(2)
+            lt_weights * 0.5 * distances[lt_idx].pow(2)
         )
         output[~lt_idx] = (
             gt_weights
             * self.threshold
-            * self.slope
             * (distances[~lt_idx] - 0.5 * self.threshold)
         )
         return output
 
 
 class Logistic(Function):
+    """:math:`p(d) = \\log(1 + e^{\\alpha(d - \\text{threshold})})`
+    """
     def __init__(self, weights, threshold=0., alpha=3.0):
         if threshold < 0:
             raise ValueError(
@@ -213,6 +272,7 @@ class Hinge(Function):
 
 
 class Log1p(Function):
+    """:math:`p(d) = \log(1 + d^{\\text{exponent}})`"""
     def __init__(self, weights, exponent=1.5):
         super(Log1p, self).__init__()
         self.weights = util.to_tensor(weights)
@@ -225,6 +285,7 @@ class Log1p(Function):
 
 
 class Log(Function):
+    """:math:`p(d) = \log(1 - \\exp(-d^\\text{exponent}))`"""
     def __init__(self, weights, exponent=1.0):
         super(Log, self).__init__()
         self.weights = util.to_tensor(weights)
@@ -239,6 +300,7 @@ class Log(Function):
 
 
 class InvPower(Function):
+    """:math:`p(d) = 1/d^\\text{exponent}`"""
     def __init__(self, weights, exponent=1):
         if not (weights <= 0).all():
             raise ValueError("Weights must be negative.")
@@ -253,6 +315,7 @@ class InvPower(Function):
 
 
 class LogRatio(Function):
+    """:math:`p(d) = \\log\\left(\\frac{d^\\text{exponent}}{1 + d^{\\text{exponent}}}\\right)`"""  # noqa: E501
     def __init__(self, weights, exponent=2):
         super(LogRatio, self).__init__()
         self.weights = util.to_tensor(weights)
@@ -267,6 +330,15 @@ class LogRatio(Function):
 
 
 class PushAndPull(Function):
+    """Combine an attractive and repulsive penalty.
+
+        .. math::
+
+            f_k(d) = \\begin{cases}
+                w_k p_{\\text{attractive}}(d_k) & w_k > 0 \\\\
+                w_k p_{\\text{repulsive}}(d_k) & w_k < 0 \\\\
+            \\end{cases}
+    """
     def __init__(
         self, weights, attractive_penalty=Log1p, repulsive_penalty=LogRatio
     ):

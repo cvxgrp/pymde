@@ -1,4 +1,3 @@
-import logging
 import sys
 
 import numpy as np
@@ -72,7 +71,7 @@ def _to_graph(edges, distances=None):
 
 
 class Graph(object):
-    """A weighted graph
+    """A weighted graph.
 
     This class represents a weighted graph. It is backed by a scipy.sparse
     adjacency matrix, and can be constructed from either a dense
@@ -82,7 +81,7 @@ class Graph(object):
     It is an error for the graph to contain self-edges (i.e., non-zero
     values on the diagonal).
 
-    This class is used in various preprocessing functions.
+    This class is accepted as an argument to various preprocessing functions.
     """
 
     def __init__(self, adjacency_matrix):
@@ -111,10 +110,27 @@ class Graph(object):
 
     @staticmethod
     def from_edges(edges, weights=None):
+        """Construct a graph from edges and weights.
+
+        Arguments
+        ---------
+        edges: torch.Tensor
+            Tensor of edges, of shape ``(n_edges, 2)``, with each
+            edge represented by a row, i.e. by two integers.
+        weights: torch.Tensor, optional
+            Tensor of weights, of shape ``(n_edges,)``, with each weight
+            a float.
+
+        Returns
+        -------
+        pymde.Graph
+            A Graph object representing ``edges`` and ``weights``.
+        """
         return _to_graph(edges, weights)
 
     @property
     def adjacency_matrix(self):
+        """The scipy.sparse adjacency matrix backing the graph."""
         return self._adjacency_matrix
 
     @property
@@ -127,6 +143,7 @@ class Graph(object):
 
     @property
     def edges(self):
+        """A torch.Tensor of the edges in the graph."""
         if self._edges is None:
             edges, distances = _to_edges(self.A)
             self._edges = edges
@@ -135,6 +152,7 @@ class Graph(object):
 
     @property
     def distances(self):
+        """The distances associated with each edge."""
         if self._distances is None:
             edges, distances = _to_edges(self.A)
             self._edges = edges
@@ -147,20 +165,25 @@ class Graph(object):
 
     @property
     def n_items(self):
+        """The number of items in the graph."""
         return self.A.shape[0]
 
     @property
     def n_edges(self):
+        """The number of edges in the graph."""
         return self.edges.shape[0]
 
     @property
     def n_all_edges(self):
+        """n_items choose 2."""
         return self.n_items * (self.n_items - 1) / 2
 
-    def neighbors(self, node):
+    def neighbors(self, node: int) -> np.ndarray:
+        """The indices of the neighbors of ``node``."""
         return self.A.indices[self.A.indptr[node] : self.A.indptr[node + 1]]
 
-    def neighbor_distances(self, node):
+    def neighbor_distances(self, node) -> np.ndarray:
+        """The distances associated with the edges connected to ``node``."""
         return self.A.data[self.A.indptr[node] : self.A.indptr[node + 1]]
 
     def __getitem__(self, key):
@@ -177,6 +200,22 @@ class Graph(object):
         This method does some basic preprocessing, constructs an MDE problem
         that is often suitable for drawing graphs, and computes/returns an
         embedding by approximately solving the MDE problem.
+
+        Arguments
+        ---------
+        embedding_dim: int
+            The number of dimemsions, 1, 2, or 3.
+        standardized: bool
+            Whether to impose a standardization constraint.
+        device: str
+            Device on which to compute/store embedding, 'cpu' or 'cuda'.
+        verbose: bool
+            Whether to print verbose output.
+
+        Returns
+        -------
+        torch.Tensor
+            The embedding, of shape ``(n_items, embedding_dim)``
         """
         if (self.distances < 0).any():
             raise ValueError(
@@ -207,14 +246,26 @@ class Graph(object):
             device=device,
         )
         X = mde.embed(verbose=verbose)
-        ax = mde.plot(edges=self.edges)
-        return X, ax
+        mde.plot(edges=self.edges)
+        return X
 
 
 def scale(graph, natural_length):
     """Scale graph weights to have RMS equal to `natural_length`
 
     Returns a new graph, leaving the old graph unmodified.
+
+    Arguments
+    ---------
+    graph: pymde.Graph
+        The graph whose distances to scale.
+    natural_length: float
+        Target RMS value.
+
+    Returns
+    -------
+    pymde.Graph
+        A new graph with scaled distances.
     """
     rms = graph.distances.pow(2).mean().sqrt()
     alpha = natural_length / rms
@@ -290,15 +341,15 @@ def __init_process(data, indptr, indices):
 def shortest_paths(
     graph, max_length=None, retain_fraction=1.0, n_workers=None, verbose=False
 ):
-    """Compute shortest-path distances
+    """Compute shortest-path distances.
 
-    This function computes the shortest-path distances on a given graph.
+    This function computes the shortest-path distances on a graph.
     It returns a new graph, with an edge for each distance that was
     computed (each edge is weighted by the shortest-path distance between
     the two nodes in the original graph). The new graph can be interpreted
     as a "filled-in" version of the input graph.
 
-    The max_length and retain_fraction keyword arguments can be used
+    The ``max_length`` and ``retain_fraction`` keyword arguments can be used
     to compute only a subset of the distances. This can be useful
     if the graph has a very large number of nodes, in which storing all graph
     distances may be intractable.
@@ -306,29 +357,28 @@ def shortest_paths(
     If the graph is sufficiently large, multiple cores will be used to
     accelerate the computation.
 
-
     Arguments
     ---------
-        graph: pymde.Graph or scipy.sparse matrix
-            Graph instance, or an adjacency matrix
-        max_length: float (optional)
-            The maximum-length path to compute; paths longer than max_length
-            are not computed/explored.
-        retain_fraction: float
-            A float between 0 and 1, specifying the fraction of all (n choose 2)
-            to compute. For example, if `retain_fraction` is 0.1, only 10
-            percent of the edges will be stored.
-        n_workers: int (optional)
-            The number of processes to use. Defaults to the number of available
-            cores.
-        verbose: bool
-            Whether to print verbose output.
+    graph: pymde.Graph or scipy.sparse matrix
+        Graph instance, or an adjacency matrix
+    max_length: float, optional
+        The maximum-length path to compute; paths longer than max_length
+        are not computed/explored.
+    retain_fraction: float
+        A float between 0 and 1, specifying the fraction of all (n choose 2)
+        to compute. For example, if ``retain_fraction`` is 0.1, only 10
+        percent of the edges will be stored.
+    n_workers: int, optional
+        The number of processes to use. Defaults to the number of available
+        cores.
+    verbose: bool
+        Whether to print verbose output.
 
     Returns
     -------
-        pymde.Graph
-            A new graph, with an edge (and weight) for each shortest-path
-            distance that was computed/stored.
+    pymde.Graph
+        A new graph, with an edge (and weight) for each shortest-path
+        distance that was computed/stored.
     """
     if sp.issparse(graph):
         graph = Graph(graph)
@@ -454,10 +504,10 @@ def k_nearest_neighbors(
 ):
     """Compute k-nearest neighbors for each node in graph.
 
-    Computes a k-nearest neighbor graph.
+    This function Computes a k-nearest neighbor graph.
 
     By default, the input graph is interpreted as a distance matrix, with
-    graph.adjacency_matrix[i, j] giving the distance between i and j. If
+    ``graph.adjacency_matrix[i, j]`` giving the distance between i and j. If
     `graph_distances` is True, then the shortest-path metric is used to
     compute neighbors.
 
@@ -473,13 +523,13 @@ def k_nearest_neighbors(
     k: int
         The number of nearest neighbors per item.
     graph_distances: bool
-        If True, computes shortest-path distances on the graph; otherwise,
+        If ``True``, computes shortest-path distances on the graph; otherwise,
         interprets the graph as a distance matrix.
     max_distance: float (optional)
-        If not None, neighborhoods are restricted to have a radius
+        If not ``None``, neighborhoods are restricted to have a radius
         no greater than max_distance.
     verbose: bool
-        If True, print verbose output.
+        If ``True``, print verbose output.
 
     Returns
     -------

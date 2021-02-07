@@ -12,7 +12,6 @@ takes at least two arguments:
         (default True)
 """
 
-import logging
 import os
 
 import numpy as np

@@ -34,6 +34,31 @@ LOGGER.addHandler(_stream_handler)
 
 
 class MDE(torch.nn.Module):
+    """An MDE problem.
+
+    An MDE instance represents a specific MDE problem, specified by
+    the number of items, the embedding dimension, a list of edges,
+    the vector distortion function, and possibly a constraint.
+
+    Attributes
+    ----------
+    n_items: int
+        The number of items
+    embedding_dim: int
+        The embedding dimension
+    edges: torch.Tensor
+        The list of edges.
+    distortion_function: Callable
+        The vector distorton function.
+    constraint: pymde.constraints.Constraint
+        The constraint imposed (or None)
+    device
+        The device on which to compute the embedding and store data
+        (like 'cpu' or 'cuda')
+    solve_stats
+        Summary statistics about the embedding, populated after calling
+        the ``embed`` method.
+    """
     def __init__(
         self,
         n_items: int,
@@ -47,26 +72,26 @@ class MDE(torch.nn.Module):
 
         Arguments
         ---------
-            n_items: int
-                Number of things being embedded.
-            embedding_dim: int
-                Embedding dimension.
-            edges: torch.Tensor(shape=(num_edges, 2), dtype=torch.int)
-                Tensor, where each row is an edge (i, j) between two items;
-                each edge should satisfy 0 <= i < j < n_items. In particular
-                self-edges are not allowed.
-            distortion_function: Callable or pymde.functions.StochasticFunction
-                The vectorized distortion function, typically an instance
-                of a class from `pymde.penalties` or `pymde.losses`; however,
-                this can be any Python callable that maps a torch.Tensor
-                of embedding distances to a torch.Tensor of distortions.
-            constraint: pymde.constraints.Constraint (optional)
-                A Constraint object, such as `pymde.Standardized()`.
-                Defaults to an unconstrained (centered) embedding.
-            device: str (optional)
-                Name of device on which to store tensors/compute embedding,
-                such as 'cpu' or 'cuda' for GPU. Default infers device from
-                `edges` and `distortion_function`.
+        n_items: int
+            Number of things being embedded.
+        embedding_dim: int
+            Embedding dimension.
+        edges: torch.Tensor(shape=(num_edges, 2), dtype=torch.int)
+            Tensor, where each row is an edge (i, j) between two items;
+            each edge should satisfy 0 <= i < j < n_items. In particular
+            self-edges are not allowed.
+        distortion_function: Callable or pymde.functions.StochasticFunction
+            The vectorized distortion function, typically an instance
+            of a class from ``pymde.penalties`` or ``pymde.losses`` however,
+            this can be any Python callable that maps a torch.Tensor
+            of embedding distances to a torch.Tensor of distortions.
+        constraint: pymde.constraints.Constraint, optional
+            A Constraint object, such as ``pymde.Standardized()``
+            Defaults to an unconstrained (centered) embedding.
+        device: str, optional
+            Name of device on which to store tensors/compute embedding,
+            such as 'cpu' or 'cuda' for GPU. Default infers device from
+            ``edges`` and ``distortion_function``
         """
         super(MDE, self).__init__()
         if device is None:
@@ -218,30 +243,30 @@ class MDE(torch.nn.Module):
         p.text(text)
 
     def differences(self, X):
-        """Compute X[i] - X[j] for each row (i, j) in edges"""
+        """Compute ``X[i] - X[j]`` for each row (i, j) in edges."""
         lhs = X.gather(0, self._lhs)
         rhs = X.gather(0, self._rhs)
         return lhs.sub_(rhs)
 
     def distances(self, X=None):
-        """Compute embedding distances
+        """Compute embedding distances.
 
         This function computes the embedding distances corresponding to
-        the list of edges (`self.edges`).
+        the list of edges (``self.edges``)
 
-        If `X` is None, computes distances for the embedding computed
-        by the last call to `embed`.
+        If ``X`` is None, computes distances for the embedding computed
+        by the last call to ``embed``
 
         Arguments
         ---------
-            X: torch.Tensor(shape=(n_items, 2)) (optional)
-                Embedding.
+        X: torch.Tensor(shape=(n_items, 2)), optional
+            Embedding.
 
         Returns
         -------
-            torch.Tensor(shape=(n_edges,))
-                Vector of embedding distances. The k-th entry is the distance
-                corresponding to the k-th edge (`self.edges[k]`).
+        torch.Tensor(shape=(n_edges,))
+            Vector of embedding distances. The k-th entry is the distance
+            corresponding to the k-th edge (``self.edges[k]``
         """
         if X is None:
             X = self.X
@@ -257,19 +282,19 @@ class MDE(torch.nn.Module):
 
         This function computes the distortions for an embedding.
 
-        If `X` is None, computes distortions for the embedding computed
-        by the last call to `embed`.
+        If ``X`` is None, computes distortions for the embedding computed
+        by the last call to ``embed``
 
         Arguments
         ---------
-            X: torch.Tensor(shape=(n_items, 2)) (optional)
-                Embedding.
+        X: torch.Tensor(shape=(n_items, 2)), optional
+            Embedding.
 
         Returns
         -------
-            torch.Tensor(shape=(n_edges,))
-                Vector of distortions. The k-th entry is the distortion
-                for the k-th edge (`self.edges[k]`).
+        torch.Tensor(shape=(n_edges,))
+            Vector of distortions. The k-th entry is the distortion
+            for the k-th edge (``self.edges[k]``
         """
         if X is None:
             X = self.X
@@ -281,22 +306,22 @@ class MDE(torch.nn.Module):
         return self.distortion_function(self.distances(X))
 
     def average_distortion(self, X=None):
-        """Compute average distortion
+        """Compute average distortion.
 
-        This function computes the average distortion for an embedding.
+        This method computes the average distortion of an embedding.
 
-        If `X` is None, average distortion for the embedding computed
-        by the last call to `embed`.
+        If ``X`` is None, this method computes the average distortion for the
+        embedding computed by the last call to ``embed``.
 
         Arguments
         ---------
-            X: torch.Tensor(shape=(n_items, 2)) (optional)
-                Embedding.
+        X: torch.Tensor(shape=(n_items, 2)), optional
+            Embedding.
 
         Returns
         -------
-            scalar (float)
-                The average distortion.
+        scalar (float)
+            The average distortion.
         """
         if X is None:
             X = self.X
@@ -310,39 +335,41 @@ class MDE(torch.nn.Module):
         )
 
     def high_distortion_pairs(self, X=None):
-        """Compute distortions, sorted from high to low
+        """Compute distortions, sorted from high to low.
 
         Computes the distortions for an embedding, sorting them from high
         to low. Returns the edges and distortions in the sorted order.
 
         This function can be used to debug an embedding or search for outliers
         in the data. In particular it can be instructive to manually
-        examine the items which incurred the highest distortion. So, for
-        example, you might write
+        examine the items which incurred the highest distortion.
 
-        ```python3
-        edges, distortions = mde.high_distortion_pairs()
-        maybe_outliers = edges[:10]
-        ```
+        For example:
 
-        and then manually examine the items corresponding to the edges in
-        `maybe_outliers`.
+        .. code:: python3
+
+            edges, distortions = mde.high_distortion_pairs()
+            maybe_outliers = edges[:10]
+
+        You can then examine the items corresponding to the edges in
+        ``maybe_outliers``.
 
         Arguments
         ---------
-            X: torch.Tensor(shape=(n_items, 2)) (optional)
-                Embedding.
+        X: torch.Tensor(shape=(n_items, 2)), optional
+            Embedding.
 
         Returns
         -------
-            torch.Tensor(shape=(n_edges, 2))
-                edges, sorted from highest distortion to lowest
+        torch.Tensor(shape=(n_edges, 2))
+            edges, sorted from highest distortion to lowest
 
-            torch.Tensor(shape=(n_edges,))
-                distortions, sorted from highest to lowest
+        torch.Tensor(shape=(n_edges,))
+            distortions, sorted from highest to lowest
         """
         if X is None:
             X = self.X
+
         if X is None:
             raise ValueError(
                 "Call this function after running the `embed` method, or "
@@ -365,41 +392,41 @@ class MDE(torch.nn.Module):
         print_every=None,
         snapshot_every=None,
     ):
-        """Compute a low-distortion embedding.
+        """Compute an embedding.
 
-        This method stores the embedding in the `X` attribute of the problem
-        instance (`mde.X`). Summary statistics related to the fitting
-        process are stored in the `solve_stats` attribute (`mde.solve_stats`).
+        This method stores the embedding in the ``X`` attribute of the problem
+        instance (``mde.X``). Summary statistics related to the fitting
+        process are stored in the ``solve_stats`` attribute (``mde.solve_stats``
 
         All arguments have sensible default values, so in most cases,
-        it suffices to just type `mde.embed()` or `mde.embed(verbose=True)`.
+        it suffices to just type ``mde.embed()`` or ``mde.embed(verbose=True)``
 
         Arguments
         ---------
-            X: torch.Tensor(shape=(mde.n_items, mde.embedding_dim)] (optional)
-                initial iterate; when None, initial point is chosen randomly
-                (and projected onto the constraints); the initial iterate
-                should be in the constraint set
-            eps: float
-                residual norm threshold; quit when the residual norm
-                is less than or equal to eps
-            max_iter: int
-                max number of iterations
-            verbose: bool
-                whether to print verbose output
-            print_every: int (optional)
-                print verbose output every `print_every` iterations
-            snapshot_every: int (optional)
-                Snapshot embedding every snapshot_every iterations;
-                snapshots saved as CPU tensors to self.solve_stats.snapshots.
-                If you want to generate an animation with `mde.play()` after
-                embedding, set `snapshot_every` to a positive integer
-                (like 1 or 5).
+        X: torch.Tensor, optional
+            Initial iterate, of shape ``(n_items, embedding_dim)``; when None,
+            initial point is chosen randomly (and projected onto the
+            constraints); the initial iterate should be in the constraint set
+        eps: float
+            Residual norm threshold; quit when the residual norm
+            is smaller than ``eps``.
+        max_iter: int
+            Maximum number of iterations.
+        verbose: bool
+            Whether to print verbose output.
+        print_every: int, optional
+            Print verbose output every ``print_every`` iterations.
+        snapshot_every: int, optional
+            Snapshot embedding every ``snapshot_every`` iterations;
+            snapshots saved as CPU tensors to ``self.solve_stats.snapshots``.
+            If you want to generate an animation with the ``play`` method after
+            embedding, set ``snapshot_every`` to a positive integer
+            (like 1 or 5).
 
         Returns
         -------
-            torch.Tensor(shape=(mde.n_items, mde.embedding_dim))
-                The embedding.
+        torch.Tensor
+            The embedding, of shape ``(n_items, embedding_dim)``
         """
         if isinstance(self.distortion_function, StochasticFunction):
             device = (self.distortion_function.device,)
@@ -516,50 +543,50 @@ class MDE(torch.nn.Module):
         or according to a pre-defined sequence of colors. Additionally,
         edges can optionally be superimposed.
 
-        The `embed` method must be called sometime before calling this method.
+        The ``embed`` method must be called sometime before calling this method.
 
         Arguments
         ---------
-            color_by: np.ndarray(shape=mde.n_items) (optional)
-                A sequence of values, one for each item, which should be
-                used to color each embedding vector. These values may either
-                be categorical or continuous. For example, if `n_items` is 4,
+        color_by: np.ndarray(shape=mde.n_items), optional
+            A sequence of values, one for each item, which should be
+            used to color each embedding vector. These values may either
+            be categorical or continuous. For example, if ``n_items`` is 4,
 
-                    np.ndarray(['dog', 'cat', 'zebra', 'cat'])
-                    np.ndarray([0, 1, 1, 2]
-                    np.ndarray([0.1, 0.5, 0.31, 0.99]
+                np.ndarray(['dog', 'cat', 'zebra', 'cat'])
+                np.ndarray([0, 1, 1, 2]
+                np.ndarray([0.1, 0.5, 0.31, 0.99]
 
-                are all acceptable. The first two are treated as categorical,
-                the third is continuous. A finite number of colors is used
-                when the values are categorical, while a spectrum of colors is
-                used when the values are continuous.
-            color_map: str or matplotlib colormap instance
-                Color map to use when resolving `color_by` to colors; ignored
-                when `color_by` is None.
-            colors: np.ndarray(shape=(mde.n_items, 4)) (optional)
-                A sequence of colors, one for each item, specifying the exact
-                color each item should be colored. Each row must represent
-                an RGBA value.
+            are all acceptable. The first two are treated as categorical,
+            the third is continuous. A finite number of colors is used
+            when the values are categorical, while a spectrum of colors is
+            used when the values are continuous.
+        color_map: str or matplotlib colormap instance
+            Color map to use when resolving ``color_by`` to colors; ignored
+            when ``color_by`` is None.
+        colors: np.ndarray(shape=(mde.n_items, 4)), optional
+            A sequence of colors, one for each item, specifying the exact
+            color each item should be colored. Each row must represent
+            an RGBA value.
 
-                Only one of `color_by` and `colors` should be non-None.
-            edges: {torch.Tensor/np.ndarray}(shape=(any, 2)) (optional)
-                List of edges to superimpose over the scatter plot.
-            axis_limits: tuple(length=2) (optional)
-                tuple (limit_low, limit_high) of axis limits, applied to both
-                the x and y axis.
-            background_color: str (optional)
-                color of background
-            marker_size: float (optional)
-                size of each point in the scatter plot
-            figsize_inches: tuple(length=2)
-                size of figures in inches: (width_inches, height_inches)
-            savepath: str (optional)
-                path to save the plot.
+            Only one of ``color_by`` and ``colors`` should be non-None.
+        edges: {torch.Tensor/np.ndarray}(shape=(any, 2)), optional
+            List of edges to superimpose over the scatter plot.
+        axis_limits: tuple(length=2), optional
+            tuple (limit_low, limit_high) of axis limits, applied to both
+            the x and y axis.
+        background_color: str, optional
+            color of background
+        marker_size: float, optional
+            size of each point in the scatter plot
+        figsize_inches: tuple(length=2)
+            size of figures in inches: (width_inches, height_inches)
+        savepath: str, optional
+            path to save the plot.
 
         Returns
         -------
-            matplotlib axis:
-                Axis on which the embedding is plotted.
+        matplotlib axis:
+            Axis on which the embedding is plotted.
         """
         from pymde import experiment_utils
 
@@ -586,9 +613,9 @@ class MDE(torch.nn.Module):
         )
 
     def distortions_cdf(self, figsize_inches=(8, 3)):
-        """Plot a cumulative distribution function (CDF) of the distortions.
+        """Plot a cumulative distribution function of the distortions.
 
-        The `embed` method must be called sometime before calling this method.
+        The ``embed`` method must be called sometime before calling this method.
         """
         from pymde import experiment_utils
 
@@ -612,70 +639,70 @@ class MDE(torch.nn.Module):
         tmpdir=None,
         savepath=None,
     ):
-        """Create a movie (a GIF) visualizing how the embedding was formed.
+        """Create a movie visualizing how the embedding was formed.
 
         This method creates a GIF showing how the embedding was formed, starting
         with the initial iterate and ending with the final embedding. In other
-        words it visualizes how the embedding algorithm (the `embed` method)
-        updated the embedding's state over time.
-
-        The embedding dimension should be at most 3.
+        words it visualizes how the embedding algorithm (the ``embed`` method)
+        updated the embedding's state over time. (The embedding dimension should
+        be at most 3.)
 
         In each frame, the embedding is visualized as a scatter plot. The points
         can optionally be colored according to categorical or continuous
         values, or according to a pre-defined sequence of colors. Additionally,
         edges can optionally be superimposed.
 
-        The `embed` method must be called sometime before calling this method,
-        with a non-None value for the `snapshot_every` keyword argument.
+        The ``embed`` method must be called sometime before calling this method,
+        with a non-None value for the ``snapshot_every`` keyword argument.
 
         If you want to save the GIF (instead of just viewing it in a Jupyter
-        notebook), make sure to supply a path via the `savepath` keyword
+        notebook), make sure to supply a path via the ``savepath`` keyword
         argument.
 
         Arguments
         ---------
-            color_by: np.ndarray(shape=mde.n_items) (optional)
-                A sequence of values, one for each item, which should be
-                used to color each embedding vector. These values may either
-                be categorical or continuous. For example, if `n_items` is 4,
+        color_by: np.ndarray(shape=mde.n_items), optional
+            A sequence of values, one for each item, which should be
+            used to color each embedding vector. These values may either
+            be categorical or continuous. For example, if ``n_items`` is 4,
 
-                    np.ndarray(['dog', 'cat', 'zebra', 'cat'])
-                    np.ndarray([0, 1, 1, 2]
-                    np.ndarray([0.1, 0.5, 0.31, 0.99]
+            .. code:: python3
 
-                are all acceptable. The first two are treated as categorical,
-                the third is continuous. A finite number of colors is used
-                when the values are categorical, while a spectrum of colors is
-                used when the values are continuous.
-            color_map: str or matplotlib colormap instance
-                Color map to use when resolving `color_by` to colors; ignored
-                when `color_by` is None.
-            colors: np.ndarray(shape=(mde.n_items, 4)) (optional)
-                A sequence of colors, one for each item, specifying the exact
-                color each item should be colored. Each row must represent
-                an RGBA value.
+                categorical_values = np.ndarray(['dog', 'cat', 'zebra', 'cat'])
+                other_categorical_values = np.ndarray([0, 1, 1, 2]
+                continuous_values = np.ndarray([0.1, 0.5, 0.31, 0.99]
 
-                Only one of `color_by` and `colors` should be non-None.
-            edges: {torch.Tensor/np.ndarray}(shape=(any, 2)) (optional)
-                List of edges to superimpose over the scatter plot.
-            axis_limits: tuple(length=2) (optional)
-                tuple (limit_low, limit_high) of axis limits, applied to both
-                the x and y axis.
-            background_color: str (optional)
-                color of background
-            marker_size: float (optional)
-                size of each point in the scatter plot
-            figsize_inches: tuple(length=2)
-                size of figures in inches: (width_inches, height_inches)
-            fps : float (optional)
-                the number of frames per second at which the movie should be
-                shown
-            tmpdir: str (optional)
-                path to directory, where individual images comprising the GIF
-                will be stored
-            savepath: str (optional)
-                path at which to save the GIF.
+            are all acceptable values for this argument. A finite number of
+            colors is used when the values are categorical, while a
+            spectrum of colors is used when the values are continuous.
+        color_map: str or matplotlib colormap instance
+            Color map to use when resolving ``color_by`` to colors; ignored
+            when ``color_by`` is None.
+        colors: np.ndarray(shape=(mde.n_items, 4)), optional
+            A sequence of colors, one for each item, specifying the exact
+            color each item should be colored. Each row must represent
+            an RGBA value.
+
+            Only one of ``color_by`` and ``colors`` should be non-None.
+        edges: {torch.Tensor/np.ndarray}(shape=(any, 2)), optional
+            List of edges to superimpose over the scatter plot.
+        axis_limits: tuple(length=2), optional
+            tuple (limit_low, limit_high) of axis limits, applied to both
+            the x and y axis.
+        background_color: str, optional
+            color of background
+        marker_size: float, optional
+            size of each point in the scatter plot
+        figsize_inches: tuple(length=2)
+            size of figures in inches: (width_inches, height_inches)
+        fps : float, optional
+            the number of frames per second at which the movie should be
+            shown
+        tmpdir: str, optional
+            path to directory, where individual images comprising the GIF
+            will be stored
+        savepath: str, optional
+            path at which to save the GIF.
         """
         if self.solve_stats is None or not self.solve_stats.snapshots:
             raise ValueError(

@@ -1,9 +1,50 @@
 """Losses: Distortion functions derived from original deviations.
 
-A deviation is a nonnegative scalar that quantifies how different two
-things are. The larger the deviation, the more different the things are.
+A vector distortion function :math:`f : \\mathbf{R}^{p} \\to \\mathbf{R}^p`
+derived from original deviations has component functions
 
-A deviation of 0 means that two things are the same.
+.. math::
+
+    f_k(d_k) = \\ell(d_k, \delta_k), \\quad k=1, \\ldots, p,
+
+where
+:math:`\\ell` is a loss function, :math:`d_k` is an embedding distance,
+and :math:`\\delta_k` is a scalar deviation or dissimilarity scores.
+
+When an MDE problem calls a distortion function, :math:`d_k` is the Euclidean
+distance between the items paired by the k-th edge, so :math:`\\delta_k` should
+be the original deviation associated with the k-th edge, and :math:`f_k(d_k)`
+is the distortion associated with the edge.
+
+The deviations can be interpreted as targets for the embedding distances:
+the loss function is 0 when :math:`d_k = \\delta_k`, and positive otherwise.
+So a deviation :math:`\\delta_k`` of 0 means that the items in the k-th edge
+are the same, and the larger the deviation, the more dissimilar the items are.
+
+Distortion functions are created in a vectorized or elementwise fashion. The
+constructor takes a sequence (torch.Tensor) of deviations (target distances),
+returning a callable object. The object takes a sequence of distances of the
+same length as the weights, and returns a sequence of distortions, one for each
+distance.
+
+For example:
+
+.. code:: python3
+
+    deviations = torch.tensor([1., 2., 3.])
+    f = pymde.losses.Quadratic(weights)
+
+    distances = torch.tensor([2., 5., 4.])
+    distortions = f(distances)
+    # the distortions are (2 - 1)**2 == 1, (5 - 2)**2 == 9, (4 - 3)**2 = 1
+    print(distortions)
+
+prints
+
+.. code:: python3
+
+    torch.tensor([1., 9., 1.])
+
 """
 from pymde import util
 from pymde.functions.function import Function
@@ -11,6 +52,7 @@ import torch
 
 
 class Quadratic(Function):
+    """:math:`\\ell(d, \\delta) = (d - \\delta)^2`"""
     def __init__(self, deviations):
         super(Quadratic, self).__init__()
         self.deviations = util.to_tensor(deviations)
@@ -20,6 +62,11 @@ class Quadratic(Function):
 
 
 class WeightedQuadratic(Function):
+    """:math:`\\ell(d, \\delta) = \\frac{1}{\\delta^2} (d - \\delta)^2`
+
+    If ``weights`` is not None, the coefficient then the
+    coefficient :math:`1/\\delta^2` is replaced by the weights.
+    """
     def __init__(self, deviations, weights=None):
         super(WeightedQuadratic, self).__init__()
         self.deviations = util.to_tensor(deviations)
@@ -43,6 +90,15 @@ class _ClippedQuadratic(Function):
 
 
 class Huber(Function):
+    """
+    .. math::
+
+        \ell(d, \\delta) = \\begin{cases}
+            \\cdot (d - \\delta)^2 & d < \\text{threshold} \\\\
+            \\text{threshold}(2(d - \\delta) - \\cdot \\text{threshold})
+            & d \\geq \\text{threshold}
+        \\end{cases}
+    """
     def __init__(self, deviations, threshold):
         super(Huber, self).__init__()
         self.deviations = util.to_tensor(deviations)
@@ -60,6 +116,7 @@ class Huber(Function):
 
 
 class Cubic(Function):
+    """:math:`\\ell(d, \\delta) = (d - \\delta)^3`"""
     def __init__(self, deviations):
         super(Cubic, self).__init__()
         self.deviations = util.to_tensor(deviations)
@@ -69,6 +126,7 @@ class Cubic(Function):
 
 
 class Power(Function):
+    """:math:`\\ell(d, \\delta) = (d - \\delta)^{\\text{exponent}}`"""
     def __init__(self, deviations, exponent):
         super(Power, self).__init__()
         self.deviations = util.to_tensor(deviations)
@@ -94,6 +152,7 @@ class _WeightedPower(Function):
 
 
 class Absolute(Function):
+    """:math:`\\ell(d, \\delta) = |d - \\delta|`"""
     def __init__(self, deviations):
         super(Absolute, self).__init__()
         self.deviations = util.to_tensor(deviations)
@@ -103,6 +162,7 @@ class Absolute(Function):
 
 
 class Logistic(Function):
+    """:math:`\\ell(d, \\delta) = \\log(1 + \\exp(|d - \\delta|))`"""
     def __init__(self, deviations):
         super(Logistic, self).__init__()
         self.deviations = util.to_tensor(deviations)
@@ -113,6 +173,7 @@ class Logistic(Function):
 
 
 class Fractional(Function):
+    """:math:`\\ell(d, \\delta) = \\max(\\delta / d, d / \\delta)`"""
     def __init__(self, deviations):
         super(Fractional, self).__init__()
         self.deviations = util.to_tensor(deviations)
@@ -125,6 +186,12 @@ class Fractional(Function):
 
 
 class SoftFractional(Function):
+    """:math:`\\ell(d, \\delta) = \\frac{1}{\\gamma}\\log\\left( \\frac{\\exp(\\gamma \\delta/d) + \\exp(\\gamma d/\\delta)}{2\\exp(\\gamma)} \\right)`
+
+    The parameter ``gamma`` controls how close this loss is to the
+    fractional loss. The larger ``gamma`` is, the closer to the fractional
+    loss.
+    """  # noqa: E501
     def __init__(self, deviations, gamma=10.0):
         super(SoftFractional, self).__init__()
         self.deviations = util.to_tensor(deviations)

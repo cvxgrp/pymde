@@ -93,7 +93,9 @@ class _ProjectGradient(torch.autograd.Function):
     @staticmethod
     def backward(ctx, grad_output):
         return (
-            ctx.constraint.project_tspace(ctx.X, grad_output, inplace=False),
+            ctx.constraint.project_onto_tangent_space(
+                ctx.X, grad_output, inplace=False
+            ),
             None,
         )
 

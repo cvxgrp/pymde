@@ -84,7 +84,7 @@ def lbfgs(
         opt.zero_grad()
         average_distortion = objective_fn(X)
         average_distortion.backward()
-        constraint.project_tspace(X, X.grad, inplace=True)
+        constraint.project_onto_tangent_space(X, X.grad, inplace=True)
         return average_distortion
 
     ls = "strong_wolfe" if use_line_search else None
@@ -100,7 +100,7 @@ def lbfgs(
         tolerance_change=-torch.tensor(
             float("inf"), dtype=X.dtype, device=X.device
         ),
-        project_callback=constraint.project,
+        project_callback=constraint.project_onto_constraint,
         use_cached_loss=use_cached_loss,
     )
 
@@ -116,7 +116,7 @@ def lbfgs(
         X.requires_grad_(False)
 
         with torch.no_grad():
-            constraint.project(X, inplace=True)
+            constraint.project_onto_constraint(X, inplace=True)
 
         times.append(time.time() - start)
         try:
