@@ -69,12 +69,8 @@ kinds of embeddings of the MNIST data.
 .. image:: files/mnist_std.gif
 	:width: 32 %
 
-The MDE framework was introduced in the paper
-`Minimum-Distortion Embedding <https://web.stanford.edu/~boyd/papers/min_dist_emb.html>`_,
-and PyMDE is its official implementation.
-
 **PyMDE is easy to use.**
-It's very easy to get started with PyMDE. You can just call a high-level
+It's very easy to get started with PyMDE. You can call a high-level
 function to embed your data (be they high-dimensional vectors or the nodes in a
 graph), into any target dimension, using just one line of code. Creating
 custom embeddings is also easy, because PyMDE separates the description of an
