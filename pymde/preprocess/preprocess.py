@@ -69,28 +69,30 @@ def sample_edges(n, num_edges, exclude=None, seed=None):
 
 
 def dissimilar_edges(n_items, similar_edges, num_edges=None, seed=None):
-    """Sample edges not in similar_edges
+    """Sample edges not in ``similar_edges``.
 
-    Given a number of items, and a torch.Tensor containing pairs of
-    items known to be similar, uniformly at random samples some
-    edges in the complement of `similar_edges`.
+    Given a number of items, and a ``torch.Tensor`` containing pairs of
+    items known to be similar, this function samples (uniformly at random) some
+    edges in the complement of ``similar_edges``. The returned number
+    of edges will be approximately equal to (and no greater than) the
+    number of edges in ``similar_edges`` (or ``num_edges``, if provided).
 
     Arguments
     ---------
-        n_items: int
-            The number of items.
-        similar_edges: torch.Tensor(shape=(n_edges, 2))
-            Edges to exclude when sampling.
-        num_edges: int (optional)
-            Number of edges to sample, defaults to approximately
-            the same number as `similar_edges`.
-        seed: int (optional)
-            Random seed for the sampling.
+    n_items: int
+        The number of items.
+    similar_edges: torch.Tensor
+        Edges to exclude when sampling.
+    num_edges: int (optional)
+        Number of edges to sample, defaults to approximately
+        the same number as ``similar_edges``.
+    seed: int (optional)
+        Random seed for the sampling.
 
     Returns
     -------
-        torch.Tensor
-            A torch.Tensor of dissimilar edges.
+    torch.Tensor
+        Edges not in ``similar_edges``.
     """
     if num_edges is None:
         num_edges = similar_edges.shape[0]

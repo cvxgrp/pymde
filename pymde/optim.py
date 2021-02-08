@@ -9,7 +9,23 @@ from pymde import util
 
 
 class SolveStats(object):
-    """Summary statistics for a solve."""
+    """Summary statistics for a solve.
+
+    Attributes
+    ----------
+    average_distortions: sequence
+        The average distortion at each iteration.
+    residual_norms: sequence
+        The residual norm at each iteration.
+    step_size_percents: sequence
+        The relative size of each step.
+    solve_time: float
+        The time it took to create the embedding, in seconds.
+    snapshots: sequence
+        Snapshots of the embedding.
+    snapshot_every: int
+        The number of iterations between snapshots.
+    """
     def __init__(
         self,
         average_distortions,

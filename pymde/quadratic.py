@@ -108,8 +108,12 @@ def spectral(
 
     Solves the quadratic MDE problem
 
-        min sum_{(i, j) in edges} w_{ij} d_{ij}^2
-        s.t. (1/n)X^TX = I, d_{ij} = |x_i - x_j|_2
+    .. math::
+
+        \\begin{array}{ll}
+        \\mbox{minimize} & \\sum_{(i, j) in \\text{edges}} w_{ij} d_{ij}^2 \\\\
+        \\mbox{subject to} & (1/n) X^T X = I, \quad d_{ij} = |x_i - x_j|_2.
+        \\end{array}
 
     The weights may be negative.
 

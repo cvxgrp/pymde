@@ -1,10 +1,25 @@
 .. _api:
 
-API
-===
+API documentation
+=================
+
+.. _api_mde:
+
+.. note:: 
+
+   PyMDE is very young software. When updates are released, we will try to be
+   backward compatible with earlier versions, but sometimes we may be unable to
+   do so.
+
+   If a version ever includes a breaking change, we will make sure
+   to communicate that clearly. Until we reach v1.0.0, an increase in the minor
+   version will indicate breaking changes (e.g., v0.2.0 may have some changes
+   that are incompatible with v0.1.0, but v0.1.5 will be fully compatible
+   with v0.1.0).
+
 
 MDE
-~~~
+---
 
 .. autoclass:: pymde.MDE
     :members:
@@ -12,12 +27,24 @@ MDE
 
     .. automethod:: __init__
 
+.. autoclass:: pymde.optim.SolveStats
+
+.. _api_preserve_neighbors:
+
+Preserve neighbors
+------------------
+
 .. autofunction:: pymde.preserve_neighbors
+
+.. _api_preserve_distances:
+
+Preserve distances
+------------------
 
 .. autofunction:: pymde.preserve_distances
 
 Distortion functions
-~~~~~~~~~~~~~~~~~~~~
+--------------------
 
 Penalties
 ^^^^^^^^^
@@ -83,8 +110,10 @@ Losses
    .. autoclass:: pymde.losses.SoftFractional
         :exclude-members: forward
 
+.. _api_constraints:
+
 Constraints
-~~~~~~~~~~~
+-----------
 
 .. autoclass:: pymde.constraints.Constraint
    :members:
@@ -97,21 +126,32 @@ Constraints
    
    .. automethod:: __init__
 
-
 Preprocessing
-~~~~~~~~~~~~~
+-------------
+
+.. _api_graph:
 
 .. autoclass:: pymde.Graph
     :members:
 
+.. autofunction:: pymde.preprocess.data_matrix.k_nearest_neighbors
+
 .. autofunction:: pymde.preprocess.graph.k_nearest_neighbors
+
+.. autofunction:: pymde.preprocess.dissimilar_edges
 
 .. autofunction:: pymde.preprocess.graph.shortest_paths
 
-.. autofunction:: pymde.preprocess.data_matrix.k_nearest_neighbors
+
+Classical embeddings
+--------------------
+
+.. autofunction:: pymde.quadratic.pca
+
+.. autofunction:: pymde.quadratic.spectral
 
 Utilities
-~~~~~~~~~
+---------
 
 .. autofunction:: pymde.all_edges
 
@@ -122,3 +162,15 @@ Utilities
 .. autofunction:: pymde.rotate
 
 .. autofunction:: pymde.plot
+
+Datasets
+--------
+
+.. autoclass:: pymde.datasets.Dataset
+   :members:
+
+.. autofunction:: pymde.datasets.MNIST
+
+.. autofunction:: pymde.datasets.google_scholar
+
+.. autofunction:: pymde.datasets.covid19_scrna_wilk

@@ -11,7 +11,7 @@ images, biological cells, nodes in a network, or any other type of abstract
 object. The embeddings are designed to minimally distort relationships between
 pairs of items, while possibly satisfying some constraints.
 
-PyMDE can be used to:
+You can use PyMDE to:
 
 * visualize datasets, small or large;
 * generate feature vectors for supervised learning;
@@ -19,6 +19,11 @@ PyMDE can be used to:
 * draw graphs;
 * and more.
 
+PyMDE accompanies the paper
+`Minimum-Distortion Embedding <https://web.stanford.edu/~boyd/papers/min_dist_emb.html>`_.
+
+Example
+-------
 Here's an example that shows how to use PyMDE to visualize high-dimensional
 vectors (which in this case are images from the MNIST dataset).
 
@@ -41,7 +46,7 @@ This is just one of the many things that PyMDE can do.
 
 
 Why use PyMDE?
-~~~~~~~~~~~~~~
+--------------
 
 There are many reasons to try out PyMDE. Here are some.
 
@@ -100,10 +105,7 @@ faster.
 	installation/index
 	getting_started/index
 	mde/index
-	preserve_neighbors/index
-	preserve_distances/index
-	visualizing/index
-	incremental/index
+	preprocess/index
 	datasets/index
 	examples/index
 	api/index

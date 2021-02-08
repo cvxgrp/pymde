@@ -65,7 +65,17 @@ class Dataset(object):
             return list(self.attributes.values())[0]
 
 
-def MNIST(root="./", download=True):
+def MNIST(root="./", download=True) -> Dataset:
+    """MNIST dataset (LeCun, et al.).
+
+    The MNIST dataset contains 70,000, 28x28 images of handwritten digits.
+
+    - ``data``: ``torch.Tensor`` with 70,000 rows, each of
+      length 784 (representing the pixels in the image).
+    - ``attributes`` dict: the key ``digits`` holds an array
+      in which each entry gives the digit depicted in the corresponding row of
+      ``data``.
+    """
     mnist_train = torchvision.datasets.MNIST(
         root=root, train=True, download=download
     )
@@ -86,7 +96,28 @@ def MNIST(root="./", download=True):
     )
 
 
-def google_scholar(root="./", download=True, full=False):
+def google_scholar(root="./", download=True, full=False) -> Dataset:
+    """Google Scholar dataset (Agrawal, et al.).
+
+    The Google Scholar dataset contains an academic coauthorship graph: the
+    nodes are authors, and two authors are connected by an edge if either
+    author listed the other as a coauthor on Google Scholar. (Note that if
+    two authors collaborated on a paper, but neither has listed the other
+    as a coauthor on their Scholar profiles, then they will not be connected
+    by an edge).
+
+    If ``full`` is False, obtains a small version of the dataset, on roughly
+    40,000 authors, each with h-index at least 50. If ``full`` is True,
+    obtains the whole dataset, on roughly 600,000 authors. The full dataset
+    is roughly 1GB in size.
+
+    - ``data``: a ``pymde.Graph``, with nodes representing authors
+    - ``attributes``: the ``coauthors`` key has an array holding the number
+      of coauthors of each other, normalized to be a percentile.
+    - ``other_data``: holds a dataframe describing the dataset, keyed by
+      ``dataframe``.
+    """
+
     try:
         import pandas as pd
     except ImportError:
@@ -151,7 +182,19 @@ def google_scholar(root="./", download=True, full=False):
     return load_dataset()
 
 
-def covid19_scrna_wilk(root="./", download=True):
+def covid19_scrna_wilk(root="./", download=True) -> Dataset:
+    """COVID-19 scRNA data (Wilk, et al.).
+
+    The COVID-19 dataset includes a PCA embedding of single-cell
+    mRNA transcriptomes of roughly 40,000 cells, taken from some patients
+    with COVID-19 infections and from healthy controls.
+
+    Instructions on how to obtain the full dataset are available in the
+    Wilk et al. paper: https://www.nature.com/articles/s41591-020-0944-y,
+
+    - ``data``: the PCA embedding
+    - ``attributes``: two keys, ``cell_type`` and ``health_status``.
+    """
     root = os.path.expanduser(root)
 
     url = "https://akshayagrawal.com/scrna/scrna_covid19_wilk.tar.gz"

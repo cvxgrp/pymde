@@ -396,7 +396,7 @@ class MDE(torch.nn.Module):
 
         This method stores the embedding in the ``X`` attribute of the problem
         instance (``mde.X``). Summary statistics related to the fitting
-        process are stored in the ``solve_stats`` attribute (``mde.solve_stats``
+        process are stored in ``solve_stats`` (``mde.solve_stats``).
 
         All arguments have sensible default values, so in most cases,
         it suffices to just type ``mde.embed()`` or ``mde.embed(verbose=True)``
@@ -404,14 +404,19 @@ class MDE(torch.nn.Module):
         Arguments
         ---------
         X: torch.Tensor, optional
-            Initial iterate, of shape ``(n_items, embedding_dim)``; when None,
-            initial point is chosen randomly (and projected onto the
-            constraints); the initial iterate should be in the constraint set
+            Initial iterate, of shape ``(n_items, embedding_dim)``. When None,
+            the initial iterate is chosen randomly (and projected onto the
+            constraints); otherwise, the initial iterate should satisfy
+            the constraints.
         eps: float
             Residual norm threshold; quit when the residual norm
             is smaller than ``eps``.
         max_iter: int
             Maximum number of iterations.
+        memory_size: int
+            The quasi-Newton memory. Larger values may lead to more stable
+            behavior, but will increase the amount of time each iteration
+            takes.
         verbose: bool
             Whether to print verbose output.
         print_every: int, optional
@@ -426,7 +431,7 @@ class MDE(torch.nn.Module):
         Returns
         -------
         torch.Tensor
-            The embedding, of shape ``(n_items, embedding_dim)``
+            The embedding, of shape ``(n_items, embedding_dim)``.
         """
         if isinstance(self.distortion_function, StochasticFunction):
             device = (self.distortion_function.device,)
@@ -551,6 +556,8 @@ class MDE(torch.nn.Module):
             A sequence of values, one for each item, which should be
             used to color each embedding vector. These values may either
             be categorical or continuous. For example, if ``n_items`` is 4,
+
+            .. code:: python3
 
                 np.ndarray(['dog', 'cat', 'zebra', 'cat'])
                 np.ndarray([0, 1, 1, 2]

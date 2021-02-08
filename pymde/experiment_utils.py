@@ -290,6 +290,8 @@ def _plot(
 ):
     if isinstance(X, torch.Tensor):
         X = X.cpu().numpy()
+    else:
+        X = np.asarray(X)
 
     if isinstance(color_by, torch.Tensor):
         color_by = color_by.cpu().numpy()
@@ -298,9 +300,13 @@ def _plot(
 
     if isinstance(edges, torch.Tensor):
         edges = edges.cpu().numpy()
+    elif edges is not None:
+        edges = np.asarray(edges)
 
     if isinstance(colors, torch.Tensor):
         colors = colors.cpu().numpy()
+    elif colors is not None:
+        colors = np.asarray(colors)
 
     X = X[:, :3]
     if X.shape[1] == 3:
@@ -439,48 +445,51 @@ def plot(
 
     Arguments
     ---------
-        X: {torch.Tensor, np.ndarray}(shape=(n_items, embedding_dim))
-            The embedding to plot. The second dimension should be 1, 2, or 3.
-        color_by: np.ndarray(shape=n_items) (optional)
-            A sequence of values, one for each item, which should be
-            used to color each embedding vector. These values may either
-            be categorical or continuous. For example, if `n_items` is 4,
+    X: array-like
+        The embedding to plot, of shape ``(n_items, embedding_dim)``. The
+        second dimension should be 1, 2, or 3.
+    color_by: array-like, optional
+        A sequence of values, one for each item, which should be
+        used to color each embedding vector. These values may either
+        be categorical or continuous. For example, if ``n_items`` is 4,
 
-                np.ndarray(['dog', 'cat', 'zebra', 'cat'])
-                np.ndarray([0, 1, 1, 2]
-                np.ndarray([0.1, 0.5, 0.31, 0.99]
+        .. code:: python3
 
-            are all acceptable. The first two are treated as categorical,
-            the third is continuous. A finite number of colors is used
-            when the values are categorical, while a spectrum of colors is
-            used when the values are continuous.
-        color_map: str or matplotlib colormap instance
-            Color map to use when resolving `color_by` to colors; ignored
-            when `color_by` is None.
-        colors: np.ndarray(shape=(n_items, 4)) (optional)
-            A sequence of colors, one for each item, specifying the exact
-            color each item should be colored. Each row must represent
-            an RGBA value.
+            np.ndarray(['dog', 'cat', 'zebra', 'cat'])
+            np.ndarray([0, 1, 1, 2]
+            np.ndarray([0.1, 0.5, 0.31, 0.99]
 
-            Only one of `color_by` and `colors` should be non-None.
-        edges: {torch.Tensor/np.ndarray}(shape=(any, 2)) (optional)
-            List of edges to superimpose over the scatter plot.
-        axis_limits: tuple(length=2) (optional)
-            tuple (limit_low, limit_high) of axis limits, applied to both
-            the x and y axis.
-        background_color: str (optional)
-            color of background
-        marker_size: float (optional)
-            size of each point in the scatter plot
-        figsize_inches: tuple(length=2)
-            size of figures in inches: (width_inches, height_inches)
-        savepath: str (optional)
-            path to save the plot.
+        are all acceptable. The first two are treated as categorical,
+        the third is continuous. A finite number of colors is used
+        when the values are categorical, while a spectrum of colors is
+        used when the values are continuous.
+    color_map: str or matplotlib colormap instance
+        Color map to use when resolving ``color_by`` to colors; ignored
+        when ``color_by`` is None.
+    colors: array-like, optional
+        A sequence of colors, one for each item, specifying the exact
+        color each item should be colored. Each row must represent
+        an RGBA value.
+
+        Only one of ``color_by`` and ``colors`` should be non-None.
+    edges: array-like, optional
+        List of edges to superimpose over the scatter plot, shape ``(any, 2)``
+    axis_limits: tuple, optional
+        tuple ``(limit_low, limit_high)`` of axis limits, applied to both
+        the x and y axis.
+    background_color: str, optional
+        color of background
+    marker_size: float, optional
+        size of each point in the scatter plot
+    figsize_inches: tuple
+        size of figures in inches: ``(width_inches, height_inches)``
+    savepath: str, optional
+        path to save the plot.
 
     Returns
     -------
-        matplotlib axis:
-            Axis on which the embedding is plotted.
+    matplotlib.Axes:
+        Axis on which the embedding is plotted.
     """
     if color_by is not None and colors is not None:
         raise ValueError("Only one of 'color_by` and `colors` can be non-None")

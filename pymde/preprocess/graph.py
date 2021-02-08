@@ -504,7 +504,7 @@ def k_nearest_neighbors(
 ):
     """Compute k-nearest neighbors for each node in graph.
 
-    This function Computes a k-nearest neighbor graph.
+    This function computes a k-nearest neighbor graph.
 
     By default, the input graph is interpreted as a distance matrix, with
     ``graph.adjacency_matrix[i, j]`` giving the distance between i and j. If
