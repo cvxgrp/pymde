@@ -1,7 +1,7 @@
 # PyMDE
 ![](https://github.com/cvxgrp/pymde/workflows/Test/badge.svg) ![](https://github.com/cvxgrp/pymde/workflows/Deploy/badge.svg)
 
-*The official documentation for PyMDE is available at https://www.pymde.org.*
+*The official documentation for PyMDE is available at www.pymde.org.*
 
 This repository accompanies the monograph [*Minimum-Distortion Embedding*](https://web.stanford.edu/~boyd/papers/min_dist_emb.html).
 
@@ -29,7 +29,7 @@ or have any feedback, please reach out by [filing a Github
 issue](https://github.com/cvxgrp/pymde/issues).
 
 This README gives a very brief overview of PyMDE. Make sure to read the 
-official documentation at https://www.pymde.org, which has in-depth tutorials
+official documentation at www.pymde.org, which has in-depth tutorials
 and API documentation.
 
 - [Installation](#installation)
