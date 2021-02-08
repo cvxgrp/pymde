@@ -19,7 +19,7 @@ embeddings.
 
 
 The MDE framework
-~~~~~~~~~~~~~~~~~
+-----------------
 
 In this section, we introduce the concept of an MDE problem, whose solution
 is an embedding. At a high-level, the objective of the MDE problem
@@ -167,7 +167,7 @@ to include them anyway).
 Or, we can **anchor** or pin some of the embedding vectors to fixed values.
 
 Constructing an MDE problem
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------
 
 In PyMDE, instances of the :any:`pymde.MDE` class are MDE problems. The
 :any:`pymde.preserve_neighbors` and :any:`pymde.preserve_distances`
@@ -295,7 +295,7 @@ In the next section, we'll learn more about distortion functions and
 how to create them.
 
 Distortion functions
-~~~~~~~~~~~~~~~~~~~~
+--------------------
 
 A distortion function is just a Python callable that maps the embedding
 distances to distortions, using PyTorch operations. Its call signature should
@@ -345,7 +345,7 @@ Losses
 
 
 Constraints
-~~~~~~~~~~~
+-----------
 
 PyMDE currently provides three constraint sets:
 
@@ -435,7 +435,7 @@ It is possible to specify a custom constraint set. To learn how to
 do so, consult the :ref:`API documentation <api_constraints>`.
 
 Computing embeddings
-~~~~~~~~~~~~~~~~~~~~
+--------------------
 
 After creating an MDE problem, you can compute an embedding by calling
 the its :any:`embed <pymde.MDE.embed>` method. The embed method takes
@@ -448,7 +448,7 @@ Computing an embedding saves some statistics in the
 :any:`solve_stats <pymde.optim.SolveStats>` attribute.
 
 Sanity-checking embeddings
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------
 The MDE framework gives you a few ways to sanity-check embeddings.
 
 Plotting embeddings
@@ -508,7 +508,7 @@ to large distances; or you can even remove some items from your original
 dataset, if they appear malformed.
 
 Comparing embeddings
-~~~~~~~~~~~~~~~~~~~~
+--------------------
 Suppose you want to compare two different embeddings, which have the same
 number of items and the same embedding dimension. If you have an MDE instance,
 you can evaluate the average distortion of each embedding by calling
@@ -531,3 +531,23 @@ less), or by computing the Frobenius norm of their difference (this distance
 will make sense if both embeddings are standardized, since that will put
 them on the same scale, but it will make less sense otherwise).
 
+Embedding new points
+--------------------
+
+Suppose we have embedded some number of items, and later we obtain additional
+items of the same type that we wish to embed. (For example, we might
+have embedded the MNIST dataset, and later we obtain more images we'd like
+to embed.)
+
+We have two options for embedding the new points. We could of course combine
+the new images with the old images and compute a new embedding. This however
+will result in an entirely new embedding. We might instead want to embed
+the new items, without changing the vectors for the old data. To do say,
+we can solve a small MDE problem involving the new items and some of the old
+ones: some edges will be between new items, and importantly some edges will
+connect the new items to old items. The old items can be held in place
+with an anchor constraint.
+
+PyMDE provides all the tools needed to embed new points, while holding
+the old ones fixed, but it does not yet have a high-level API for doing this.
+We plan to add one soon.
