@@ -75,7 +75,7 @@ either as a data matrix in which each row is a feature vector, or as a
 specified by the `embedding_dim` keyword argument, which is `2` by default.
 
 **Return value.** The return value is an `MDE` object. Calling the `embed()`
-method on this object returns an **embedding**, which is a matrix
+method on this object returns an embedding, which is a matrix
 (`torch.Tensor`) in which each row is an embedding vector. For example, if the
 original input is a data matrix of shape `(n_items, n_features)`, then the
 embedding matrix has shape `(n_items, embeddimg_dim)`.
