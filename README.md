@@ -17,11 +17,11 @@ in runtime with more specialized embedding methods. With a GPU, it can be
 even faster.
 
 PyMDE can be enjoyed by beginners and experts alike. It can be used to:
-* reduce the dimensionality of vector data;
-* generate feature vectors;
-* visualize datasets;
-* draw graphs in an aesthetically pleasing way;
-* find outliers in original data;
+
+* visualize datasets, small or large;
+* generate feature vectors for supervised learning;
+* compress high-dimensional vector data;
+* draw graphs;
 * and more.
 
 PyMDE is very young software, under active development. If you run into issues,
