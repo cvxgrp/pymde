@@ -22,4 +22,5 @@ help:
 		touch $(BUILDDIR)/html/.nojekyll; \
 		rm -rf ../docs/; \
 		mv $(BUILDDIR)/html/ ../docs/; \
+		cp _CNAME ../docs/CNAME; \
 	fi

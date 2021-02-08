@@ -12,7 +12,7 @@ PyMDE is available on PyPI. Install it with
 We recommend installing PyMDE in a virtual environment of your choice,
 such as virtualenv, venv, or a conda environment.
 
-PyMDE's has the following requirements:
+PyMDE has the following requirements:
 
 * Python >= 3.7
 * numpy >= 1.17.5
