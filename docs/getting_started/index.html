@@ -1,0 +1,447 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Getting started &mdash; pymde 0.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="MDE" href="../mde/index.html" />
+    <link rel="prev" title="Installation" href="../installation/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> pymde
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">CONTENTS</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-is-an-embedding">What is an embedding?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#visualizing-data">Visualizing data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#preserving-neighbors">Preserving neighbors</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#customizing-embeddings">Customizing embeddings</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#preserving-distances">Preserving distances</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id2">Customizing embeddings</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#plotting">Plotting</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#scatter-plots">Scatter plots</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#movies">Movies</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#generating-feature-vectors">Generating feature vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#classical-embeddings">Classical embeddings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#drawing-graphs">Drawing graphs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../mde/index.html">MDE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocess/index.html">Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets/index.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../citing/index.html">Citing</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pymde</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Getting started</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/getting_started/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="getting-started">
+<span id="id1"></span><h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<p>This page shows how to get started with PyMDE for four common tasks:</p>
+<ul class="simple">
+<li><p>visualizing datasets in two or three dimensions;</p></li>
+<li><p>generating feature vectors for supervised learning;</p></li>
+<li><p>computing classical embeddings, like PCA and spectral embedding;</p></li>
+<li><p>drawing graphs in the Cartesian plane.</p></li>
+</ul>
+<p>To learn how to create custom embeddings (induced by custom objective functions
+and constraints), sanity check embeddings, identify possible outliers in
+the original data, embed new data, and more, see the section on <a class="reference internal" href="../mde/index.html#mde"><span class="std std-ref">MDE</span></a>.</p>
+<div class="section" id="what-is-an-embedding">
+<h2>What is an embedding?<a class="headerlink" href="#what-is-an-embedding" title="Permalink to this headline">¶</a></h2>
+<p>An <em>embedding</em> of a finite set of items is an assignment of each item
+to a vector of fixed length. The length of the vectors is called the <em>embedding
+dimension</em>. An embedding is represented concretely by a matrix, in which each
+row is the embedding vector of an item.</p>
+<p>Commonly, each item is associated with either an original
+high-dimensional vector or a node in a graph. For these common cases,
+PyMDE provides high-level functions for computing embeddings in just one
+line. These functions are</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../api/index.html#pymde.preserve_neighbors" title="pymde.preserve_neighbors"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.preserve_neighbors</span></code></a>, and</p></li>
+<li><p><a class="reference internal" href="../api/index.html#pymde.preserve_distances" title="pymde.preserve_distances"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.preserve_distances</span></code></a>.</p></li>
+</ul>
+<p>The first creates embeddings that focus on the local structure of the data,
+putting similar items near each other and dissimilar items not near each other,
+while the second focuses more on the global structure, choosing embedding
+vectors to respect some notion of original distance or dissimilarity between
+items.</p>
+<p>We’ll see how to use these functions below.</p>
+</div>
+<div class="section" id="visualizing-data">
+<h2>Visualizing data<a class="headerlink" href="#visualizing-data" title="Permalink to this headline">¶</a></h2>
+<p>When the embedding dimension is 2 (or 3), embeddings can be used to visualize
+large collections of items. These visualizations can sometimes lead to
+new insights into the data.</p>
+<div class="section" id="preserving-neighbors">
+<h3>Preserving neighbors<a class="headerlink" href="#preserving-neighbors" title="Permalink to this headline">¶</a></h3>
+<p>Let’s create an embedding that preserves the local structure
+of some data, using the <a class="reference internal" href="../api/index.html#pymde.preserve_neighbors" title="pymde.preserve_neighbors"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.preserve_neighbors</span></code></a> function. This function
+is based on on preserving the <code class="docutils literal notranslate"><span class="pre">k</span></code>-nearest neighbors of each original vector
+(where <code class="docutils literal notranslate"><span class="pre">k</span></code> is a parameter that by default is chosen on your behalf).</p>
+<p>We’ll use the MNIST dataset, which contains images of handwritten digits, as an
+example. The original items are the images, and each item (image) is
+represented by an original vector containing the pixel values.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymde</span>
+<span class="n">mnist</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">MNIST</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Next, we embed.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">mde</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">preserve_neighbors</span><span class="p">(</span><span class="n">mnist</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">embedding</span> <span class="o">=</span> <span class="n">mde</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The first argument to <code class="docutils literal notranslate"><span class="pre">preserve_neighbors</span></code> is the data matrix: there are
+70,000 images, each represented by a vector of length 784 , so <code class="docutils literal notranslate"><span class="pre">mnist.data</span></code>
+is a <code class="docutils literal notranslate"><span class="pre">torch.Tensor</span></code> of shape <code class="docutils literal notranslate"><span class="pre">(70,000,</span> <span class="pre">784)</span></code>. The optional keyword argument
+<code class="docutils literal notranslate"><span class="pre">verbose=True</span></code> flag turns on helpful messages about what the function is
+doing. The embedding dimension is 2 by default.</p>
+<p>The function returns a <a class="reference internal" href="../api/index.html#pymde.MDE" title="pymde.MDE"><code class="xref any py py-class docutils literal notranslate"><span class="pre">pymde.MDE</span></code></a> object, which can be thought of as
+describing the kind of embedding we would like. To compute the embedding, we
+call the <a class="reference internal" href="../api/index.html#pymde.MDE.embed" title="pymde.MDE.embed"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">embed</span></code></a> method of the <code class="docutils literal notranslate"><span class="pre">mde</span></code> object. This returns a
+<code class="docutils literal notranslate"><span class="pre">torch.Tensor</span></code> of shape <code class="docutils literal notranslate"><span class="pre">(70,000,</span> <span class="pre">2)</span></code>, in which <code class="docutils literal notranslate"><span class="pre">embedding[k]</span></code> is
+the embedding vector assigned to the image <code class="docutils literal notranslate"><span class="pre">mnist.data[k]</span></code>.</p>
+<p>We can visualize the embedding with a scatter plot. In the scatter plot,
+we’ll color each point by the digit represented by the underlying image.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">pymde</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">embedding</span><span class="p">,</span> <span class="n">color_by</span><span class="o">=</span><span class="s1">&#39;mnist.attributes[&#39;</span><span class="n">digits</span><span class="s1">&#39;]`)</span>
+</pre></div>
+</div>
+<img alt="../_images/mnist.png" src="../_images/mnist.png" />
+<p>We can see that similar images are near each other in the embedding, while
+dissimilar images are not.</p>
+<div class="section" id="customizing-embeddings">
+<h4>Customizing embeddings<a class="headerlink" href="#customizing-embeddings" title="Permalink to this headline">¶</a></h4>
+<p>The <a class="reference internal" href="../api/index.html#pymde.preserve_neighbors" title="pymde.preserve_neighbors"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.preserve_neighbors</span></code></a> function takes a few keyword arguments
+that can be used to customize the embedding. For example, you
+can impose a <a class="reference internal" href="../api/index.html#pymde.Standardized" title="pymde.Standardized"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.Standardized</span></code></a> constraint: this
+causes the embedding to have uncorrelated columns, and prevents it from
+spreading out too much.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">embedding</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">preserve_neighbors</span><span class="p">(</span><span class="n">mnist</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">constraint</span><span class="o">=</span><span class="n">pymde</span><span class="o">.</span><span class="n">Standardized</span><span class="p">())</span><span class="o">.</span><span class="n">embed</span><span class="p">()</span>
+<span class="n">pymde</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">embedding</span><span class="p">,</span> <span class="n">color_by</span><span class="o">=</span><span class="n">mnist</span><span class="o">.</span><span class="n">attributes</span><span class="p">[</span><span class="s1">&#39;digits&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<img alt="../_images/mnist_std.png" src="../_images/mnist_std.png" />
+<p>To learn about the other keyword arguments, read the tutorial on <a class="reference internal" href="../mde/index.html#mde"><span class="std std-ref">MDE</span></a>,
+then consult the <a class="reference internal" href="../api/index.html#api-preserve-neighbors"><span class="std std-ref">API documentation</span></a>.</p>
+<p>For more in-depth examples of creating neighborhood-based visualizations,
+including 3D embeddings, see the <a class="reference internal" href="../examples/index.html#example-mnist"><span class="std std-ref">MNIST</span></a> and
+<a class="reference internal" href="../examples/index.html#example-scrna"><span class="std std-ref">single-cell genomics</span></a> example notebooks.</p>
+</div>
+</div>
+<div class="section" id="preserving-distances">
+<h3>Preserving distances<a class="headerlink" href="#preserving-distances" title="Permalink to this headline">¶</a></h3>
+<p>Next, we’ll create an embedding that roughly preserves the global structure
+of some original data, by preserving some known original
+distances between some pairs of items. We will embed the nodes of an unweighted
+graph. For the original distance between two nodes, we’ll use the length of the
+shortest path connecting them.</p>
+<p>The specific graph we’ll use is an academic coauthorship graph, from
+Google Scholar: the nodes are authors (with h-index at least 50), and two
+authors have an edge between them if either has listed the author as a coauthor.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymde</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="n">device</span> <span class="o">=</span> <span class="s1">&#39;cuda&#39;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s1">&#39;cpu&#39;</span>
+<span class="n">google_scholar</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">google_scholar</span><span class="p">()</span>
+<span class="n">mde</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">preserve_distances</span><span class="p">(</span><span class="n">google_scholar</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">embedding</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">embed</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">data</span></code> attribute of the <code class="docutils literal notranslate"><span class="pre">google_scholar</span></code> dataset is a
+<a class="reference internal" href="../api/index.html#pymde.Graph" title="pymde.Graph"><code class="xref any py py-class docutils literal notranslate"><span class="pre">pymde.Graph</span></code></a> object, which encodes the coauthorship network.
+The <a class="reference internal" href="../api/index.html#pymde.preserve_distances" title="pymde.preserve_distances"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.preserve_distances</span></code></a> function returns a <a class="reference internal" href="../api/index.html#pymde.MDE" title="pymde.MDE"><code class="xref any py py-class docutils literal notranslate"><span class="pre">pymde.MDE</span></code></a>
+object, and calling the <code class="docutils literal notranslate"><span class="pre">embed</span></code> method computes the embedding.</p>
+<p>Notice that we passed in a <code class="docutils literal notranslate"><span class="pre">device</span></code> to <code class="docutils literal notranslate"><span class="pre">pymde.preserve_distances</span></code>;
+this embedding preserves over 80 million distances, so using a GPU can speed
+things up.</p>
+<p>Next we plot the embedding, coloring each point by how many coauthors the
+author has in the network (normalized to be a percentile).</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">pymde</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">embedding</span><span class="p">,</span> <span class="n">color_by</span><span class="o">=</span><span class="n">google_scholar</span><span class="o">.</span><span class="n">attributes</span><span class="p">[</span><span class="s1">&#39;coauthors&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<img alt="../_images/scholar.jpg" src="../_images/scholar.jpg" />
+<p>The most collaborative authors are near the embedding, and less collaborative
+ones are on the fringe. It also turns out that the diameter of the embedding
+is close to the true diameter of the graph.</p>
+<p>For a more in-depth study of this example, see the
+<a class="reference internal" href="../examples/index.html#example-google-scholar"><span class="std std-ref">notebook on Google Scholar</span></a>.</p>
+<div class="section" id="id2">
+<h4>Customizing embeddings<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
+<p>The <a class="reference internal" href="../api/index.html#pymde.preserve_distances" title="pymde.preserve_distances"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.preserve_distances</span></code></a> function takes a few keyword arguments
+that can be used to customize the embedding.</p>
+<p>To learn about the keyword arguments, read the tutorial on <a class="reference internal" href="../mde/index.html#mde"><span class="std std-ref">MDE</span></a>,
+then consult the <a class="reference internal" href="../api/index.html#api-preserve-distances"><span class="std std-ref">API documentation</span></a>.</p>
+</div>
+</div>
+<div class="section" id="plotting">
+<h3>Plotting<a class="headerlink" href="#plotting" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="scatter-plots">
+<h4>Scatter plots<a class="headerlink" href="#scatter-plots" title="Permalink to this headline">¶</a></h4>
+<p>The <a class="reference internal" href="../api/index.html#pymde.plot" title="pymde.plot"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.plot</span></code></a> function can be used to plot embeddings with dimension
+at most 3. The takes an embedding as the argument, as well a number of optional
+keyword arguments. The full signature can be seen in the API documentation.</p>
+</div>
+<div class="section" id="movies">
+<h4>Movies<a class="headerlink" href="#movies" title="Permalink to this headline">¶</a></h4>
+<p>The <a class="reference internal" href="../api/index.html#pymde.MDE.play" title="pymde.MDE.play"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">pymde.MDE.play</span></code></a> method can be used to create an animated GIF of the
+embedding process. To create a GIF, first call <a class="reference internal" href="../api/index.html#pymde.MDE.embed" title="pymde.MDE.embed"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">pymde.MDE.embed</span></code></a> with
+the <code class="docutils literal notranslate"><span class="pre">snapshot_every</span></code> keyword argument, then call <code class="docutils literal notranslate"><span class="pre">play</span></code>:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">mde</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="n">snapshot_every</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">mde</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">savepath</span><span class="o">=</span><span class="s1">&#39;/path/to/file.gif&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">snapshot_every=1</span></code> keyword argument instructs the <code class="docutils literal notranslate"><span class="pre">MDE</span></code> object to
+take a snapshot of the embedding during every iteration of the solution
+algorithm. The <code class="docutils literal notranslate"><span class="pre">play</span></code> method generates the GIF, and saves it to <code class="docutils literal notranslate"><span class="pre">savepath</span></code>.</p>
+<p><a class="reference internal" href="../api/index.html#pymde.MDE.play" title="pymde.MDE.play"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">pymde.MDE.play</span></code></a> can be configured with a number of keyword arguments;
+these keyword arguments are described in the API documentation.</p>
+</div>
+</div>
+</div>
+<div class="section" id="generating-feature-vectors">
+<h2>Generating feature vectors<a class="headerlink" href="#generating-feature-vectors" title="Permalink to this headline">¶</a></h2>
+<p>The embeddings made via <a class="reference internal" href="../api/index.html#pymde.preserve_neighbors" title="pymde.preserve_neighbors"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.preserve_neighbors</span></code></a> and
+<a class="reference internal" href="../api/index.html#pymde.preserve_distances" title="pymde.preserve_distances"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.preserve_distances</span></code></a> can be used as feature vectors for supervised
+learning tasks. You can choose the dimension of the vectors by specifying the
+<code class="docutils literal notranslate"><span class="pre">embedding_dim</span></code> keyword argument, e.g.,</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">embedding</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span><span class="o">.</span><span class="n">embed</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="classical-embeddings">
+<h2>Classical embeddings<a class="headerlink" href="#classical-embeddings" title="Permalink to this headline">¶</a></h2>
+<p>PyMDE provides a few implementations of classical embeddings, for convenience.
+To produce a PCA embedding of a data matrix, call the <a class="reference internal" href="../api/index.html#pymde.quadratic.pca" title="pymde.quadratic.pca"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.quadratic.pca</span></code></a>
+method:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">embedding</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">quadratic</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">data_matrix</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To create a spectral embedding, based on a sequence of edges (a <code class="docutils literal notranslate"><span class="pre">torch.Tensor</span></code>
+of shape <code class="docutils literal notranslate"><span class="pre">(n_edges,</span> <span class="pre">2)</span></code>) and weights, use <a class="reference internal" href="../api/index.html#pymde.quadratic.spectral" title="pymde.quadratic.spectral"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.quadratic.spectral</span></code></a>.
+A spectral embedding based on the nearest neighbors of each item of a data
+matrix can be created with</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">embedding</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">preserve_neighbors</span><span class="p">(</span><span class="n">data_matrix</span><span class="p">,</span>
+   <span class="n">attractive_penalty</span><span class="o">=</span><span class="n">pymde</span><span class="o">.</span><span class="n">penalties</span><span class="o">.</span><span class="n">Quadratic</span><span class="p">,</span>
+   <span class="n">repulsive_penalty</span><span class="o">=</span><span class="kc">None</span>
+<span class="p">)</span><span class="o">.</span><span class="n">embed</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="drawing-graphs">
+<h2>Drawing graphs<a class="headerlink" href="#drawing-graphs" title="Permalink to this headline">¶</a></h2>
+<p>Finally, PyMDE can be used to draw graphs in the Cartesian plane.
+Here is a very simple example that draws a cycle graph on 3 nodes.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">edges</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span>
+         <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+         <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+         <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="p">])</span>
+<span class="n">triangle</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">Graph</span><span class="o">.</span><span class="n">from_edges</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+<span class="n">triangle</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/triangle.png" src="../_images/triangle.png" />
+<p>For more in-depth examples, see the <a class="reference internal" href="../examples/index.html#example-graphs"><span class="std std-ref">notebook on drawing graphs</span></a>,
+and the API documentation of <a class="reference internal" href="../api/index.html#pymde.Graph" title="pymde.Graph"><code class="xref any py py-class docutils literal notranslate"><span class="pre">pymde.Graph</span></code></a>.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="../mde/index.html" class="btn btn-neutral float-right" title="MDE" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../installation/index.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Akshay Agrawal.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

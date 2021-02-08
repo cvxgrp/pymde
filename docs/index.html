@@ -1,0 +1,289 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>PyMDE: Minimum-Distortion Embedding &mdash; pymde 0.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="installation/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="#" class="icon icon-home"> pymde
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">CONTENTS</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mde/index.html">MDE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preprocess/index.html">Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datasets/index.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="citing/index.html">Citing</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">pymde</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>PyMDE: Minimum-Distortion Embedding</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="pymde-minimum-distortion-embedding">
+<h1>PyMDE: Minimum-Distortion Embedding<a class="headerlink" href="#pymde-minimum-distortion-embedding" title="Permalink to this headline">¶</a></h1>
+<p>PyMDE is a Python library for computing vector embeddings of items, such as
+images, biological cells, nodes in a network, or any other type of abstract
+object. The embeddings are designed to minimally distort relationships between
+pairs of items, while possibly satisfying some constraints.</p>
+<p>You can use PyMDE to:</p>
+<ul class="simple">
+<li><p>visualize datasets, small or large;</p></li>
+<li><p>generate feature vectors for supervised learning;</p></li>
+<li><p>compress high-dimensional vector data;</p></li>
+<li><p>draw graphs;</p></li>
+<li><p>and more.</p></li>
+</ul>
+<p>PyMDE accompanies the paper
+<a class="reference external" href="https://web.stanford.edu/~boyd/papers/min_dist_emb.html">Minimum-Distortion Embedding</a>.</p>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<p>Here’s an example that shows how to use PyMDE to visualize high-dimensional
+vectors (which in this case are images from the MNIST dataset).</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymde</span>
+
+<span class="n">mnist</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">MNIST</span><span class="p">()</span>
+<span class="n">embedding</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">preserve_neighbors</span><span class="p">(</span><span class="n">mnist</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">embed</span><span class="p">()</span>
+<span class="n">pymde</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">embedding</span><span class="p">,</span> <span class="n">color_by</span><span class="o">=</span><span class="n">mnist</span><span class="o">.</span><span class="n">attributes</span><span class="p">[</span><span class="s1">&#39;digits&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<img alt="_images/mnist.png" src="_images/mnist.png" />
+<p>Each point represents an image in the dataset, and every point is colored
+by the digit represented by its underlying image. However, only the raw
+pixel data was used to create the embedding.</p>
+<p>This is just one of the many things that PyMDE can do.</p>
+</div>
+<div class="section" id="why-use-pymde">
+<h2>Why use PyMDE?<a class="headerlink" href="#why-use-pymde" title="Permalink to this headline">¶</a></h2>
+<p>There are many reasons to try out PyMDE. Here are some.</p>
+<p><strong>PyMDE is expressive.</strong>
+PyMDE is based on a simple but general framework for embedding, called
+<em>Minimum-Distortion Embedding</em> (MDE). The MDE framework generalizes well-known
+methods like PCA, spectral embedding, multi-dimensional scaling, LargeVis, and
+UMAP. With (Py)MDE, it is easy to recreate well-known embeddings and to create
+new ones, tailored to your particular application. Unlike most other methods
+for creating embeddings, PyMDE also lets you impose constraints on the
+embedding.</p>
+<p>For example, the below GIFs show PyMDE computing three different
+kinds of embeddings of the MNIST data.</p>
+<a class="reference internal image-reference" href="_images/mnist_quadratic.gif"><img alt="_images/mnist_quadratic.gif" src="_images/mnist_quadratic.gif" style="width: 32%;" /></a>
+<a class="reference internal image-reference" href="_images/mnist_centered.gif"><img alt="_images/mnist_centered.gif" src="_images/mnist_centered.gif" style="width: 32%;" /></a>
+<a class="reference internal image-reference" href="_images/mnist_std.gif"><img alt="_images/mnist_std.gif" src="_images/mnist_std.gif" style="width: 32%;" /></a>
+<p>The MDE framework was introduced in the paper
+<a class="reference external" href="https://web.stanford.edu/~boyd/papers/min_dist_emb.html">Minimum-Distortion Embedding</a>,
+and PyMDE is its official implementation.</p>
+<p><strong>PyMDE is easy to use.</strong>
+It’s very easy to get started with PyMDE. You can just call a high-level
+function to embed your data (be they high-dimensional vectors or the nodes in a
+graph), into any target dimension, using just one line of code. Creating
+custom embeddings is also easy, because PyMDE separates the description of an
+embedding from how it is computed: you say what kind of embedding you want, and
+PyMDE will compute it for you.</p>
+<p>In addition to computing embeddings, PyMDE can plot them (if
+the embedding dimension is three or less), create GIFs of the embedding
+process, help you compare different embeddings, preprocess your data, and
+more.</p>
+<p><strong>PyMDE is principled.</strong>
+The MDE framework provides principled methods to debug and analyze
+embeddings. These methods can be used to make your embeddings more faithful
+to your original data, and to search for anomalies and outliers in the original
+data.</p>
+<p><strong>PyMDE is fast.</strong>
+PyMDE is competitive in runtime with more specialized embedding methods, and
+can scale to datasets with millions of items. With a GPU, it can be even
+faster.</p>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="installation/index.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Akshay Agrawal.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

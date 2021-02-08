@@ -1,0 +1,300 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Datasets &mdash; pymde 0.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Examples" href="../examples/index.html" />
+    <link rel="prev" title="Preprocessing" href="../preprocess/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> pymde
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">CONTENTS</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mde/index.html">MDE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocess/index.html">Preprocessing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Datasets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#mnist">MNIST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#google-scholar">Google Scholar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scrna-transcriptomes-from-covid-19-patients">scRNA transcriptomes from COVID-19 patients</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../citing/index.html">Citing</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pymde</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Datasets</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/datasets/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="datasets">
+<span id="id1"></span><h1>Datasets<a class="headerlink" href="#datasets" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">pymde.datasets</span></code> module provides functions that download and return
+some datasets. You can use these datasets to experiment with custom
+MDE problems, or while learning how to use PyMDE.</p>
+<p>Each function returns a <a class="reference internal" href="../api/index.html#pymde.datasets.Dataset" title="pymde.datasets.Dataset"><code class="xref any py py-class docutils literal notranslate"><span class="pre">pymde.datasets.Dataset</span></code></a> object. The <code class="docutils literal notranslate"><span class="pre">data</span></code>
+member of this object holds the raw data. The <code class="docutils literal notranslate"><span class="pre">attributes</span></code> member
+is a dictionary whose values are (held-out) attributes associated with
+the items; you can use these attributes to color your embeddings, when
+visualizing them. Other data related to the dataset is in the <code class="docutils literal notranslate"><span class="pre">other_data</span></code>
+dict, and metadata about the dataset (eg, its authors) is available in
+<code class="docutils literal notranslate"><span class="pre">metadata</span></code>.</p>
+<p>The first time one of these functions is called, it will download the dataset and
+cache it locally, in the current directory (change the directory with
+the <code class="docutils literal notranslate"><span class="pre">root</span></code> keyword argument). Subsequent calls will use the cached data.</p>
+<p>PyMDE currently provides three datasets. If you would like to add an
+additional dataset, please reach out to us on
+<a class="reference external" href="https://github.com/cvxgrp/pymde">Github</a>.</p>
+<div class="section" id="mnist">
+<h2>MNIST<a class="headerlink" href="#mnist" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt>
+<code class="sig-prename descclassname">pymde.datasets.</code><code class="sig-name descname">MNIST</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span><span class="o">=</span><span class="default_value">'./'</span></em>, <em class="sig-param"><span class="n">download</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="../api/index.html#pymde.datasets.Dataset" title="pymde.datasets.Dataset">pymde.datasets.Dataset</a></dt>
+<dd><p>MNIST dataset (LeCun, et al.).</p>
+<p>The MNIST dataset contains 70,000, 28x28 images of handwritten digits.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code>: <code class="docutils literal notranslate"><span class="pre">torch.Tensor</span></code> with 70,000 rows, each of
+length 784 (representing the pixels in the image).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">attributes</span></code> dict: the key <code class="docutils literal notranslate"><span class="pre">digits</span></code> holds an array
+in which each entry gives the digit depicted in the corresponding row of
+<code class="docutils literal notranslate"><span class="pre">data</span></code>.</p></li>
+</ul>
+</dd></dl>
+
+</div>
+<div class="section" id="google-scholar">
+<h2>Google Scholar<a class="headerlink" href="#google-scholar" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt>
+<code class="sig-prename descclassname">pymde.datasets.</code><code class="sig-name descname">google_scholar</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span><span class="o">=</span><span class="default_value">'./'</span></em>, <em class="sig-param"><span class="n">download</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">full</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="../api/index.html#pymde.datasets.Dataset" title="pymde.datasets.Dataset">pymde.datasets.Dataset</a></dt>
+<dd><p>Google Scholar dataset (Agrawal, et al.).</p>
+<p>The Google Scholar dataset contains an academic coauthorship graph: the
+nodes are authors, and two authors are connected by an edge if either
+author listed the other as a coauthor on Google Scholar. (Note that if
+two authors collaborated on a paper, but neither has listed the other
+as a coauthor on their Scholar profiles, then they will not be connected
+by an edge).</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">full</span></code> is False, obtains a small version of the dataset, on roughly
+40,000 authors, each with h-index at least 50. If <code class="docutils literal notranslate"><span class="pre">full</span></code> is True,
+obtains the whole dataset, on roughly 600,000 authors. The full dataset
+is roughly 1GB in size.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code>: a <code class="docutils literal notranslate"><span class="pre">pymde.Graph</span></code>, with nodes representing authors</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">attributes</span></code>: the <code class="docutils literal notranslate"><span class="pre">coauthors</span></code> key has an array holding the number
+of coauthors of each other, normalized to be a percentile.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">other_data</span></code>: holds a dataframe describing the dataset, keyed by
+<code class="docutils literal notranslate"><span class="pre">dataframe</span></code>.</p></li>
+</ul>
+</dd></dl>
+
+</div>
+<div class="section" id="scrna-transcriptomes-from-covid-19-patients">
+<h2>scRNA transcriptomes from COVID-19 patients<a class="headerlink" href="#scrna-transcriptomes-from-covid-19-patients" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt>
+<code class="sig-prename descclassname">pymde.datasets.</code><code class="sig-name descname">covid19_scrna_wilk</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span><span class="o">=</span><span class="default_value">'./'</span></em>, <em class="sig-param"><span class="n">download</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="../api/index.html#pymde.datasets.Dataset" title="pymde.datasets.Dataset">pymde.datasets.Dataset</a></dt>
+<dd><p>COVID-19 scRNA data (Wilk, et al.).</p>
+<p>The COVID-19 dataset includes a PCA embedding of single-cell
+mRNA transcriptomes of roughly 40,000 cells, taken from some patients
+with COVID-19 infections and from healthy controls.</p>
+<p>Instructions on how to obtain the full dataset are available in the
+Wilk et al. paper: <a class="reference external" href="https://www.nature.com/articles/s41591-020-0944-y">https://www.nature.com/articles/s41591-020-0944-y</a>,</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code>: the PCA embedding</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">attributes</span></code>: two keys, <code class="docutils literal notranslate"><span class="pre">cell_type</span></code> and <code class="docutils literal notranslate"><span class="pre">health_status</span></code>.</p></li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="../examples/index.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../preprocess/index.html" class="btn btn-neutral float-left" title="Preprocessing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Akshay Agrawal.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,1668 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>API documentation &mdash; pymde 0.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Citing" href="../citing/index.html" />
+    <link rel="prev" title="Examples" href="../examples/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> pymde
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">CONTENTS</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mde/index.html">MDE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocess/index.html">Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets/index.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#mde">MDE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#preserve-neighbors">Preserve neighbors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#preserve-distances">Preserve distances</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#distortion-functions">Distortion functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-pymde.penalties">Penalties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pymde.losses">Losses</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#constraints">Constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#preprocessing">Preprocessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#classical-embeddings">Classical embeddings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#utilities">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#datasets">Datasets</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../citing/index.html">Citing</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pymde</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>API documentation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/api/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="api-documentation">
+<span id="api"></span><h1>API documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note" id="api-mde">
+<p class="admonition-title">Note</p>
+<p>PyMDE is very young software. When updates are released, we will try to be
+backward compatible with earlier versions, but sometimes we may be unable to
+do so.</p>
+<p>If a version ever includes a breaking change, we will make sure
+to communicate that clearly. Until we reach v1.0.0, an increase in the minor
+version will indicate breaking changes (e.g., v0.2.0 may have some changes
+that are incompatible with v0.1.0, but v0.1.5 will be fully compatible
+with v0.1.0).</p>
+</div>
+<div class="section" id="mde">
+<h2>MDE<a class="headerlink" href="#mde" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="pymde.MDE">
+<em class="property">class </em><code class="sig-prename descclassname">pymde.</code><code class="sig-name descname">MDE</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_items</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">embedding_dim</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">edges</span><span class="p">:</span> <span class="n">torch.Tensor</span></em>, <em class="sig-param"><span class="n">distortion_function</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>Callable<span class="p">, </span>pymde.functions.function.StochasticFunction<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">constraint</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="#pymde.constraints.Constraint" title="pymde.constraints.Constraint">pymde.constraints.Constraint</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">device</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.MDE" title="Permalink to this definition">¶</a></dt>
+<dd><p>An MDE problem.</p>
+<p>An MDE instance represents a specific MDE problem, specified by
+the number of items, the embedding dimension, a list of edges,
+the vector distortion function, and possibly a constraint.</p>
+<dl class="py attribute">
+<dt id="pymde.MDE.n_items">
+<code class="sig-name descname">n_items</code><a class="headerlink" href="#pymde.MDE.n_items" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of items</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pymde.MDE.embedding_dim">
+<code class="sig-name descname">embedding_dim</code><a class="headerlink" href="#pymde.MDE.embedding_dim" title="Permalink to this definition">¶</a></dt>
+<dd><p>The embedding dimension</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pymde.MDE.edges">
+<code class="sig-name descname">edges</code><a class="headerlink" href="#pymde.MDE.edges" title="Permalink to this definition">¶</a></dt>
+<dd><p>The list of edges.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pymde.MDE.distortion_function">
+<code class="sig-name descname">distortion_function</code><a class="headerlink" href="#pymde.MDE.distortion_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>The vector distorton function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>Callable</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pymde.MDE.constraint">
+<code class="sig-name descname">constraint</code><a class="headerlink" href="#pymde.MDE.constraint" title="Permalink to this definition">¶</a></dt>
+<dd><p>The constraint imposed (or None)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pymde.constraints.Constraint" title="pymde.constraints.Constraint">pymde.constraints.Constraint</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pymde.MDE.device">
+<code class="sig-name descname">device</code><a class="headerlink" href="#pymde.MDE.device" title="Permalink to this definition">¶</a></dt>
+<dd><p>The device on which to compute the embedding and store data
+(like ‘cpu’ or ‘cuda’)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pymde.MDE.solve_stats">
+<code class="sig-name descname">solve_stats</code><a class="headerlink" href="#pymde.MDE.solve_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Summary statistics about the embedding, populated after calling
+the <code class="docutils literal notranslate"><span class="pre">embed</span></code> method.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymde.MDE.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_items</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">embedding_dim</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">edges</span><span class="p">:</span> <span class="n">torch.Tensor</span></em>, <em class="sig-param"><span class="n">distortion_function</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>Callable<span class="p">, </span>pymde.functions.function.StochasticFunction<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">constraint</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="#pymde.constraints.Constraint" title="pymde.constraints.Constraint">pymde.constraints.Constraint</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">device</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.MDE.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs an MDE problem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_items</strong> (<em>int</em>) – Number of things being embedded.</p></li>
+<li><p><strong>embedding_dim</strong> (<em>int</em>) – Embedding dimension.</p></li>
+<li><p><strong>edges</strong> (<em>torch.Tensor</em><em>(</em><em>shape=</em><em>(</em><em>num_edges</em><em>, </em><em>2</em><em>)</em><em>, </em><em>dtype=torch.int</em><em>)</em>) – Tensor, where each row is an edge (i, j) between two items;
+each edge should satisfy 0 &lt;= i &lt; j &lt; n_items. In particular
+self-edges are not allowed.</p></li>
+<li><p><strong>distortion_function</strong> (<em>Callable</em><em> or </em><em>pymde.functions.StochasticFunction</em>) – The vectorized distortion function, typically an instance
+of a class from <code class="docutils literal notranslate"><span class="pre">pymde.penalties</span></code> or <code class="docutils literal notranslate"><span class="pre">pymde.losses</span></code> however,
+this can be any Python callable that maps a torch.Tensor
+of embedding distances to a torch.Tensor of distortions.</p></li>
+<li><p><strong>constraint</strong> (<a class="reference internal" href="#pymde.constraints.Constraint" title="pymde.constraints.Constraint"><em>pymde.constraints.Constraint</em></a><em>, </em><em>optional</em>) – A Constraint object, such as <code class="docutils literal notranslate"><span class="pre">pymde.Standardized()</span></code>
+Defaults to an unconstrained (centered) embedding.</p></li>
+<li><p><strong>device</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of device on which to store tensors/compute embedding,
+such as ‘cpu’ or ‘cuda’ for GPU. Default infers device from
+<code class="docutils literal notranslate"><span class="pre">edges</span></code> and <code class="docutils literal notranslate"><span class="pre">distortion_function</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymde.MDE.average_distortion">
+<code class="sig-name descname">average_distortion</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.MDE.average_distortion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute average distortion.</p>
+<p>This method computes the average distortion of an embedding.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">X</span></code> is None, this method computes the average distortion for the
+embedding computed by the last call to <code class="docutils literal notranslate"><span class="pre">embed</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>torch.Tensor</em><em>(</em><em>shape=</em><em>(</em><em>n_items</em><em>, </em><em>2</em><em>)</em><em>)</em><em>, </em><em>optional</em>) – Embedding.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The average distortion.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>scalar (float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymde.MDE.differences">
+<code class="sig-name descname">differences</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.MDE.differences" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute <code class="docutils literal notranslate"><span class="pre">X[i]</span> <span class="pre">-</span> <span class="pre">X[j]</span></code> for each row (i, j) in edges.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymde.MDE.distances">
+<code class="sig-name descname">distances</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.MDE.distances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute embedding distances.</p>
+<p>This function computes the embedding distances corresponding to
+the list of edges (<code class="docutils literal notranslate"><span class="pre">self.edges</span></code>)</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">X</span></code> is None, computes distances for the embedding computed
+by the last call to <code class="docutils literal notranslate"><span class="pre">embed</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>torch.Tensor</em><em>(</em><em>shape=</em><em>(</em><em>n_items</em><em>, </em><em>2</em><em>)</em><em>)</em><em>, </em><em>optional</em>) – Embedding.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Vector of embedding distances. The k-th entry is the distance
+corresponding to the k-th edge (<code class="docutils literal notranslate"><span class="pre">self.edges[k]</span></code></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor(shape=(n_edges,))</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymde.MDE.distortions">
+<code class="sig-name descname">distortions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.MDE.distortions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute distortions</p>
+<p>This function computes the distortions for an embedding.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">X</span></code> is None, computes distortions for the embedding computed
+by the last call to <code class="docutils literal notranslate"><span class="pre">embed</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>torch.Tensor</em><em>(</em><em>shape=</em><em>(</em><em>n_items</em><em>, </em><em>2</em><em>)</em><em>)</em><em>, </em><em>optional</em>) – Embedding.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Vector of distortions. The k-th entry is the distortion
+for the k-th edge (<code class="docutils literal notranslate"><span class="pre">self.edges[k]</span></code></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor(shape=(n_edges,))</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymde.MDE.distortions_cdf">
+<code class="sig-name descname">distortions_cdf</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">figsize_inches</span><span class="o">=</span><span class="default_value">(8, 3)</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.MDE.distortions_cdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot a cumulative distribution function of the distortions.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">embed</span></code> method must be called sometime before calling this method.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymde.MDE.embed">
+<code class="sig-name descname">embed</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">eps</span><span class="o">=</span><span class="default_value">1e-05</span></em>, <em class="sig-param"><span class="n">max_iter</span><span class="o">=</span><span class="default_value">300</span></em>, <em class="sig-param"><span class="n">memory_size</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">print_every</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">snapshot_every</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.MDE.embed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute an embedding.</p>
+<p>This method stores the embedding in the <code class="docutils literal notranslate"><span class="pre">X</span></code> attribute of the problem
+instance (<code class="docutils literal notranslate"><span class="pre">mde.X</span></code>). Summary statistics related to the fitting
+process are stored in <code class="docutils literal notranslate"><span class="pre">solve_stats</span></code> (<code class="docutils literal notranslate"><span class="pre">mde.solve_stats</span></code>).</p>
+<p>All arguments have sensible default values, so in most cases,
+it suffices to just type <code class="docutils literal notranslate"><span class="pre">mde.embed()</span></code> or <code class="docutils literal notranslate"><span class="pre">mde.embed(verbose=True)</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>torch.Tensor</em><em>, </em><em>optional</em>) – Initial iterate, of shape <code class="docutils literal notranslate"><span class="pre">(n_items,</span> <span class="pre">embedding_dim)</span></code>. When None,
+the initial iterate is chosen randomly (and projected onto the
+constraints); otherwise, the initial iterate should satisfy
+the constraints.</p></li>
+<li><p><strong>eps</strong> (<em>float</em>) – Residual norm threshold; quit when the residual norm
+is smaller than <code class="docutils literal notranslate"><span class="pre">eps</span></code>.</p></li>
+<li><p><strong>max_iter</strong> (<em>int</em>) – Maximum number of iterations.</p></li>
+<li><p><strong>memory_size</strong> (<em>int</em>) – The quasi-Newton memory. Larger values may lead to more stable
+behavior, but will increase the amount of time each iteration
+takes.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – Whether to print verbose output.</p></li>
+<li><p><strong>print_every</strong> (<em>int</em><em>, </em><em>optional</em>) – Print verbose output every <code class="docutils literal notranslate"><span class="pre">print_every</span></code> iterations.</p></li>
+<li><p><strong>snapshot_every</strong> (<em>int</em><em>, </em><em>optional</em>) – Snapshot embedding every <code class="docutils literal notranslate"><span class="pre">snapshot_every</span></code> iterations;
+snapshots saved as CPU tensors to <code class="docutils literal notranslate"><span class="pre">self.solve_stats.snapshots</span></code>.
+If you want to generate an animation with the <code class="docutils literal notranslate"><span class="pre">play</span></code> method after
+embedding, set <code class="docutils literal notranslate"><span class="pre">snapshot_every</span></code> to a positive integer
+(like 1 or 5).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The embedding, of shape <code class="docutils literal notranslate"><span class="pre">(n_items,</span> <span class="pre">embedding_dim)</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymde.MDE.high_distortion_pairs">
+<code class="sig-name descname">high_distortion_pairs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.MDE.high_distortion_pairs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute distortions, sorted from high to low.</p>
+<p>Computes the distortions for an embedding, sorting them from high
+to low. Returns the edges and distortions in the sorted order.</p>
+<p>This function can be used to debug an embedding or search for outliers
+in the data. In particular it can be instructive to manually
+examine the items which incurred the highest distortion.</p>
+<p>For example:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">edges</span><span class="p">,</span> <span class="n">distortions</span> <span class="o">=</span> <span class="n">mde</span><span class="o">.</span><span class="n">high_distortion_pairs</span><span class="p">()</span>
+<span class="n">maybe_outliers</span> <span class="o">=</span> <span class="n">edges</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>You can then examine the items corresponding to the edges in
+<code class="docutils literal notranslate"><span class="pre">maybe_outliers</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>torch.Tensor</em><em>(</em><em>shape=</em><em>(</em><em>n_items</em><em>, </em><em>2</em><em>)</em><em>)</em><em>, </em><em>optional</em>) – Embedding.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>torch.Tensor(shape=(n_edges, 2))</em> – edges, sorted from highest distortion to lowest</p></li>
+<li><p><em>torch.Tensor(shape=(n_edges,))</em> – distortions, sorted from highest to lowest</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymde.MDE.play">
+<code class="sig-name descname">play</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">color_by</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">color_map</span><span class="o">=</span><span class="default_value">'Spectral'</span></em>, <em class="sig-param"><span class="n">colors</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">edges</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">axis_limits</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">background_color</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">marker_size</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">figsize_inches</span><span class="o">=</span><span class="default_value">(8.0, 8.0)</span></em>, <em class="sig-param"><span class="n">fps</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tmpdir</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">savepath</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.MDE.play" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a movie visualizing how the embedding was formed.</p>
+<p>This method creates a GIF showing how the embedding was formed, starting
+with the initial iterate and ending with the final embedding. In other
+words it visualizes how the embedding algorithm (the <code class="docutils literal notranslate"><span class="pre">embed</span></code> method)
+updated the embedding’s state over time. (The embedding dimension should
+be at most 3.)</p>
+<p>In each frame, the embedding is visualized as a scatter plot. The points
+can optionally be colored according to categorical or continuous
+values, or according to a pre-defined sequence of colors. Additionally,
+edges can optionally be superimposed.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">embed</span></code> method must be called sometime before calling this method,
+with a non-None value for the <code class="docutils literal notranslate"><span class="pre">snapshot_every</span></code> keyword argument.</p>
+<p>If you want to save the GIF (instead of just viewing it in a Jupyter
+notebook), make sure to supply a path via the <code class="docutils literal notranslate"><span class="pre">savepath</span></code> keyword
+argument.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>color_by</strong> (<em>np.ndarray</em><em>(</em><em>shape=mde.n_items</em><em>)</em><em>, </em><em>optional</em>) – <p>A sequence of values, one for each item, which should be
+used to color each embedding vector. These values may either
+be categorical or continuous. For example, if <code class="docutils literal notranslate"><span class="pre">n_items</span></code> is 4,</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">categorical_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">([</span><span class="s1">&#39;dog&#39;</span><span class="p">,</span> <span class="s1">&#39;cat&#39;</span><span class="p">,</span> <span class="s1">&#39;zebra&#39;</span><span class="p">,</span> <span class="s1">&#39;cat&#39;</span><span class="p">])</span>
+<span class="n">other_categorical_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">continuous_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.31</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>are all acceptable values for this argument. A finite number of
+colors is used when the values are categorical, while a
+spectrum of colors is used when the values are continuous.</p>
+</p></li>
+<li><p><strong>color_map</strong> (<em>str</em><em> or </em><em>matplotlib colormap instance</em>) – Color map to use when resolving <code class="docutils literal notranslate"><span class="pre">color_by</span></code> to colors; ignored
+when <code class="docutils literal notranslate"><span class="pre">color_by</span></code> is None.</p></li>
+<li><p><strong>colors</strong> (<em>np.ndarray</em><em>(</em><em>shape=</em><em>(</em><em>mde.n_items</em><em>, </em><em>4</em><em>)</em><em>)</em><em>, </em><em>optional</em>) – <p>A sequence of colors, one for each item, specifying the exact
+color each item should be colored. Each row must represent
+an RGBA value.</p>
+<p>Only one of <code class="docutils literal notranslate"><span class="pre">color_by</span></code> and <code class="docutils literal notranslate"><span class="pre">colors</span></code> should be non-None.</p>
+</p></li>
+<li><p><strong>edges</strong> (<em>{torch.Tensor/np.ndarray}</em><em>(</em><em>shape=</em><em>(</em><em>any</em><em>, </em><em>2</em><em>)</em><em>)</em><em>, </em><em>optional</em>) – List of edges to superimpose over the scatter plot.</p></li>
+<li><p><strong>axis_limits</strong> (<em>tuple</em><em>(</em><em>length=2</em><em>)</em><em>, </em><em>optional</em>) – tuple (limit_low, limit_high) of axis limits, applied to both
+the x and y axis.</p></li>
+<li><p><strong>background_color</strong> (<em>str</em><em>, </em><em>optional</em>) – color of background</p></li>
+<li><p><strong>marker_size</strong> (<em>float</em><em>, </em><em>optional</em>) – size of each point in the scatter plot</p></li>
+<li><p><strong>figsize_inches</strong> (<em>tuple</em><em>(</em><em>length=2</em><em>)</em>) – size of figures in inches: (width_inches, height_inches)</p></li>
+<li><p><strong>fps</strong> (<em>float</em><em>, </em><em>optional</em>) – the number of frames per second at which the movie should be
+shown</p></li>
+<li><p><strong>tmpdir</strong> (<em>str</em><em>, </em><em>optional</em>) – path to directory, where individual images comprising the GIF
+will be stored</p></li>
+<li><p><strong>savepath</strong> (<em>str</em><em>, </em><em>optional</em>) – path at which to save the GIF.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymde.MDE.plot">
+<code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">color_by</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">color_map</span><span class="o">=</span><span class="default_value">'Spectral'</span></em>, <em class="sig-param"><span class="n">colors</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">edges</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">axis_limits</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">background_color</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">marker_size</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">figsize_inches</span><span class="o">=</span><span class="default_value">(8.0, 8.0)</span></em>, <em class="sig-param"><span class="n">savepath</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.MDE.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot an embedding, in one, two, or three dimensions.</p>
+<p>This method plots embeddings, with embedding dimension at most 3.</p>
+<p>The embedding is visualized as a scatter plot. The points can
+optionally be colored according to categorical or continuous values,
+or according to a pre-defined sequence of colors. Additionally,
+edges can optionally be superimposed.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">embed</span></code> method must be called sometime before calling this method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>color_by</strong> (<em>np.ndarray</em><em>(</em><em>shape=mde.n_items</em><em>)</em><em>, </em><em>optional</em>) – <p>A sequence of values, one for each item, which should be
+used to color each embedding vector. These values may either
+be categorical or continuous. For example, if <code class="docutils literal notranslate"><span class="pre">n_items</span></code> is 4,</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">([</span><span class="s1">&#39;dog&#39;</span><span class="p">,</span> <span class="s1">&#39;cat&#39;</span><span class="p">,</span> <span class="s1">&#39;zebra&#39;</span><span class="p">,</span> <span class="s1">&#39;cat&#39;</span><span class="p">])</span>
+<span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.31</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>are all acceptable. The first two are treated as categorical,
+the third is continuous. A finite number of colors is used
+when the values are categorical, while a spectrum of colors is
+used when the values are continuous.</p>
+</p></li>
+<li><p><strong>color_map</strong> (<em>str</em><em> or </em><em>matplotlib colormap instance</em>) – Color map to use when resolving <code class="docutils literal notranslate"><span class="pre">color_by</span></code> to colors; ignored
+when <code class="docutils literal notranslate"><span class="pre">color_by</span></code> is None.</p></li>
+<li><p><strong>colors</strong> (<em>np.ndarray</em><em>(</em><em>shape=</em><em>(</em><em>mde.n_items</em><em>, </em><em>4</em><em>)</em><em>)</em><em>, </em><em>optional</em>) – <p>A sequence of colors, one for each item, specifying the exact
+color each item should be colored. Each row must represent
+an RGBA value.</p>
+<p>Only one of <code class="docutils literal notranslate"><span class="pre">color_by</span></code> and <code class="docutils literal notranslate"><span class="pre">colors</span></code> should be non-None.</p>
+</p></li>
+<li><p><strong>edges</strong> (<em>{torch.Tensor/np.ndarray}</em><em>(</em><em>shape=</em><em>(</em><em>any</em><em>, </em><em>2</em><em>)</em><em>)</em><em>, </em><em>optional</em>) – List of edges to superimpose over the scatter plot.</p></li>
+<li><p><strong>axis_limits</strong> (<em>tuple</em><em>(</em><em>length=2</em><em>)</em><em>, </em><em>optional</em>) – tuple (limit_low, limit_high) of axis limits, applied to both
+the x and y axis.</p></li>
+<li><p><strong>background_color</strong> (<em>str</em><em>, </em><em>optional</em>) – color of background</p></li>
+<li><p><strong>marker_size</strong> (<em>float</em><em>, </em><em>optional</em>) – size of each point in the scatter plot</p></li>
+<li><p><strong>figsize_inches</strong> (<em>tuple</em><em>(</em><em>length=2</em><em>)</em>) – size of figures in inches: (width_inches, height_inches)</p></li>
+<li><p><strong>savepath</strong> (<em>str</em><em>, </em><em>optional</em>) – path to save the plot.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Axis on which the embedding is plotted.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>matplotlib axis</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymde.MDE.to">
+<code class="sig-name descname">to</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">device</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.MDE.to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move MDE instance to another device.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymde.optim.SolveStats">
+<em class="property">class </em><code class="sig-prename descclassname">pymde.optim.</code><code class="sig-name descname">SolveStats</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">average_distortions</span></em>, <em class="sig-param"><span class="n">residual_norms</span></em>, <em class="sig-param"><span class="n">step_size_percents</span></em>, <em class="sig-param"><span class="n">solve_time</span></em>, <em class="sig-param"><span class="n">times</span></em>, <em class="sig-param"><span class="n">snapshots</span></em>, <em class="sig-param"><span class="n">snapshot_every</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.optim.SolveStats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Summary statistics for a solve.</p>
+<dl class="py attribute">
+<dt id="pymde.optim.SolveStats.average_distortions">
+<code class="sig-name descname">average_distortions</code><a class="headerlink" href="#pymde.optim.SolveStats.average_distortions" title="Permalink to this definition">¶</a></dt>
+<dd><p>The average distortion at each iteration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>sequence</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pymde.optim.SolveStats.residual_norms">
+<code class="sig-name descname">residual_norms</code><a class="headerlink" href="#pymde.optim.SolveStats.residual_norms" title="Permalink to this definition">¶</a></dt>
+<dd><p>The residual norm at each iteration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>sequence</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pymde.optim.SolveStats.step_size_percents">
+<code class="sig-name descname">step_size_percents</code><a class="headerlink" href="#pymde.optim.SolveStats.step_size_percents" title="Permalink to this definition">¶</a></dt>
+<dd><p>The relative size of each step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>sequence</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pymde.optim.SolveStats.solve_time">
+<code class="sig-name descname">solve_time</code><a class="headerlink" href="#pymde.optim.SolveStats.solve_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>The time it took to create the embedding, in seconds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pymde.optim.SolveStats.snapshots">
+<code class="sig-name descname">snapshots</code><a class="headerlink" href="#pymde.optim.SolveStats.snapshots" title="Permalink to this definition">¶</a></dt>
+<dd><p>Snapshots of the embedding.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>sequence</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pymde.optim.SolveStats.snapshot_every">
+<code class="sig-name descname">snapshot_every</code><a class="headerlink" href="#pymde.optim.SolveStats.snapshot_every" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of iterations between snapshots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="preserve-neighbors">
+<span id="api-preserve-neighbors"></span><h2>Preserve neighbors<a class="headerlink" href="#preserve-neighbors" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="pymde.preserve_neighbors">
+<code class="sig-prename descclassname">pymde.</code><code class="sig-name descname">preserve_neighbors</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">embedding_dim=2</em>, <em class="sig-param">attractive_penalty=&lt;class 'pymde.functions.penalties.Log1p'&gt;</em>, <em class="sig-param">repulsive_penalty=&lt;class 'pymde.functions.penalties.Log'&gt;</em>, <em class="sig-param">constraint=None</em>, <em class="sig-param">n_neighbors=None</em>, <em class="sig-param">repulsive_fraction=None</em>, <em class="sig-param">max_distance=None</em>, <em class="sig-param">init='quadratic'</em>, <em class="sig-param">device='cpu'</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.preserve_neighbors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct an MDE problem designed to preserve local structure.</p>
+<p>This function constructs an MDE problem for preserving the
+local structure of original data. This MDE problem is well-suited for
+visualization (using <code class="docutils literal notranslate"><span class="pre">embedding_dim</span></code> 2 or 3), but can also be used to
+generate features for machine learning tasks (with <code class="docutils literal notranslate"><span class="pre">embedding_dim</span></code> = 10,
+50, or 100, for example). It yields embeddings in which similar items
+are near each other, and dissimilar items are not near each other.</p>
+<p>The original data can either be a data matrix, or a graph.
+Data matrices should be torch Tensors, NumPy arrays, or scipy sparse
+matrices; graphs should be instances of <code class="docutils literal notranslate"><span class="pre">pymde.Graph</span></code>.</p>
+<p>The MDE problem uses distortion functions derived from weights (i.e.,
+penalties).</p>
+<p>To obtain an embedding, call the <code class="docutils literal notranslate"><span class="pre">embed</span></code> method on the returned object.
+To plot it, use <code class="docutils literal notranslate"><span class="pre">pymde.plot</span></code>.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">embedding</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">preserve_neighbors</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">embed</span><span class="p">()</span>
+<span class="n">pymde</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">embedding</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>{torch.Tensor</em><em>, </em><em>numpy.ndarray</em><em>, </em><em>scipy.sparse matrix}</em><em>(</em>) – shape=(n_items, n_features)) or pymde.Graph
+The original data, a data matrix or a graph. Neighbors are
+computed using Euclidean distance if the data is a matrix,
+or the shortest-path metric if the data is a graph.</p></li>
+<li><p><strong>embedding_dim</strong> (<em>int</em>) – The embedding dimension, R^m. Use 2 or 3 for visualization.</p></li>
+<li><p><strong>attractive_penalty</strong> (<em>pymde.Function class</em><em> (or </em><em>factory</em><em>)</em>) – Callable that constructs a distortion function, given positive
+weights. Typically one of the classes from <code class="docutils literal notranslate"><span class="pre">pymde.penalties</span></code>,
+such as <code class="docutils literal notranslate"><span class="pre">pymde.penalties.log1p</span></code>, <code class="docutils literal notranslate"><span class="pre">pymde.penalties.Huber</span></code>, or
+<code class="docutils literal notranslate"><span class="pre">pymde.penalties.Quadratic</span></code>.</p></li>
+<li><p><strong>repulsive_penalty</strong> (<em>pymde.Function class</em><em> (or </em><em>factory</em><em>)</em>) – Callable that constructs a distortion function, given negative
+weights. (If <code class="docutils literal notranslate"><span class="pre">None</span></code>, only positive weights are used.) For example,
+<code class="docutils literal notranslate"><span class="pre">pymde.penalties.Log</span></code> or <code class="docutils literal notranslate"><span class="pre">pymde.penalties.InversePower</span></code>.</p></li>
+<li><p><strong>constraint</strong> (<a class="reference internal" href="#pymde.constraints.Constraint" title="pymde.constraints.Constraint"><em>pymde.constraints.Constraint</em></a><em> (</em><em>optional</em><em>)</em>) – Embedding constraint, like <code class="docutils literal notranslate"><span class="pre">pymde.Standardized()</span></code> or
+<code class="docutils literal notranslate"><span class="pre">pymde.Anchored(anchors,</span> <span class="pre">values)</span></code> (or <code class="docutils literal notranslate"><span class="pre">None</span></code>). Defaults no
+constraint when a repulsive penalty is provided, otherwise defaults to
+<code class="docutils literal notranslate"><span class="pre">pymde.Standardized()</span></code>.</p></li>
+<li><p><strong>n_neighbors</strong> (<em>int</em><em> (</em><em>optional</em><em>)</em>) – The number of nearest neighbors to compute for each row (item) of
+<code class="docutils literal notranslate"><span class="pre">data</span></code>. A sensible value is chosen by default, depending on the
+number of items.</p></li>
+<li><p><strong>repulsive_fraction</strong> (<em>float</em><em> (</em><em>optional</em><em>)</em>) – How many repulsive edges to enclude, relative to the number
+of attractive edges. 1 means as many repulsive edges as
+attractive edges. The higher this number, the more uniformly spread
+out the embedding will be.</p></li>
+<li><p><strong>max_distance</strong> (<em>float</em><em> (</em><em>optional</em><em>)</em>) – If not None, neighborhoods are restricted to have a radius
+no greater than <code class="docutils literal notranslate"><span class="pre">max_distance</span></code>.</p></li>
+<li><p><strong>init</strong> (<em>str</em>) – Initialization strategy; ‘quadratic’ or ‘random’.</p></li>
+<li><p><strong>device</strong> (<em>str</em><em> (</em><em>optional</em><em>)</em>) – Device for the embedding (eg, ‘cpu’, ‘cuda’).</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, print verbose output.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A <code class="docutils literal notranslate"><span class="pre">pymde.MDE</span></code> object, based on the original data.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pymde.MDE" title="pymde.MDE">pymde.MDE</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="preserve-distances">
+<span id="api-preserve-distances"></span><h2>Preserve distances<a class="headerlink" href="#preserve-distances" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="pymde.preserve_distances">
+<code class="sig-prename descclassname">pymde.</code><code class="sig-name descname">preserve_distances</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">embedding_dim=2</em>, <em class="sig-param">loss=&lt;class 'pymde.functions.losses.Absolute'&gt;</em>, <em class="sig-param">constraint=None</em>, <em class="sig-param">max_distances=50000000.0</em>, <em class="sig-param">device='cpu'</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.preserve_distances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct an MDE problem based on original distances.</p>
+<p>This function constructs an MDE problem for preserving pairwise
+distances between items. This can be useful for preserving the global
+structure of the data.</p>
+<p>The data can be specified with either a data matrix (a NumPy array, torch
+Tensor, or sparse matrix), or a <code class="docutils literal notranslate"><span class="pre">pymde.Graph</span></code> instance encoding the
+distances:</p>
+<blockquote>
+<div><p>A NumPy array, torch tensor, or sparse matrix is interpreted as a
+collection of feature vectors: each row gives the feature vector for an
+item. The original distances are the Euclidean distances between the
+feature vectors.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">pymde.Graph</span></code> instance is interpreted as encoding all (n_items
+choose 2) distances: the distance between i and j is taken to be the
+length of the shortest path connecting i and j.</p>
+</div></blockquote>
+<p>When the number of items n_items is large, the total number of pairs will
+be very large. When this happens, instead of computing all pairs of
+distances, this function will sample a subset uniformly at random. The
+maximum number of distances to compute is specified by the parameter
+<code class="docutils literal notranslate"><span class="pre">max_distances</span></code>. Depending on how many items you have (and how much
+memory your machine has), you may need to adjust this parameter.</p>
+<p>To obtain an embedding, call the <code class="docutils literal notranslate"><span class="pre">embed</span></code> method on the returned object.
+To plot it, use <code class="docutils literal notranslate"><span class="pre">pymde.plot</span></code>.</p>
+<p>For example:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">embedding</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">preserve_distances</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">embed</span><span class="p">()</span>
+<span class="n">pymde</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">embedding</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>{np.ndarray</em><em>, </em><em>torch.Tensor</em><em>, </em><em>scipy.sparse matrix}</em><em>(</em>) – shape=(n_items, n_features)), or pymde.Graph
+A data matrix or a <code class="docutils literal notranslate"><span class="pre">pymde.Graph</span></code> instance.</p></li>
+<li><p><strong>embedding_dim</strong> (<em>int</em>) – The embedding dimension.</p></li>
+<li><p><strong>loss</strong> (<em>pymde.Function class</em><em> (or </em><em>factory</em><em>)</em>) – Callable that constructs a distortion function, given
+original distances. Typically one of the classes defined in
+<code class="docutils literal notranslate"><span class="pre">pymde.losses</span></code>, such as <code class="docutils literal notranslate"><span class="pre">pymde.losses.Absolute</span></code>, or
+<code class="docutils literal notranslate"><span class="pre">pymde.losses.WeightedQuadratic</span></code>.</p></li>
+<li><p><strong>constraint</strong> (<a class="reference internal" href="#pymde.constraints.Constraint" title="pymde.constraints.Constraint"><em>pymde.constraints.Constraint</em></a><em> (</em><em>optional</em><em>)</em>) – Embedding constraint, such as <code class="docutils literal notranslate"><span class="pre">pymde.Standardized()</span></code> or
+<code class="docutils literal notranslate"><span class="pre">pymde.Anchored(anchors,</span> <span class="pre">values)</span></code> (or <code class="docutils literal notranslate"><span class="pre">None</span></code>). Defaults to no
+constraint. Note: when the constraint is <code class="docutils literal notranslate"><span class="pre">pymde.Standardized()</span></code>,
+the original distances will be scaled by a constant (because the
+standardization constraint puts a limit on how large any one
+distance can be).</p></li>
+<li><p><strong>max_distances</strong> (<em>int</em>) – Maximum number of distances to compute.</p></li>
+<li><p><strong>device</strong> (<em>str</em><em> (</em><em>optional</em><em>)</em>) – Device for the embedding (eg, ‘cpu’, ‘cuda’).</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, print verbose output.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A <code class="docutils literal notranslate"><span class="pre">pymde.MDE</span></code> instance, based on preserving the original distances.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pymde.MDE" title="pymde.MDE">pymde.MDE</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="distortion-functions">
+<h2>Distortion functions<a class="headerlink" href="#distortion-functions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-pymde.penalties">
+<span id="penalties"></span><h3>Penalties<a class="headerlink" href="#module-pymde.penalties" title="Permalink to this headline">¶</a></h3>
+<p>Penalties: distortion functions derived from weights.</p>
+<p>A vector distortion function  <span class="math notranslate nohighlight">\(f : \mathbf{R}^{p} \to \mathbf{R}^p\)</span>
+derived from weights has component functions</p>
+<div class="math notranslate nohighlight">
+\[f_k(d_k) = w_kp(d_k), \quad k=1, \ldots, p,\]</div>
+<p>where <span class="math notranslate nohighlight">\(w_k\)</span> is a scalar weight, <span class="math notranslate nohighlight">\(p\)</span> is a penalty function, and
+<span class="math notranslate nohighlight">\(d_k\)</span> is an embedding distance. The penalty encourages distances to be
+small when the weights are positive, and encourages them to be not small
+when the weights are negative.</p>
+<p>When an MDE problem calls a distortion function, <span class="math notranslate nohighlight">\(d_k\)</span> is the Euclidean
+distance between the items paired by the <span class="math notranslate nohighlight">\(k\)</span>-th edge, so <span class="math notranslate nohighlight">\(w_k\)</span>
+should be the weight associated with the <span class="math notranslate nohighlight">\(k\)</span>-th edge, and
+<span class="math notranslate nohighlight">\(f_k(d_k)\)</span> is the distortion associated with the edge.</p>
+<p>Every penalty can be used with positive or negative weights. When <span class="math notranslate nohighlight">\(w_k\)</span>
+is positive, <span class="math notranslate nohighlight">\(f_k\)</span> is attractive, meaning it encourages the embedding
+distances to be small; when <span class="math notranslate nohighlight">\(w_k\)</span> is negative, <span class="math notranslate nohighlight">\(f_k\)</span> is repulsive,
+meaning it encourages the distances to be large. Some penalties are better
+suited to attracting points, while others are better suited to repelling them.</p>
+<p><strong>Negative weights.</strong>
+For negative weights, it is recommended to only use one of the
+following penalties:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">pymde</span><span class="o">.</span><span class="n">penalties</span><span class="o">.</span><span class="n">Log</span>
+<span class="n">pymde</span><span class="o">.</span><span class="n">penalties</span><span class="o">.</span><span class="n">InvPower</span>
+<span class="n">pymde</span><span class="o">.</span><span class="n">penalties</span><span class="o">.</span><span class="n">LogRatio</span>
+</pre></div>
+</div>
+<p>These penalties go to negative infinity as the input approaches zero,
+and to zero as the input approaches infinity. With a negative weight,
+that means the distortion function goes to infinity at 0, and to 0 at infinity.</p>
+<p>Using other penalties with negative weights is possible, but it can lead to
+pathological MDE problems if you are not careful.</p>
+<p><strong>Positive weights.</strong>
+Penalties that work well in attracting points are those that are <span class="math notranslate nohighlight">\(0\)</span>
+when the distance is <span class="math notranslate nohighlight">\(0\)</span>, grows when the distance is larger than
+<span class="math notranslate nohighlight">\(0\)</span>. All the penalties in this module, other than the ones listed above
+(and the function described below), can be safely used with attractive
+penalties. Some examples inlcude:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">pymde</span><span class="o">.</span><span class="n">penalties</span><span class="o">.</span><span class="n">Log1p</span>
+<span class="n">pymde</span><span class="o">.</span><span class="n">penalties</span><span class="o">.</span><span class="n">Linear</span>
+<span class="n">pymde</span><span class="o">.</span><span class="n">penalties</span><span class="o">.</span><span class="n">Quadratic</span>
+<span class="n">pymde</span><span class="o">.</span><span class="n">penalties</span><span class="o">.</span><span class="n">Cubic</span>
+<span class="n">pymde</span><span class="o">.</span><span class="n">penalties</span><span class="o">.</span><span class="n">Huber</span>
+</pre></div>
+</div>
+<p><strong>Combining penalties.</strong>
+The <code class="docutils literal notranslate"><span class="pre">PushAndPull</span></code> function can be used to combine two penalties, an attractive
+penalty for use with positive weights, and a repulsive penalty for use with
+negative weights. This leads to a distortion function of the form</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}f_k(d) = \begin{cases}
+    w_k p_{\text{attractive}}(d_k) &amp; w_k &gt; 0 \\
+    w_k p_{\text{repulsive}}(d_k) &amp; w_k &lt; 0 \\
+\end{cases}.\end{split}\]</div>
+<p>For example:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">weights</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.</span><span class="p">])</span>
+<span class="n">attractive_penalty</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">penalties</span><span class="o">.</span><span class="n">Log1p</span>
+<span class="n">repulsive_penalty</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">penalties</span><span class="o">.</span><span class="n">Log</span>
+
+<span class="n">distortion_function</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">PushAndPull</span><span class="p">(</span>
+    <span class="n">weights</span><span class="p">,</span>
+    <span class="n">attractive_penalty</span><span class="p">,</span>
+    <span class="n">repulsive_penalty</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Example.</strong>
+Distortion functions are created in a vectorized or elementwise fashion. The
+constructor takes a sequence (torch.Tensor) of weights, returning a callable
+object. The object takes a sequence of distances of the same length as the
+weights, and returns a sequence of distortions, one for each distance.</p>
+<p>For example:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">weights</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">])</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">penalties</span><span class="o">.</span><span class="n">Quadratic</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+
+<span class="n">distances</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">])</span>
+<span class="n">distortions</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span>
+<span class="c1"># the distortions are 1 * 2**2 == 4, 2 * 1**2 == 2, 3 * 4**2 = 48</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">distortions</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>prints</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">4.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">48.</span><span class="p">])</span>
+</pre></div>
+</div>
+<dl class="py class">
+<dt id="pymde.penalties.Linear">
+<em class="property">class </em><code class="sig-prename descclassname">pymde.penalties.</code><code class="sig-name descname">Linear</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">weights</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.penalties.Linear" title="Permalink to this definition">¶</a></dt>
+<dd><p><span class="math notranslate nohighlight">\(p(d) = d\)</span></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymde.penalties.Quadratic">
+<em class="property">class </em><code class="sig-prename descclassname">pymde.penalties.</code><code class="sig-name descname">Quadratic</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">weights</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.penalties.Quadratic" title="Permalink to this definition">¶</a></dt>
+<dd><p><span class="math notranslate nohighlight">\(p(d) = d^2\)</span></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymde.penalties.Cubic">
+<em class="property">class </em><code class="sig-prename descclassname">pymde.penalties.</code><code class="sig-name descname">Cubic</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">weights</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.penalties.Cubic" title="Permalink to this definition">¶</a></dt>
+<dd><p><span class="math notranslate nohighlight">\(p(d) = d^3\)</span></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymde.penalties.Power">
+<em class="property">class </em><code class="sig-prename descclassname">pymde.penalties.</code><code class="sig-name descname">Power</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">weights</span></em>, <em class="sig-param"><span class="n">exponent</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.penalties.Power" title="Permalink to this definition">¶</a></dt>
+<dd><p><span class="math notranslate nohighlight">\(p(d) = d^\text{exponent}\)</span></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymde.penalties.Huber">
+<em class="property">class </em><code class="sig-prename descclassname">pymde.penalties.</code><code class="sig-name descname">Huber</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">weights</span></em>, <em class="sig-param"><span class="n">threshold</span><span class="o">=</span><span class="default_value">0.5</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.penalties.Huber" title="Permalink to this definition">¶</a></dt>
+<dd><div class="math notranslate nohighlight">
+\[\begin{split}p(d) = \begin{cases}
+    0.5 \cdot d^2 &amp; d &lt; \text{threshold} \\
+    \text{threshold}(d - 0.5 \cdot \text{threshold})
+    &amp; d \geq \text{threshold}
+\end{cases}\end{split}\]</div>
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymde.penalties.Logistic">
+<em class="property">class </em><code class="sig-prename descclassname">pymde.penalties.</code><code class="sig-name descname">Logistic</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">weights</span></em>, <em class="sig-param"><span class="n">threshold</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">3.0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.penalties.Logistic" title="Permalink to this definition">¶</a></dt>
+<dd><p><span class="math notranslate nohighlight">\(p(d) = \log(1 + e^{\alpha(d - \text{threshold})})\)</span></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymde.penalties.Log1p">
+<em class="property">class </em><code class="sig-prename descclassname">pymde.penalties.</code><code class="sig-name descname">Log1p</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">weights</span></em>, <em class="sig-param"><span class="n">exponent</span><span class="o">=</span><span class="default_value">1.5</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.penalties.Log1p" title="Permalink to this definition">¶</a></dt>
+<dd><p><span class="math notranslate nohighlight">\(p(d) = \log(1 + d^{\text{exponent}})\)</span></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymde.penalties.Log">
+<em class="property">class </em><code class="sig-prename descclassname">pymde.penalties.</code><code class="sig-name descname">Log</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">weights</span></em>, <em class="sig-param"><span class="n">exponent</span><span class="o">=</span><span class="default_value">1.0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.penalties.Log" title="Permalink to this definition">¶</a></dt>
+<dd><p><span class="math notranslate nohighlight">\(p(d) = \log(1 - \exp(-d^\text{exponent}))\)</span></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymde.penalties.InvPower">
+<em class="property">class </em><code class="sig-prename descclassname">pymde.penalties.</code><code class="sig-name descname">InvPower</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">weights</span></em>, <em class="sig-param"><span class="n">exponent</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.penalties.InvPower" title="Permalink to this definition">¶</a></dt>
+<dd><p><span class="math notranslate nohighlight">\(p(d) = 1/d^\text{exponent}\)</span></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymde.penalties.LogRatio">
+<em class="property">class </em><code class="sig-prename descclassname">pymde.penalties.</code><code class="sig-name descname">LogRatio</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">weights</span></em>, <em class="sig-param"><span class="n">exponent</span><span class="o">=</span><span class="default_value">2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.penalties.LogRatio" title="Permalink to this definition">¶</a></dt>
+<dd><p><span class="math notranslate nohighlight">\(p(d) = \log\left(\frac{d^\text{exponent}}{1 + d^{\text{exponent}}}\right)\)</span></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymde.penalties.PushAndPull">
+<em class="property">class </em><code class="sig-prename descclassname">pymde.penalties.</code><code class="sig-name descname">PushAndPull</code><span class="sig-paren">(</span><em class="sig-param">weights</em>, <em class="sig-param">attractive_penalty=&lt;class 'pymde.functions.penalties.Log1p'&gt;</em>, <em class="sig-param">repulsive_penalty=&lt;class 'pymde.functions.penalties.LogRatio'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.penalties.PushAndPull" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combine an attractive and repulsive penalty.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}f_k(d) = \begin{cases}
+    w_k p_{\text{attractive}}(d_k) &amp; w_k &gt; 0 \\
+    w_k p_{\text{repulsive}}(d_k) &amp; w_k &lt; 0 \\
+\end{cases}\end{split}\]</div>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pymde.losses">
+<span id="losses"></span><h3>Losses<a class="headerlink" href="#module-pymde.losses" title="Permalink to this headline">¶</a></h3>
+<p>Losses: distortion functions derived from original deviations.</p>
+<p>A vector distortion function <span class="math notranslate nohighlight">\(f : \mathbf{R}^{p} \to \mathbf{R}^p\)</span>
+derived from original deviations has component functions</p>
+<div class="math notranslate nohighlight">
+\[f_k(d_k) = \ell(d_k, \delta_k), \quad k=1, \ldots, p,\]</div>
+<p>where
+<span class="math notranslate nohighlight">\(\ell\)</span> is a loss function, <span class="math notranslate nohighlight">\(\delta_k\)</span> is a nonnegative deviation
+or dissimilarity score, <span class="math notranslate nohighlight">\(d_k\)</span> is an embedding distance,</p>
+<p>When an MDE problem calls a distortion function, <span class="math notranslate nohighlight">\(d_k\)</span> is the Euclidean
+distance between the items paired by the k-th edge, so <span class="math notranslate nohighlight">\(\delta_k\)</span> should
+be the original deviation associated with the k-th edge, and <span class="math notranslate nohighlight">\(f_k(d_k)\)</span>
+is the distortion associated with the edge.</p>
+<p>The deviations can be interpreted as targets for the embedding distances:
+the loss function is 0 when <span class="math notranslate nohighlight">\(d_k = \delta_k\)</span>, and positive otherwise.
+So a deviation <span class="math notranslate nohighlight">\(\delta_k\)</span> of 0 means that the items in the k-th edge
+are the same, and the larger the deviation, the more dissimilar the items are.</p>
+<p>Distortion functions are created in a vectorized or elementwise fashion. The
+constructor takes a sequence (torch.Tensor) of deviations (target distances),
+returning a callable object. The object takes a sequence of distances of the
+same length as the weights, and returns a sequence of distortions, one for each
+distance.</p>
+<p>Some examples of losses inlcude:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">pymde</span><span class="o">.</span><span class="n">losses</span><span class="o">.</span><span class="n">Absolute</span>
+<span class="n">pymde</span><span class="o">.</span><span class="n">losses</span><span class="o">.</span><span class="n">Quadratic</span>
+<span class="n">pymde</span><span class="o">.</span><span class="n">losses</span><span class="o">.</span><span class="n">SoftFractional</span>
+</pre></div>
+</div>
+<p><strong>Example.</strong></p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">deviations</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">])</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">losses</span><span class="o">.</span><span class="n">Quadratic</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+
+<span class="n">distances</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">])</span>
+<span class="n">distortions</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span>
+<span class="c1"># the distortions are (2 - 1)**2 == 1, (5 - 2)**2 == 9, (4 - 3)**2 = 1</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">distortions</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>prints</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">9.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">])</span>
+</pre></div>
+</div>
+<dl class="py class">
+<dt id="pymde.losses.Absolute">
+<em class="property">class </em><code class="sig-prename descclassname">pymde.losses.</code><code class="sig-name descname">Absolute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">deviations</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.losses.Absolute" title="Permalink to this definition">¶</a></dt>
+<dd><p><span class="math notranslate nohighlight">\(\ell(d, \delta) = |d - \delta|\)</span></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymde.losses.Quadratic">
+<em class="property">class </em><code class="sig-prename descclassname">pymde.losses.</code><code class="sig-name descname">Quadratic</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">deviations</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.losses.Quadratic" title="Permalink to this definition">¶</a></dt>
+<dd><p><span class="math notranslate nohighlight">\(\ell(d, \delta) = (d - \delta)^2\)</span></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymde.losses.Cubic">
+<em class="property">class </em><code class="sig-prename descclassname">pymde.losses.</code><code class="sig-name descname">Cubic</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">deviations</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.losses.Cubic" title="Permalink to this definition">¶</a></dt>
+<dd><p><span class="math notranslate nohighlight">\(\ell(d, \delta) = (d - \delta)^3\)</span></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymde.losses.Power">
+<em class="property">class </em><code class="sig-prename descclassname">pymde.losses.</code><code class="sig-name descname">Power</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">deviations</span></em>, <em class="sig-param"><span class="n">exponent</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.losses.Power" title="Permalink to this definition">¶</a></dt>
+<dd><p><span class="math notranslate nohighlight">\(\ell(d, \delta) = (d - \delta)^{\text{exponent}}\)</span></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymde.losses.WeightedQuadratic">
+<em class="property">class </em><code class="sig-prename descclassname">pymde.losses.</code><code class="sig-name descname">WeightedQuadratic</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">deviations</span></em>, <em class="sig-param"><span class="n">weights</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.losses.WeightedQuadratic" title="Permalink to this definition">¶</a></dt>
+<dd><p><span class="math notranslate nohighlight">\(\ell(d, \delta) = \frac{1}{\delta^2} (d - \delta)^2\)</span></p>
+<p>If <code class="docutils literal notranslate"><span class="pre">weights</span></code> is not None, the coefficient then the
+coefficient <span class="math notranslate nohighlight">\(1/\delta^2\)</span> is replaced by the weights.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymde.losses.Fractional">
+<em class="property">class </em><code class="sig-prename descclassname">pymde.losses.</code><code class="sig-name descname">Fractional</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">deviations</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.losses.Fractional" title="Permalink to this definition">¶</a></dt>
+<dd><p><span class="math notranslate nohighlight">\(\ell(d, \delta) = \max(\delta / d, d / \delta)\)</span></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymde.losses.SoftFractional">
+<em class="property">class </em><code class="sig-prename descclassname">pymde.losses.</code><code class="sig-name descname">SoftFractional</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">deviations</span></em>, <em class="sig-param"><span class="n">gamma</span><span class="o">=</span><span class="default_value">10.0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.losses.SoftFractional" title="Permalink to this definition">¶</a></dt>
+<dd><p><span class="math notranslate nohighlight">\(\ell(d, \delta) = \frac{1}{\gamma}\log\left( \frac{\exp(\gamma \delta/d) + \exp(\gamma d/\delta)}{2\exp(\gamma)} \right)\)</span></p>
+<p>The parameter <code class="docutils literal notranslate"><span class="pre">gamma</span></code> controls how close this loss is to the
+fractional loss. The larger <code class="docutils literal notranslate"><span class="pre">gamma</span></code> is, the closer to the fractional
+loss.</p>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="constraints">
+<span id="api-constraints"></span><h2>Constraints<a class="headerlink" href="#constraints" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="pymde.constraints.Constraint">
+<em class="property">class </em><code class="sig-prename descclassname">pymde.constraints.</code><code class="sig-name descname">Constraint</code><a class="headerlink" href="#pymde.constraints.Constraint" title="Permalink to this definition">¶</a></dt>
+<dd><p>A generic constraint.</p>
+<p>To create a custom constraint, create a subclass of this class,
+and implement its abstract methods.</p>
+<dl class="py method">
+<dt id="pymde.constraints.Constraint.initialization">
+<em class="property">abstract </em><code class="sig-name descname">initialization</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_items</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">embedding_dim</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">device</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="headerlink" href="#pymde.constraints.Constraint.initialization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a random embedding in the constraint set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_items</strong> (<em>int</em>) – The number of items.</p></li>
+<li><p><strong>embedding_dim</strong> (<em>int</em>) – The embedding dimension.</p></li>
+<li><p><strong>device</strong> (<em>str</em>) – Device on which to store the returned embedding.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a tensor of shape <code class="docutils literal notranslate"><span class="pre">(n_items,</span> <span class="pre">embedding_dim)</span></code> satisfying the
+constraints.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymde.constraints.Constraint.name">
+<em class="property">abstract </em><code class="sig-name descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#pymde.constraints.Constraint.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the constraint.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymde.constraints.Constraint.project_onto_constraint">
+<em class="property">abstract </em><code class="sig-name descname">project_onto_constraint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Z</span><span class="p">:</span> <span class="n">torch.Tensor</span></em>, <em class="sig-param"><span class="n">inplace</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="headerlink" href="#pymde.constraints.Constraint.project_onto_constraint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Project <code class="docutils literal notranslate"><span class="pre">Z</span></code> onto the constraint set.</p>
+<p>Returns a projection of <code class="docutils literal notranslate"><span class="pre">Z</span></code> onto the constraint set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Z</strong> (<em>torch.Tensor</em>) – The point to project.</p></li>
+<li><p><strong>inplace</strong> (<em>bool</em>) – If True, stores the projection in <code class="docutils literal notranslate"><span class="pre">Z</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>The projection of <code class="docutils literal notranslate"><span class="pre">Z</span></code> onto the constraints.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymde.constraints.Constraint.project_onto_tangent_space">
+<em class="property">abstract </em><code class="sig-name descname">project_onto_tangent_space</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">torch.Tensor</span></em>, <em class="sig-param"><span class="n">Z</span><span class="p">:</span> <span class="n">torch.Tensor</span></em>, <em class="sig-param"><span class="n">inplace</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="headerlink" href="#pymde.constraints.Constraint.project_onto_tangent_space" title="Permalink to this definition">¶</a></dt>
+<dd><p>Project <code class="docutils literal notranslate"><span class="pre">Z</span></code> onto the tangent space of the constraint set at <code class="docutils literal notranslate"><span class="pre">X</span></code>.</p>
+<p>Returns the Euclidean projection of <code class="docutils literal notranslate"><span class="pre">Z</span></code> onto
+the tangent space of the constraint set at <code class="docutils literal notranslate"><span class="pre">X</span></code> (where <code class="docutils literal notranslate"><span class="pre">X</span></code> is
+some matrix satisfying the constraints).</p>
+<p><code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">Z</span></code> should have the same shape.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>torch.Tensor</em>) – A point satisfying the constraints.</p></li>
+<li><p><strong>Z</strong> (<em>torch.Tensor</em>) – The point to project.</p></li>
+<li><p><strong>inplace</strong> (<em>bool</em>) – If True, stores the projection in <code class="docutils literal notranslate"><span class="pre">Z</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>The projection of <code class="docutils literal notranslate"><span class="pre">Z</span></code> onto the tangent space of the constraint</p></li>
+<li><p>set at <code class="docutils literal notranslate"><span class="pre">X</span></code>.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="pymde.Centered">
+<code class="sig-prename descclassname">pymde.</code><code class="sig-name descname">Centered</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymde.Centered" title="Permalink to this definition">¶</a></dt>
+<dd><p>Centering constraint.</p>
+<p>This function returns a centering constraint, which requires the embedding
+vectors to be centered around 0.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pymde.Standardized">
+<code class="sig-prename descclassname">pymde.</code><code class="sig-name descname">Standardized</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymde.Standardized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standardization constraint.</p>
+<p>This function returns a standardization constraint, which constrains an
+embedding <span class="math notranslate nohighlight">\(X\)</span> to be centered (the rows have mean zero) and to satisfy
+<span class="math notranslate nohighlight">\((1/n) X^T  X = I\)</span>.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymde.Anchored">
+<em class="property">class </em><code class="sig-prename descclassname">pymde.</code><code class="sig-name descname">Anchored</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">anchors</span></em>, <em class="sig-param"><span class="n">values</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.Anchored" title="Permalink to this definition">¶</a></dt>
+<dd><p>Anchor some vectors to specific values.</p>
+<dl class="py method">
+<dt id="pymde.Anchored.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">anchors</span></em>, <em class="sig-param"><span class="n">values</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.Anchored.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs an anchor constraint, in which some embedding vectors
+(the anchors) are fixed to specific values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>anchors</strong> (<em>torch.Tensor</em><em>, </em><em>shape</em><em> (</em><em>n_anchors</em><em>)</em>) – a Tensor in which each entry gives the index of an anchored
+vertex</p></li>
+<li><p><strong>values</strong> (<em>torch.Tensor</em><em>, </em><em>shape</em><em> (</em><em>n_anchors</em><em>, </em><em>embedding_dim</em><em>)</em>) – a Tensor which gives the value to which each anchor should be
+fixed</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="preprocessing">
+<h2>Preprocessing<a class="headerlink" href="#preprocessing" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="api-graph"></span><dl class="py class">
+<dt id="pymde.Graph">
+<em class="property">class </em><code class="sig-prename descclassname">pymde.</code><code class="sig-name descname">Graph</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">adjacency_matrix</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.Graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>A weighted graph.</p>
+<p>This class represents a weighted graph. It is backed by a scipy.sparse
+adjacency matrix, and can be constructed from either a dense
+distance matrix, a sparse adjacency matrix, or torch.Tensor’s
+of edges and weights (using the <cite>from_edges</cite> static method).</p>
+<p>It is an error for the graph to contain self-edges (i.e., non-zero
+values on the diagonal).</p>
+<p>This class is accepted as an argument to various preprocessing functions.</p>
+<dl class="py method">
+<dt id="pymde.Graph.adjacency_matrix">
+<em class="property">property </em><code class="sig-name descname">adjacency_matrix</code><a class="headerlink" href="#pymde.Graph.adjacency_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>The scipy.sparse adjacency matrix backing the graph.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymde.Graph.distances">
+<em class="property">property </em><code class="sig-name descname">distances</code><a class="headerlink" href="#pymde.Graph.distances" title="Permalink to this definition">¶</a></dt>
+<dd><p>The distances associated with each edge.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymde.Graph.draw">
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">embedding_dim</span><span class="o">=</span><span class="default_value">2</span></em>, <em class="sig-param"><span class="n">standardized</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">device</span><span class="o">=</span><span class="default_value">'cpu'</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.Graph.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a graph in the Cartesian plane.</p>
+<p>This method does some basic preprocessing, constructs an MDE problem
+that is often suitable for drawing graphs, and computes/returns an
+embedding by approximately solving the MDE problem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>embedding_dim</strong> (<em>int</em>) – The number of dimemsions, 1, 2, or 3.</p></li>
+<li><p><strong>standardized</strong> (<em>bool</em>) – Whether to impose a standardization constraint.</p></li>
+<li><p><strong>device</strong> (<em>str</em>) – Device on which to compute/store embedding, ‘cpu’ or ‘cuda’.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – Whether to print verbose output.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The embedding, of shape <code class="docutils literal notranslate"><span class="pre">(n_items,</span> <span class="pre">embedding_dim)</span></code></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymde.Graph.edges">
+<em class="property">property </em><code class="sig-name descname">edges</code><a class="headerlink" href="#pymde.Graph.edges" title="Permalink to this definition">¶</a></dt>
+<dd><p>A torch.Tensor of the edges in the graph.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymde.Graph.from_edges">
+<em class="property">static </em><code class="sig-name descname">from_edges</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">edges</span></em>, <em class="sig-param"><span class="n">weights</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.Graph.from_edges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a graph from edges and weights.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>edges</strong> (<em>torch.Tensor</em>) – Tensor of edges, of shape <code class="docutils literal notranslate"><span class="pre">(n_edges,</span> <span class="pre">2)</span></code>, with each
+edge represented by a row, i.e. by two integers.</p></li>
+<li><p><strong>weights</strong> (<em>torch.Tensor</em><em>, </em><em>optional</em>) – Tensor of weights, of shape <code class="docutils literal notranslate"><span class="pre">(n_edges,)</span></code>, with each weight
+a float.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A Graph object representing <code class="docutils literal notranslate"><span class="pre">edges</span></code> and <code class="docutils literal notranslate"><span class="pre">weights</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pymde.Graph" title="pymde.Graph">pymde.Graph</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymde.Graph.n_all_edges">
+<em class="property">property </em><code class="sig-name descname">n_all_edges</code><a class="headerlink" href="#pymde.Graph.n_all_edges" title="Permalink to this definition">¶</a></dt>
+<dd><p>n_items choose 2.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymde.Graph.n_edges">
+<em class="property">property </em><code class="sig-name descname">n_edges</code><a class="headerlink" href="#pymde.Graph.n_edges" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of edges in the graph.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymde.Graph.n_items">
+<em class="property">property </em><code class="sig-name descname">n_items</code><a class="headerlink" href="#pymde.Graph.n_items" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of items in the graph.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymde.Graph.neighbor_distances">
+<code class="sig-name descname">neighbor_distances</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#pymde.Graph.neighbor_distances" title="Permalink to this definition">¶</a></dt>
+<dd><p>The distances associated with the edges connected to <code class="docutils literal notranslate"><span class="pre">node</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymde.Graph.neighbors">
+<code class="sig-name descname">neighbors</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#pymde.Graph.neighbors" title="Permalink to this definition">¶</a></dt>
+<dd><p>The indices of the neighbors of <code class="docutils literal notranslate"><span class="pre">node</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="pymde.preprocess.data_matrix.k_nearest_neighbors">
+<code class="sig-prename descclassname">pymde.preprocess.data_matrix.</code><code class="sig-name descname">k_nearest_neighbors</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">k</span></em>, <em class="sig-param"><span class="n">max_distance</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.preprocess.data_matrix.k_nearest_neighbors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute k-nearest neighbors for each row in data matrix.</p>
+<p>Computes the k-nearest neighbor graph of data matrix, under
+the Euclidean distance. Each row in the data matrix is treated as an item.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>{torch.Tensor</em><em>, </em><em>np.ndarray</em><em>, </em><em>scipy.sparse matrix}</em><em>(</em>) – shape=(n_items, n_features))
+The data matrix</p></li>
+<li><p><strong>k</strong> (<em>int</em>) – The number of nearest neighbors per item</p></li>
+<li><p><strong>max_distance</strong> (<em>float</em><em> (</em><em>optional</em><em>)</em>) – If not None, neighborhoods are restricted to have a radius
+no greater than <cite>max_distance</cite>.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – If True, print verbose output.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a neighborhood graph</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pymde.Graph" title="pymde.Graph">pymde.Graph</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pymde.preprocess.graph.k_nearest_neighbors">
+<code class="sig-prename descclassname">pymde.preprocess.graph.</code><code class="sig-name descname">k_nearest_neighbors</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">graph</span></em>, <em class="sig-param"><span class="n">k</span></em>, <em class="sig-param"><span class="n">graph_distances</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">max_distance</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.preprocess.graph.k_nearest_neighbors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute k-nearest neighbors for each node in graph.</p>
+<p>This function computes a k-nearest neighbor graph.</p>
+<p>By default, the input graph is interpreted as a distance matrix, with
+<code class="docutils literal notranslate"><span class="pre">graph.adjacency_matrix[i,</span> <span class="pre">j]</span></code> giving the distance between i and j. If
+<cite>graph_distances</cite> is True, then the shortest-path metric is used to
+compute neighbors.</p>
+<p>In the returned graph, if i is a neighbor of j and j a neighbor of i, then
+the weight w_{ij} will be +2; if only one is a neighbor of the other, then
+w_{ij} will be +1; if neither are neighbors of each other, then (i, j) will
+not be in the graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>graph</strong> (<a class="reference internal" href="#pymde.Graph" title="pymde.Graph"><em>pymde.Graph</em></a>) – The graph, representing a distance metric on the items.</p></li>
+<li><p><strong>k</strong> (<em>int</em>) – The number of nearest neighbors per item.</p></li>
+<li><p><strong>graph_distances</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, computes shortest-path distances on the graph; otherwise,
+interprets the graph as a distance matrix.</p></li>
+<li><p><strong>max_distance</strong> (<em>float</em><em> (</em><em>optional</em><em>)</em>) – If not <code class="docutils literal notranslate"><span class="pre">None</span></code>, neighborhoods are restricted to have a radius
+no greater than max_distance.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, print verbose output.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The k-nearest neighbor graph.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pymde.Graph" title="pymde.Graph">pymde.Graph</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pymde.preprocess.dissimilar_edges">
+<code class="sig-prename descclassname">pymde.preprocess.</code><code class="sig-name descname">dissimilar_edges</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_items</span></em>, <em class="sig-param"><span class="n">similar_edges</span></em>, <em class="sig-param"><span class="n">num_edges</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">seed</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.preprocess.dissimilar_edges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sample edges not in <code class="docutils literal notranslate"><span class="pre">similar_edges</span></code>.</p>
+<p>Given a number of items, and a <code class="docutils literal notranslate"><span class="pre">torch.Tensor</span></code> containing pairs of
+items known to be similar, this function samples (uniformly at random) some
+edges in the complement of <code class="docutils literal notranslate"><span class="pre">similar_edges</span></code>. The returned number
+of edges will be approximately equal to (and no greater than) the
+number of edges in <code class="docutils literal notranslate"><span class="pre">similar_edges</span></code> (or <code class="docutils literal notranslate"><span class="pre">num_edges</span></code>, if provided).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_items</strong> (<em>int</em>) – The number of items.</p></li>
+<li><p><strong>similar_edges</strong> (<em>torch.Tensor</em>) – Edges to exclude when sampling.</p></li>
+<li><p><strong>num_edges</strong> (<em>int</em><em> (</em><em>optional</em><em>)</em>) – Number of edges to sample, defaults to approximately
+the same number as <code class="docutils literal notranslate"><span class="pre">similar_edges</span></code>.</p></li>
+<li><p><strong>seed</strong> (<em>int</em><em> (</em><em>optional</em><em>)</em>) – Random seed for the sampling.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Edges not in <code class="docutils literal notranslate"><span class="pre">similar_edges</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pymde.preprocess.graph.shortest_paths">
+<code class="sig-prename descclassname">pymde.preprocess.graph.</code><code class="sig-name descname">shortest_paths</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">graph</span></em>, <em class="sig-param"><span class="n">max_length</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">retain_fraction</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">n_workers</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.preprocess.graph.shortest_paths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute shortest-path distances.</p>
+<p>This function computes the shortest-path distances on a graph.
+It returns a new graph, with an edge for each distance that was
+computed (each edge is weighted by the shortest-path distance between
+the two nodes in the original graph). The new graph can be interpreted
+as a “filled-in” version of the input graph.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">max_length</span></code> and <code class="docutils literal notranslate"><span class="pre">retain_fraction</span></code> keyword arguments can be used
+to compute only a subset of the distances. This can be useful
+if the graph has a very large number of nodes, in which storing all graph
+distances may be intractable.</p>
+<p>If the graph is sufficiently large, multiple cores will be used to
+accelerate the computation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>graph</strong> (<a class="reference internal" href="#pymde.Graph" title="pymde.Graph"><em>pymde.Graph</em></a><em> or </em><em>scipy.sparse matrix</em>) – Graph instance, or an adjacency matrix</p></li>
+<li><p><strong>max_length</strong> (<em>float</em><em>, </em><em>optional</em>) – The maximum-length path to compute; paths longer than max_length
+are not computed/explored.</p></li>
+<li><p><strong>retain_fraction</strong> (<em>float</em>) – A float between 0 and 1, specifying the fraction of all (n choose 2)
+to compute. For example, if <code class="docutils literal notranslate"><span class="pre">retain_fraction</span></code> is 0.1, only 10
+percent of the edges will be stored.</p></li>
+<li><p><strong>n_workers</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of processes to use. Defaults to the number of available
+cores.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – Whether to print verbose output.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A new graph, with an edge (and weight) for each shortest-path
+distance that was computed/stored.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pymde.Graph" title="pymde.Graph">pymde.Graph</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="classical-embeddings">
+<h2>Classical embeddings<a class="headerlink" href="#classical-embeddings" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="pymde.quadratic.pca">
+<code class="sig-prename descclassname">pymde.quadratic.</code><code class="sig-name descname">pca</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Y</span></em>, <em class="sig-param"><span class="n">embedding_dim</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.quadratic.pca" title="Permalink to this definition">¶</a></dt>
+<dd><p>PCA embedding of a data matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Y</strong> (<em>torch.Tensor</em><em>(</em><em>shape=</em><em>(</em><em>n</em><em>, </em><em>k</em><em>)</em><em>)</em>) – data matrix, with n &gt;= k</p></li>
+<li><p><strong>embedding_dim</strong> (<em>int</em>) – the number of eigenvectors to retrieve, the embedding dimension;
+must be &lt;= k</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The top embedding_dim eigenvectors of YY^T, scaled by sqrt(n)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor(shape=(n, embedding_dim))</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pymde.quadratic.spectral">
+<code class="sig-prename descclassname">pymde.quadratic.</code><code class="sig-name descname">spectral</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_items</span></em>, <em class="sig-param"><span class="n">embedding_dim</span></em>, <em class="sig-param"><span class="n">edges</span></em>, <em class="sig-param"><span class="n">weights</span></em>, <em class="sig-param"><span class="n">cg</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">max_iter</span><span class="o">=</span><span class="default_value">40</span></em>, <em class="sig-param"><span class="n">device</span><span class="o">=</span><span class="default_value">'cpu'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.quadratic.spectral" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute a spectral embedding</p>
+<p>Solves the quadratic MDE problem</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{array}{ll}
+\mbox{minimize} &amp; \sum_{(i, j) in \text{edges}} w_{ij} d_{ij}^2 \\
+\mbox{subject to} &amp; (1/n) X^T X = I, \quad d_{ij} = |x_i - x_j|_2.
+\end{array}\end{split}\]</div>
+<p>The weights may be negative.</p>
+<p>By default, the problem is solved using a Lanczos method. If cg=True,
+LOBPCG is used; LOBPCG is warm-started by running a projected quasi-newton
+method for a small number of iterations. Use cg=True when the number
+of edges is very large, and when an approximate solution is satisfactory
+(the Lanczos method typically gives much more accurate solutions, but can
+be slower).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_items</strong> (<em>int</em>) – The number of items</p></li>
+<li><p><strong>embedding_dim</strong> (<em>int</em>) – The embedding dimension</p></li>
+<li><p><strong>edges</strong> (<em>torch.Tensor</em><em>(</em><em>shape=</em><em>(</em><em>n_edges</em><em>, </em><em>2</em><em>)</em><em>)</em>) – A list of edges (i, j), 0 &lt;= i &lt; j &lt; n_items</p></li>
+<li><p><strong>weights</strong> (<em>torch.Tensor</em><em>(</em><em>shape=</em><em>(</em><em>n_edges</em><em>,</em><em>)</em><em>)</em>) – A list of weights associated with each edge</p></li>
+<li><p><strong>cg</strong> (<em>bool</em>) – If True, uses a preconditioned CG method to find the embedding,
+which requires that the Laplacian matrix plus the identity is
+positive definite; otherwise, a Lanczos method is used. Use True when
+the Lanczos method is too slow (which might happen when the number of
+edges is very large).</p></li>
+<li><p><strong>max_iter</strong> (<em>int</em>) – max iteration count for the CG method</p></li>
+<li><p><strong>device</strong> (<em>str</em><em> (</em><em>optional</em><em>)</em>) – The device on which to allocate the embedding</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A spectral embedding, projected onto the standardization constraint</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor(shape=(n_items, embedding_dim))</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="utilities">
+<h2>Utilities<a class="headerlink" href="#utilities" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="pymde.all_edges">
+<code class="sig-prename descclassname">pymde.</code><code class="sig-name descname">all_edges</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.all_edges" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="pymde.align">
+<code class="sig-prename descclassname">pymde.</code><code class="sig-name descname">align</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">source</span></em>, <em class="sig-param"><span class="n">target</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.align" title="Permalink to this definition">¶</a></dt>
+<dd><p>Align an source embedding to a target embedding</p>
+<p>Align the source embedding to another target embedding, via
+rotation. The alignment is done by solving an
+orthogonal Procrustes problem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> (<em>torch.Tensor</em>) – The embedding to rotate.</p></li>
+<li><p><strong>target</strong> (<em>torch.Tensor</em>) – The target embedding, of the same shape as source.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The rotation of source best aligned to the target.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pymde.center">
+<code class="sig-prename descclassname">pymde.</code><code class="sig-name descname">center</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.center" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="pymde.rotate">
+<code class="sig-prename descclassname">pymde.</code><code class="sig-name descname">rotate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">degrees</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.rotate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="pymde.plot">
+<code class="sig-prename descclassname">pymde.</code><code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">color_by</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">color_map</span><span class="o">=</span><span class="default_value">'Spectral'</span></em>, <em class="sig-param"><span class="n">colors</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">edges</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">axis_limits</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">background_color</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">marker_size</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">figsize_inches</span><span class="o">=</span><span class="default_value">(8.0, 8.0)</span></em>, <em class="sig-param"><span class="n">savepath</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot an embedding, in one, two, or three dimensions.</p>
+<p>This function plots embeddings. The input embedding’s dimension should
+be at most 3.</p>
+<p>The embedding is visualized as a scatter plot. The points can
+optionally be colored according to categorical or continuous values,
+or according to a pre-defined sequence of colors. Additionally,
+edges can optionally be superimposed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>array-like</em>) – The embedding to plot, of shape <code class="docutils literal notranslate"><span class="pre">(n_items,</span> <span class="pre">embedding_dim)</span></code>. The
+second dimension should be 1, 2, or 3.</p></li>
+<li><p><strong>color_by</strong> (<em>array-like</em><em>, </em><em>optional</em>) – <p>A sequence of values, one for each item, which should be
+used to color each embedding vector. These values may either
+be categorical or continuous. For example, if <code class="docutils literal notranslate"><span class="pre">n_items</span></code> is 4,</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">([</span><span class="s1">&#39;dog&#39;</span><span class="p">,</span> <span class="s1">&#39;cat&#39;</span><span class="p">,</span> <span class="s1">&#39;zebra&#39;</span><span class="p">,</span> <span class="s1">&#39;cat&#39;</span><span class="p">])</span>
+<span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.31</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>are all acceptable. The first two are treated as categorical,
+the third is continuous. A finite number of colors is used
+when the values are categorical, while a spectrum of colors is
+used when the values are continuous.</p>
+</p></li>
+<li><p><strong>color_map</strong> (<em>str</em><em> or </em><em>matplotlib colormap instance</em>) – Color map to use when resolving <code class="docutils literal notranslate"><span class="pre">color_by</span></code> to colors; ignored
+when <code class="docutils literal notranslate"><span class="pre">color_by</span></code> is None.</p></li>
+<li><p><strong>colors</strong> (<em>array-like</em><em>, </em><em>optional</em>) – <p>A sequence of colors, one for each item, specifying the exact
+color each item should be colored. Each row must represent
+an RGBA value.</p>
+<p>Only one of <code class="docutils literal notranslate"><span class="pre">color_by</span></code> and <code class="docutils literal notranslate"><span class="pre">colors</span></code> should be non-None.</p>
+</p></li>
+<li><p><strong>edges</strong> (<em>array-like</em><em>, </em><em>optional</em>) – List of edges to superimpose over the scatter plot, shape <code class="docutils literal notranslate"><span class="pre">(any,</span> <span class="pre">2)</span></code></p></li>
+<li><p><strong>axis_limits</strong> (<em>tuple</em><em>, </em><em>optional</em>) – tuple <code class="docutils literal notranslate"><span class="pre">(limit_low,</span> <span class="pre">limit_high)</span></code> of axis limits, applied to both
+the x and y axis.</p></li>
+<li><p><strong>background_color</strong> (<em>str</em><em>, </em><em>optional</em>) – color of background</p></li>
+<li><p><strong>marker_size</strong> (<em>float</em><em>, </em><em>optional</em>) – size of each point in the scatter plot</p></li>
+<li><p><strong>figsize_inches</strong> (<em>tuple</em>) – size of figures in inches: <code class="docutils literal notranslate"><span class="pre">(width_inches,</span> <span class="pre">height_inches)</span></code></p></li>
+<li><p><strong>savepath</strong> (<em>str</em><em>, </em><em>optional</em>) – path to save the plot.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Axis on which the embedding is plotted.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>matplotlib.Axes</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="datasets">
+<h2>Datasets<a class="headerlink" href="#datasets" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="pymde.datasets.Dataset">
+<em class="property">class </em><code class="sig-prename descclassname">pymde.datasets.</code><code class="sig-name descname">Dataset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">attributes</span></em>, <em class="sig-param"><span class="n">other_data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">metadata</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.datasets.Dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a dataset.</p>
+<p>Each instance has two main attrs:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>data:</dt><dd><p>either a data matrix, or an instance of pymde.Graph; the
+data to be embedded.</p>
+</dd>
+<dt>attributes:</dt><dd><p>a dictionary whose values give attributes associated
+with the items in the data, such as the digit labels in MNIST.</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>Other data that the dataset might carry is in the (dict) attribute
+<cite>other_data</cite>. Metadata about where the data came from is stored in
+<cite>metadata</cite>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pymde.datasets.MNIST">
+<code class="sig-prename descclassname">pymde.datasets.</code><code class="sig-name descname">MNIST</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span><span class="o">=</span><span class="default_value">'./'</span></em>, <em class="sig-param"><span class="n">download</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#pymde.datasets.Dataset" title="pymde.datasets.Dataset">pymde.datasets.Dataset</a><a class="headerlink" href="#pymde.datasets.MNIST" title="Permalink to this definition">¶</a></dt>
+<dd><p>MNIST dataset (LeCun, et al.).</p>
+<p>The MNIST dataset contains 70,000, 28x28 images of handwritten digits.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code>: <code class="docutils literal notranslate"><span class="pre">torch.Tensor</span></code> with 70,000 rows, each of
+length 784 (representing the pixels in the image).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">attributes</span></code> dict: the key <code class="docutils literal notranslate"><span class="pre">digits</span></code> holds an array
+in which each entry gives the digit depicted in the corresponding row of
+<code class="docutils literal notranslate"><span class="pre">data</span></code>.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pymde.datasets.google_scholar">
+<code class="sig-prename descclassname">pymde.datasets.</code><code class="sig-name descname">google_scholar</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span><span class="o">=</span><span class="default_value">'./'</span></em>, <em class="sig-param"><span class="n">download</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">full</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#pymde.datasets.Dataset" title="pymde.datasets.Dataset">pymde.datasets.Dataset</a><a class="headerlink" href="#pymde.datasets.google_scholar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Google Scholar dataset (Agrawal, et al.).</p>
+<p>The Google Scholar dataset contains an academic coauthorship graph: the
+nodes are authors, and two authors are connected by an edge if either
+author listed the other as a coauthor on Google Scholar. (Note that if
+two authors collaborated on a paper, but neither has listed the other
+as a coauthor on their Scholar profiles, then they will not be connected
+by an edge).</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">full</span></code> is False, obtains a small version of the dataset, on roughly
+40,000 authors, each with h-index at least 50. If <code class="docutils literal notranslate"><span class="pre">full</span></code> is True,
+obtains the whole dataset, on roughly 600,000 authors. The full dataset
+is roughly 1GB in size.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code>: a <code class="docutils literal notranslate"><span class="pre">pymde.Graph</span></code>, with nodes representing authors</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">attributes</span></code>: the <code class="docutils literal notranslate"><span class="pre">coauthors</span></code> key has an array holding the number
+of coauthors of each other, normalized to be a percentile.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">other_data</span></code>: holds a dataframe describing the dataset, keyed by
+<code class="docutils literal notranslate"><span class="pre">dataframe</span></code>.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pymde.datasets.covid19_scrna_wilk">
+<code class="sig-prename descclassname">pymde.datasets.</code><code class="sig-name descname">covid19_scrna_wilk</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span><span class="o">=</span><span class="default_value">'./'</span></em>, <em class="sig-param"><span class="n">download</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#pymde.datasets.Dataset" title="pymde.datasets.Dataset">pymde.datasets.Dataset</a><a class="headerlink" href="#pymde.datasets.covid19_scrna_wilk" title="Permalink to this definition">¶</a></dt>
+<dd><p>COVID-19 scRNA data (Wilk, et al.).</p>
+<p>The COVID-19 dataset includes a PCA embedding of single-cell
+mRNA transcriptomes of roughly 40,000 cells, taken from some patients
+with COVID-19 infections and from healthy controls.</p>
+<p>Instructions on how to obtain the full dataset are available in the
+Wilk et al. paper: <a class="reference external" href="https://www.nature.com/articles/s41591-020-0944-y">https://www.nature.com/articles/s41591-020-0944-y</a>,</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code>: the PCA embedding</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">attributes</span></code>: two keys, <code class="docutils literal notranslate"><span class="pre">cell_type</span></code> and <code class="docutils literal notranslate"><span class="pre">health_status</span></code>.</p></li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="../citing/index.html" class="btn btn-neutral float-right" title="Citing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../examples/index.html" class="btn btn-neutral float-left" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Akshay Agrawal.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

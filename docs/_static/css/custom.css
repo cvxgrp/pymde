@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap');
+
+:root {
+    --sidebarcolor: #102133;
+    --sidebarfontcolor: #ffffff;
+	--sidebarhover: #295e97;
+
+    --bodyfontcolor: #333;
+	--webfont: 'Raleway';
+
+	--contentwidth: 1000px;
+}
+
+/* Fonts and text */
+h1, h2, h3, h4, h5, h6 {
+	font-family: var(--webfont), 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-weight: 400;
+}
+
+h1 {
+	font-size: 225%;
+}
+
+body {
+	font-family: var(--webfont), 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	color: var(--bodyfontcolor);
+}
+
+p {
+	font-size: 1em;
+	line-height: 150%;
+}
+
+
+/* Sidebar */
+.wy-side-nav-search {
+    background-color: var(--sidebarcolor);
+}
+
+.wy-nav-side {
+    background: var(--sidebarcolor);
+}
+
+.wy-menu-vertical header, .wy-menu-vertical p.caption {
+    color: var(--sidebarfontcolor);
+}
+
+.wy-menu-vertical a {
+    color: var(--sidebarfontcolor);
+}
+
+.wy-menu-vertical a:hover {
+    background-color: var(--sidebarhover);
+}
+
+/* Main content */
+.wy-nav-content {
+    max-width: var(--contentwidth);
+}

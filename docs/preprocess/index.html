@@ -1,0 +1,354 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Preprocessing &mdash; pymde 0.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Datasets" href="../datasets/index.html" />
+    <link rel="prev" title="MDE" href="../mde/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> pymde
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">CONTENTS</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mde/index.html">MDE</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Preprocessing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#graph">Graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#neighbor-based-preprocessing">Neighbor-based preprocessing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#similar-items">Similar items</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#distance-based-preprocessing">Distance-based preprocessing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets/index.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../citing/index.html">Citing</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pymde</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Preprocessing</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/preprocess/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="preprocessing">
+<span id="preprocess"></span><h1>Preprocessing<a class="headerlink" href="#preprocessing" title="Permalink to this headline">¶</a></h1>
+<p>This part of the tutorial discusses ways to preprocess your original
+data in order to create the set of edges, and their associated weights or
+original deviations, needed to create an MDE problem. These preprocessing
+methods are analogous to feature engineering in machine learning, where
+raw data are converted to feature vectors. As in feature engineering,
+the preprocessing can have a strong effect on the final result, i.e., the
+embedding.</p>
+<p>Preprocessing methods can be grouped into two types: those that
+are based on <em>neighbors</em> of the items, and those that are based on
+<em>distances</em> between items. The high-level functions
+<a class="reference internal" href="../api/index.html#pymde.preserve_neighbors" title="pymde.preserve_neighbors"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.preserve_neighbors</span></code></a> and <a class="reference internal" href="../api/index.html#pymde.preserve_distances" title="pymde.preserve_distances"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.preserve_distances</span></code></a>
+(which were used in the <em>Getting Started</em> guide) use neighbor-based and
+distance-based preprocessing behind-the-scenes, in order to create reasonable
+MDE problems. But you can just as well preprocess the data yourself, to
+create custom embeddings.</p>
+<p>PyMDE provides a few preprocessing methods for original data that come
+as a data matrix (one row for each item) or a graph (one node for each item).</p>
+<div class="section" id="graph">
+<h2>Graph<a class="headerlink" href="#graph" title="Permalink to this headline">¶</a></h2>
+<p>The preprocessing methods often work with or return <code class="docutils literal notranslate"><span class="pre">pymde.Graph</span></code> instances,
+which package up a list of edges and their associated weights.</p>
+<p>A graph can be created from a weighted adjacency matrix (a scipy.sparse matrix,
+numpy array, or torch Tensor), or a torch Tensor containing the edges and
+weights. For example</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">adjacency_matrix</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+   <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+   <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+   <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+<span class="p">]))</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">adjacency_matrix</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or</p>
+<p>Given a graph, you can access the edges, weights, and adjacency matrix with</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">weights</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">adjacency_matrix</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="../api/index.html#api-graph"><span class="std std-ref">API documentation</span></a> describes the <a class="reference internal" href="../api/index.html#pymde.Graph" title="pymde.Graph"><code class="xref any py py-class docutils literal notranslate"><span class="pre">pymde.Graph</span></code></a> class
+in more detail.</p>
+</div>
+<div class="section" id="neighbor-based-preprocessing">
+<h2>Neighbor-based preprocessing<a class="headerlink" href="#neighbor-based-preprocessing" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="similar-items">
+<h3>Similar items<a class="headerlink" href="#similar-items" title="Permalink to this headline">¶</a></h3>
+<p>A <em>neighbor</em> of an item can be thought of an item that is in some sense
+similar to it. One class of preprocessing methods computes some neighbors
+of each item, and uses the pairs of neighbors as edges, associating these
+edges with positive weights. These weights can then be used to create
+a distortion function based on weights, using one of the classes
+in <a class="reference internal" href="../api/index.html#module-pymde.penalties" title="pymde.penalties"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">pymde.penalties</span></code></a>. A common preprocessing step is to compute the
+<code class="docutils literal notranslate"><span class="pre">k</span></code>-nearest neighbors of each item, where <code class="docutils literal notranslate"><span class="pre">k</span></code> is a parameter.</p>
+<p>When the data come as a matrix, we can use the Euclidean distance between rows
+to determine the neighbors; i.e., we take the <code class="docutils literal notranslate"><span class="pre">k</span></code> items closest to each item
+as the neighbors. You can accomplish this in PyMDE using
+<a class="reference internal" href="../api/index.html#pymde.preprocess.data_matrix.k_nearest_neighbors" title="pymde.preprocess.data_matrix.k_nearest_neighbors"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.preprocess.data_matrix.k_nearest_neighbors</span></code></a></p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">knn_graph</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">preprocess</span><span class="o">.</span><span class="n">data_matrix</span><span class="o">.</span><span class="n">k_nearest_neighbors</span><span class="p">(</span><span class="n">data_matrix</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This function returns a <code class="docutils literal notranslate"><span class="pre">Graph</span></code> instance representing the pairs of neighbors.
+If <code class="docutils literal notranslate"><span class="pre">i</span></code> is among the <code class="docutils literal notranslate"><span class="pre">k</span></code>-nearest neighbors of <code class="docutils literal notranslate"><span class="pre">j</span></code> and vice verse, then
+<code class="docutils literal notranslate"><span class="pre">(i,</span> <span class="pre">j)</span></code> gets a weight of +2; if only one is a neighbor of the other, then it
+gets a weight of +1; otherwise, if neither is a neighbor of the other, <code class="docutils literal notranslate"><span class="pre">(i,</span>
+<span class="pre">j)</span></code> is not included in the edges.</p>
+<p>When the data is an original graph (a scipy.sparse matrix or an instance
+of <code class="docutils literal notranslate"><span class="pre">pymde.Graph</span></code>), you can use <a class="reference internal" href="../api/index.html#pymde.preprocess.graph.k_nearest_neighbors" title="pymde.preprocess.graph.k_nearest_neighbors"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.preprocess.graph.k_nearest_neighbors</span></code></a>:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">knn_graph</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">preprocess</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">k_nearest_neighbors</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">use_graph_distances</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This function as an extra keyword argument, <code class="docutils literal notranslate"><span class="pre">use_graph_distances</span></code>. When this
+keyword argument is <code class="docutils literal notranslate"><span class="pre">True</span></code>, the distance between two nodes <code class="docutils literal notranslate"><span class="pre">i</span></code> and <code class="docutils literal notranslate"><span class="pre">j</span></code> is
+taken to be the length of the shortest-path between them (the edge weights are
+interpreted as distances). When it is <code class="docutils literal notranslate"><span class="pre">False</span></code> , the distance is just the
+weight of the edge <code class="docutils literal notranslate"><span class="pre">(i,</span> <span class="pre">j)</span></code> — if this edge is not in the graph, the
+distance is infinity.</p>
+<p>Preprocessing based on neighbors can be thought of as a “sparsifying”
+operation: they take data and return a sparse graph (the <code class="docutils literal notranslate"><span class="pre">knn_graph</span></code>).</p>
+</div>
+</div>
+<div class="section" id="distance-based-preprocessing">
+<h2>Distance-based preprocessing<a class="headerlink" href="#distance-based-preprocessing" title="Permalink to this headline">¶</a></h2>
+<p>When the original data is a sparse graph (meaning the items are the nodes, and
+the number of edges in the graph is much less than the total possible) with
+nonnegative edge weights representing distances between items, you can
+use the <a class="reference internal" href="../api/index.html#pymde.preprocess.graph.shortest_paths" title="pymde.preprocess.graph.shortest_paths"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.preprocess.graph.shortest_paths</span></code></a> function to compute
+the shortest-path distance between some or all pairs of items.</p>
+<p>This function takes a few important keyword arguments:</p>
+<dl class="py function">
+<dt>
+<code class="sig-prename descclassname">pymde.preprocess.graph.</code><code class="sig-name descname">shortest_paths</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">graph</span></em>, <em class="sig-param"><span class="n">max_length</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">retain_fraction</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">n_workers</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span></dt>
+<dd><p>Compute shortest-path distances.</p>
+<p>This function computes the shortest-path distances on a graph.
+It returns a new graph, with an edge for each distance that was
+computed (each edge is weighted by the shortest-path distance between
+the two nodes in the original graph). The new graph can be interpreted
+as a “filled-in” version of the input graph.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">max_length</span></code> and <code class="docutils literal notranslate"><span class="pre">retain_fraction</span></code> keyword arguments can be used
+to compute only a subset of the distances. This can be useful
+if the graph has a very large number of nodes, in which storing all graph
+distances may be intractable.</p>
+<p>If the graph is sufficiently large, multiple cores will be used to
+accelerate the computation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>graph</strong> (<a class="reference internal" href="../api/index.html#pymde.Graph" title="pymde.Graph"><em>pymde.Graph</em></a><em> or </em><em>scipy.sparse matrix</em>) – Graph instance, or an adjacency matrix</p></li>
+<li><p><strong>max_length</strong> (<em>float</em><em>, </em><em>optional</em>) – The maximum-length path to compute; paths longer than max_length
+are not computed/explored.</p></li>
+<li><p><strong>retain_fraction</strong> (<em>float</em>) – A float between 0 and 1, specifying the fraction of all (n choose 2)
+to compute. For example, if <code class="docutils literal notranslate"><span class="pre">retain_fraction</span></code> is 0.1, only 10
+percent of the edges will be stored.</p></li>
+<li><p><strong>n_workers</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of processes to use. Defaults to the number of available
+cores.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – Whether to print verbose output.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A new graph, with an edge (and weight) for each shortest-path
+distance that was computed/stored.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../api/index.html#pymde.Graph" title="pymde.Graph">pymde.Graph</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="../datasets/index.html" class="btn btn-neutral float-right" title="Datasets" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../mde/index.html" class="btn btn-neutral float-left" title="MDE" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Akshay Agrawal.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

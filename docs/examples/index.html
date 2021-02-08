@@ -1,0 +1,292 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Examples &mdash; pymde 0.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API documentation" href="../api/index.html" />
+    <link rel="prev" title="Datasets" href="../datasets/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> pymde
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">CONTENTS</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/index.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mde/index.html">MDE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocess/index.html">Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets/index.html">Datasets</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#mnist">MNIST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#single-cell-genomics">Single-Cell Genomics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#google-scholar">Google Scholar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dissimilar-edges-and-negative-weights">Dissimilar Edges and Negative Weights</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#drawing-graphs">Drawing Graphs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../citing/index.html">Citing</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pymde</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Examples</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/examples/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="examples">
+<span id="id1"></span><h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
+<p>As with most software, after reading the documentation, the best way
+to learn more is by playing with code.</p>
+<p>Our Python notebooks show how to use PyMDE on real (and synthetic)
+datasets. You can read these notebooks, or better yet, execute them and
+experiment by modifying the cells’ contents and seeing what happens.</p>
+<p>You can run the notebooks by either downloading them locally and starting a
+Jupyter server, or by opening them in Google Colab.</p>
+<div class="section" id="mnist">
+<span id="example-mnist"></span><h2>MNIST<a class="headerlink" href="#mnist" title="Permalink to this headline">¶</a></h2>
+<p>We recommend starting with our MNIST notebook, which highlights many of the
+things you can do in PyMDE, using the MNIST dataset as a case study.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/cvxgrp/pymde/blob/main/examples/mnist.ipynb">MNIST notebook</a></p></li>
+</ul>
+<p>In this notebook, you’ll see how to use the <code class="docutils literal notranslate"><span class="pre">pymde.preserve_neighbors</span></code>
+function to embed vector data, how to create MDE problems for preserving
+neighbors from scratch, how to sanity-check an embedding, and how
+to use an embedding to look for outliers in the original data.</p>
+</div>
+<div class="section" id="single-cell-genomics">
+<span id="example-scrna"></span><h2>Single-Cell Genomics<a class="headerlink" href="#single-cell-genomics" title="Permalink to this headline">¶</a></h2>
+<p>This notebook is similar to the MNIST notebook (but with less explanatory
+text). The dataset embedded here contains single-cell mRNA transcriptomes of
+cells taken from human patients with severe COVID-19 infections (and also from
+healthy controls). We’ll see that similar cells are placed near each other in
+the embedding, and cells from healthy and sick are also somewhat separated.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/cvxgrp/pymde/blob/main/examples/single_cell_genomics.ipynb">Single-cell genomics notebook</a></p></li>
+</ul>
+</div>
+<div class="section" id="google-scholar">
+<span id="example-google-scholar"></span><h2>Google Scholar<a class="headerlink" href="#google-scholar" title="Permalink to this headline">¶</a></h2>
+<p>The Google Scholar notebook uses <code class="docutils literal notranslate"><span class="pre">pymde.preserve_distances</span></code> to embed
+an academic coauthorship network, which we collected from Google Scholar.
+(This network contains most authors on Google Scholar whose h-index is at least
+50.)</p>
+<p>This example embeds a graph with roughly 40,000 nodes and (after preprocessing)
+80 million edges. If you have a GPU, computing the embedding shouldn’t take
+much longer than a minute, but it will take longer to compute on a CPU.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/cvxgrp/pymde/blob/main/examples/google_scholar.ipynb">Google Scholar notebook</a></p></li>
+</ul>
+</div>
+<div class="section" id="dissimilar-edges-and-negative-weights">
+<h2>Dissimilar Edges and Negative Weights<a class="headerlink" href="#dissimilar-edges-and-negative-weights" title="Permalink to this headline">¶</a></h2>
+<p>When creating an embedding for preserving neighbors, an important hyper-parameter
+is the number of dissimilar edges to include, and the size of the negative weights.
+Using as many dissimilar edges as there are similar edges, and choosing
+the negative weights to all be -1, usually works just fine. But different
+choices do lead to different embeddings.</p>
+<p>This notebook explores the effect these hyper-parameters have on the embedding.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/cvxgrp/pymde/blob/main/examples/dissimilar_edges_and_negative_weights.ipynb">Dissimilar edges and negative weights notebook</a></p></li>
+</ul>
+</div>
+<div class="section" id="drawing-graphs">
+<span id="example-graphs"></span><h2>Drawing Graphs<a class="headerlink" href="#drawing-graphs" title="Permalink to this headline">¶</a></h2>
+<p>PyMDE can be used to layout graphs in the Cartesian plane in an aesthetically
+pleasing way. Compared to many other graph layout libraries, PyMDE can scale
+to higher datasets. And, of course, PyMDE lets you design custom layouts, by
+choosing your own distortion functions and constraints.</p>
+<p>This notebook shows various ways of drawing graphs with PyMDE. It also
+introduces the <code class="docutils literal notranslate"><span class="pre">pymde.Graph</span></code> class.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/cvxgrp/pymde/blob/main/examples/drawing_graphs.ipynb">Drawing graphs notebook</a></p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="../api/index.html" class="btn btn-neutral float-right" title="API documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../datasets/index.html" class="btn btn-neutral float-left" title="Datasets" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Akshay Agrawal.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
