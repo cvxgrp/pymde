@@ -33,7 +33,7 @@ jobs:
         run: |
           python -m cibuildwheel --output-dir wheelhouse
         env:
-          CIBW_BUILD: "cp37* cp38*"
+          CIBW_BUILD: "cp37* cp38* cp39*"
 
       - uses: actions/upload-artifact@v2
         with:
