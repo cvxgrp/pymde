@@ -176,8 +176,20 @@ pairs of items, while possibly satisfying some constraints.</p>
 <li><p>draw graphs;</p></li>
 <li><p>and more.</p></li>
 </ul>
-<p>PyMDE accompanies the paper
-<a class="reference external" href="https://web.stanford.edu/~boyd/papers/min_dist_emb.html">Minimum-Distortion Embedding</a>.</p>
+<p>Unlike other popular embedding methods, PyMDE also lets you</p>
+<ul class="simple">
+<li><p>compute large embeddings quickly, using a GPU;</p></li>
+<li><p>fit embeddings that satisfy constraints, such as having uncorrelated
+feature columns;</p></li>
+<li><p>design custom embeddings (and recreate well-known ones, like PCA, Laplacian eigenmap, LargeVis, and UMAP);</p></li>
+<li><p>sanity-check embeddings using principled methods; and</p></li>
+<li><p>look for outliers in original data.</p></li>
+</ul>
+<p>PyMDE can accomplish these things because it is
+based on a simple but general framework for embedding, called
+<em>Minimum-Distortion Embedding</em>. This framework was introduced in a
+<a class="reference external" href="https://web.stanford.edu/~boyd/papers/min_dist_emb.html">recent paper</a>
+by the same name; PyMDE is its official implementation.</p>
 <div class="section" id="example">
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
 <p>Here’s an example that shows how to use PyMDE to visualize high-dimensional
@@ -185,7 +197,7 @@ vectors (which in this case are images from the MNIST dataset).</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymde</span>
 
 <span class="n">mnist</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">MNIST</span><span class="p">()</span>
-<span class="n">embedding</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">preserve_neighbors</span><span class="p">(</span><span class="n">mnist</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">embed</span><span class="p">()</span>
+<span class="n">embedding</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">preserve_neighbors</span><span class="p">(</span><span class="n">mnist</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">embed</span><span class="p">()</span>
 <span class="n">pymde</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">embedding</span><span class="p">,</span> <span class="n">color_by</span><span class="o">=</span><span class="n">mnist</span><span class="o">.</span><span class="n">attributes</span><span class="p">[</span><span class="s1">&#39;digits&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
@@ -212,12 +224,12 @@ kinds of embeddings of the MNIST data.</p>
 <a class="reference internal image-reference" href="_images/mnist_centered.gif"><img alt="_images/mnist_centered.gif" src="_images/mnist_centered.gif" style="width: 32%;" /></a>
 <a class="reference internal image-reference" href="_images/mnist_std.gif"><img alt="_images/mnist_std.gif" src="_images/mnist_std.gif" style="width: 32%;" /></a>
 <p><strong>PyMDE is easy to use.</strong>
-It’s very easy to get started with PyMDE. You can call a high-level
-function to embed your data (be they high-dimensional vectors or the nodes in a
-graph), into any target dimension, using just one line of code. Creating
-custom embeddings is also easy, because PyMDE separates the description of an
-embedding from how it is computed: you say what kind of embedding you want, and
-PyMDE will compute it for you.</p>
+It’s very easy to get started with PyMDE. If your original data come
+as high-dimensional vectors or nodes in graph, you can call a high-level
+function to embed them into any target dimension, using just one line of code.
+Creating custom embeddings is also easy, because PyMDE separates the
+description of an embedding from how it is computed: you say what kind of
+embedding you want, and PyMDE will compute it for you.</p>
 <p>In addition to computing embeddings, PyMDE can plot them (if
 the embedding dimension is three or less), create GIFs of the embedding
 process, help you compare different embeddings, preprocess your data, and

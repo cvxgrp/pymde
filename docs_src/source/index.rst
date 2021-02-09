@@ -19,8 +19,20 @@ You can use PyMDE to:
 * draw graphs;
 * and more.
 
-PyMDE accompanies the paper
-`Minimum-Distortion Embedding <https://web.stanford.edu/~boyd/papers/min_dist_emb.html>`_.
+Unlike other popular embedding methods, PyMDE also lets you
+
+* compute large embeddings quickly, using a GPU;
+* fit embeddings that satisfy constraints, such as having uncorrelated
+  feature columns;
+* design custom embeddings (and recreate well-known ones, like PCA, Laplacian eigenmap, LargeVis, and UMAP);
+* sanity-check embeddings using principled methods; and
+* look for outliers in original data.
+
+PyMDE can accomplish these things because it is
+based on a simple but general framework for embedding, called
+*Minimum-Distortion Embedding*. This framework was introduced in a
+`recent paper <https://web.stanford.edu/~boyd/papers/min_dist_emb.html>`_
+by the same name; PyMDE is its official implementation.
 
 Example
 -------
@@ -32,7 +44,7 @@ vectors (which in this case are images from the MNIST dataset).
 	import pymde
 
 	mnist = pymde.datasets.MNIST()
-	embedding = pymde.preserve_neighbors(mnist.data, verbose=True).embed()
+	embedding = pymde.preserve_neighbors(mnist.data, embedding_dim=2, verbose=True).embed()
 	pymde.plot(embedding, color_by=mnist.attributes['digits'])
 
 
@@ -70,12 +82,12 @@ kinds of embeddings of the MNIST data.
 	:width: 32 %
 
 **PyMDE is easy to use.**
-It's very easy to get started with PyMDE. You can call a high-level
-function to embed your data (be they high-dimensional vectors or the nodes in a
-graph), into any target dimension, using just one line of code. Creating
-custom embeddings is also easy, because PyMDE separates the description of an
-embedding from how it is computed: you say what kind of embedding you want, and
-PyMDE will compute it for you.
+It's very easy to get started with PyMDE. If your original data come
+as high-dimensional vectors or nodes in graph, you can call a high-level
+function to embed them into any target dimension, using just one line of code.
+Creating custom embeddings is also easy, because PyMDE separates the
+description of an embedding from how it is computed: you say what kind of
+embedding you want, and PyMDE will compute it for you.
 
 In addition to computing embeddings, PyMDE can plot them (if
 the embedding dimension is three or less), create GIFs of the embedding
