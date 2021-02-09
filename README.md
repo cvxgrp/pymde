@@ -136,7 +136,7 @@ embedding.
 
 
 ## Example notebooks
-We have several [example notebooks](https://github.com/cvxgrp/pymde/examples) that show how to use PyMDE on real (and synthetic) datasets.
+We have several [example notebooks](https://github.com/cvxgrp/pymde/tree/main/examples) that show how to use PyMDE on real (and synthetic) datasets.
 
 ## Citing
 To cite our work, please use the following BibTex entry.
