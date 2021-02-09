@@ -21,8 +21,10 @@ project = 'pymde'
 copyright = '2021, Akshay Agrawal'
 author = 'Akshay Agrawal'
 
-# The full version, including alpha/beta/rc tags
-__version__ = "0.1.0"
+import pymde
+
+
+__version__ = pymde.__version__
 
 version = 'v' + '.'.join(__version__.split('.')[:4])
 
