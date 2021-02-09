@@ -22,7 +22,11 @@ copyright = '2021, Akshay Agrawal'
 author = 'Akshay Agrawal'
 
 # The full version, including alpha/beta/rc tags
-release = '0.1.0'
+__version__ = "0.1.0"
+
+version = 'v' + '.'.join(__version__.split('.')[:4])
+
+release = __version__
 
 
 # -- General configuration ---------------------------------------------------
@@ -54,6 +58,10 @@ exclude_patterns = []
 # a list of builtin themes.
 #
 html_theme = 'sphinx_rtd_theme'
+
+html_show_sourcelink = False
+
+display_version = True
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

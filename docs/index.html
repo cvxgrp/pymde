@@ -63,6 +63,10 @@
           
             
             
+              <div class="version">
+                v0.1.0
+              </div>
+            
           
 
           
@@ -146,14 +150,17 @@
       <li>PyMDE: Minimum-Distortion Embedding</li>
     
     
+    <li class="wy-breadcrumbs-aside">
+    <a href="https://github.com/cvxgrp/pymde">View source</a>
+    </li>
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
     
+
   </ul>
 
   
@@ -167,10 +174,13 @@
 <p>PyMDE is a Python library for computing vector embeddings of items, such as
 images, biological cells, nodes in a network, or any other type of abstract
 object. The embeddings are designed to minimally distort relationships between
-pairs of items, while possibly satisfying some constraints.</p>
+pairs of items, while possibly satisfying some constraints.
+PyMDE is based on the monograph <em><a href="https://web.stanford.edu/~boyd/papers/min_dist_emb.html">Minimum-Distortion Embedding</a></em>,
+which introduced a simple but general framework for embedding.</p>
 <p>You can use PyMDE to:</p>
 <ul class="simple">
 <li><p>visualize datasets, small or large;</p></li>
+<li><p>embed into arbitrarily large dimensions (much greater than 2 or 3);</p></li>
 <li><p>generate feature vectors for supervised learning;</p></li>
 <li><p>compress high-dimensional vector data;</p></li>
 <li><p>draw graphs;</p></li>
@@ -182,14 +192,9 @@ pairs of items, while possibly satisfying some constraints.</p>
 <li><p>fit embeddings that satisfy constraints, such as having uncorrelated
 feature columns;</p></li>
 <li><p>design custom embeddings (and recreate well-known ones, like PCA, Laplacian eigenmap, LargeVis, and UMAP);</p></li>
-<li><p>sanity-check embeddings using principled methods; and</p></li>
+<li><p>sanity-check embeddings using principled methods;</p></li>
 <li><p>look for outliers in original data.</p></li>
 </ul>
-<p>PyMDE can accomplish these things because it is
-based on a simple but general framework for embedding, called
-<em>Minimum-Distortion Embedding</em>. This framework was introduced in a
-<a class="reference external" href="https://web.stanford.edu/~boyd/papers/min_dist_emb.html">recent paper</a>
-by the same name; PyMDE is its official implementation.</p>
 <div class="section" id="example">
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
 <p>Here’s an example that shows how to use PyMDE to visualize high-dimensional
@@ -204,7 +209,9 @@ vectors (which in this case are images from the MNIST dataset).</p>
 <img alt="_images/mnist.png" src="_images/mnist.png" />
 <p>Each point represents an image in the dataset, and every point is colored
 by the digit represented by its underlying image. However, only the raw
-pixel data was used to create the embedding.</p>
+pixel data was used to create the embedding. This example embedded into two
+dimensions, allowing us to plot the result, but PyMDE supports embedding into
+much larger dimensions.</p>
 <p>This is just one of the many things that PyMDE can do.</p>
 </div>
 <div class="section" id="why-use-pymde">
@@ -214,22 +221,25 @@ pixel data was used to create the embedding.</p>
 PyMDE is based on a simple but general framework for embedding, called
 <em>Minimum-Distortion Embedding</em> (MDE). The MDE framework generalizes well-known
 methods like PCA, spectral embedding, multi-dimensional scaling, LargeVis, and
-UMAP. With (Py)MDE, it is easy to recreate well-known embeddings and to create
-new ones, tailored to your particular application. Unlike most other methods
-for creating embeddings, PyMDE also lets you impose constraints on the
-embedding.</p>
-<p>For example, the below GIFs show PyMDE computing three different
-kinds of embeddings of the MNIST data.</p>
+UMAP. With PyMDE, it is easy to recreate well-known embeddings and to create
+new ones, tailored to your particular application.</p>
+<p>Unlike other embedding methods, PyMDE lets you impose
+constraints on the embedding. For example, the below GIFs show PyMDE computing
+three different kinds of embeddings of MNIST. The first and third
+embeddings are constrained to be <em>standardized</em> (which roughly means they have
+uncorrelated features), while the second is unconstrained. Standardized
+embeddings are favorably scaled for downstream machine learning tasks, such
+as supervised learning.</p>
 <a class="reference internal image-reference" href="_images/mnist_quadratic.gif"><img alt="_images/mnist_quadratic.gif" src="_images/mnist_quadratic.gif" style="width: 32%;" /></a>
 <a class="reference internal image-reference" href="_images/mnist_centered.gif"><img alt="_images/mnist_centered.gif" src="_images/mnist_centered.gif" style="width: 32%;" /></a>
 <a class="reference internal image-reference" href="_images/mnist_std.gif"><img alt="_images/mnist_std.gif" src="_images/mnist_std.gif" style="width: 32%;" /></a>
 <p><strong>PyMDE is easy to use.</strong>
-It’s very easy to get started with PyMDE. If your original data come
-as high-dimensional vectors or nodes in graph, you can call a high-level
-function to embed them into any target dimension, using just one line of code.
-Creating custom embeddings is also easy, because PyMDE separates the
-description of an embedding from how it is computed: you say what kind of
-embedding you want, and PyMDE will compute it for you.</p>
+It’s easy to get started with PyMDE. With just one line of code, you can
+embed high-dimensional vectors or the nodes of a graph into any target
+dimension. Creating custom embeddings is also
+easy, because PyMDE separates the description of an embedding from how it is
+computed: you say what kind of embedding you want, and PyMDE will compute it
+for you.</p>
 <p>In addition to computing embeddings, PyMDE can plot them (if
 the embedding dimension is three or less), create GIFs of the embedding
 process, help you compare different embeddings, preprocess your data, and
@@ -242,7 +252,8 @@ data.</p>
 <p><strong>PyMDE is fast.</strong>
 PyMDE is competitive in runtime with more specialized embedding methods, and
 can scale to datasets with millions of items. With a GPU, it can be even
-faster.</p>
+faster. PyMDE scales well with the embedding dimension, meaning that you can
+easily embed into dimensions such as 50, 100, or 250.</p>
 <div class="toctree-wrapper compound">
 </div>
 </div>

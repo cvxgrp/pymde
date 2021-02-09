@@ -49,6 +49,10 @@ p {
     color: var(--sidebarfontcolor);
 }
 
+.wy-side-nav-search > div.version {
+    color: var(--sidebarfontcolor);
+}
+
 .wy-menu-vertical a:hover {
     background-color: var(--sidebarhover);
 }

@@ -204,7 +204,7 @@ learning tasks. You can choose the dimension of the vectors by specifying the
 
 .. code:: python3
 
-   embedding = pymde.embed(data, embedding_dim=50).embed()
+   embedding = pymde.preserve_neighbors(data, embedding_dim=50).embed()
 
 Classical embeddings
 --------------------

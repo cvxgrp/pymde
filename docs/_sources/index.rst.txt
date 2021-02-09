@@ -10,10 +10,17 @@ PyMDE is a Python library for computing vector embeddings of items, such as
 images, biological cells, nodes in a network, or any other type of abstract
 object. The embeddings are designed to minimally distort relationships between
 pairs of items, while possibly satisfying some constraints.
+PyMDE is based on the monograph |paperlink|,
+which introduced a simple but general framework for embedding.
+
+.. |paperlink| raw:: html
+
+  <em><a href="https://web.stanford.edu/~boyd/papers/min_dist_emb.html">Minimum-Distortion Embedding</a></em>
 
 You can use PyMDE to:
 
 * visualize datasets, small or large;
+* embed into arbitrarily large dimensions (much greater than 2 or 3);
 * generate feature vectors for supervised learning;
 * compress high-dimensional vector data;
 * draw graphs;
@@ -25,14 +32,8 @@ Unlike other popular embedding methods, PyMDE also lets you
 * fit embeddings that satisfy constraints, such as having uncorrelated
   feature columns;
 * design custom embeddings (and recreate well-known ones, like PCA, Laplacian eigenmap, LargeVis, and UMAP);
-* sanity-check embeddings using principled methods; and
+* sanity-check embeddings using principled methods;
 * look for outliers in original data.
-
-PyMDE can accomplish these things because it is
-based on a simple but general framework for embedding, called
-*Minimum-Distortion Embedding*. This framework was introduced in a
-`recent paper <https://web.stanford.edu/~boyd/papers/min_dist_emb.html>`_
-by the same name; PyMDE is its official implementation.
 
 Example
 -------
@@ -52,10 +53,12 @@ vectors (which in this case are images from the MNIST dataset).
 
 Each point represents an image in the dataset, and every point is colored
 by the digit represented by its underlying image. However, only the raw
-pixel data was used to create the embedding.
+pixel data was used to create the embedding. This example embedded into two
+dimensions, allowing us to plot the result, but PyMDE supports embedding into
+much larger dimensions.
+
 
 This is just one of the many things that PyMDE can do.
-
 
 Why use PyMDE?
 --------------
@@ -66,13 +69,16 @@ There are many reasons to try out PyMDE. Here are some.
 PyMDE is based on a simple but general framework for embedding, called
 *Minimum-Distortion Embedding* (MDE). The MDE framework generalizes well-known
 methods like PCA, spectral embedding, multi-dimensional scaling, LargeVis, and
-UMAP. With (Py)MDE, it is easy to recreate well-known embeddings and to create
-new ones, tailored to your particular application. Unlike most other methods
-for creating embeddings, PyMDE also lets you impose constraints on the
-embedding.
+UMAP. With PyMDE, it is easy to recreate well-known embeddings and to create
+new ones, tailored to your particular application.
 
-For example, the below GIFs show PyMDE computing three different
-kinds of embeddings of the MNIST data.
+Unlike other embedding methods, PyMDE lets you impose
+constraints on the embedding. For example, the below GIFs show PyMDE computing
+three different kinds of embeddings of MNIST. The first and third
+embeddings are constrained to be *standardized* (which roughly means they have
+uncorrelated features), while the second is unconstrained. Standardized
+embeddings are favorably scaled for downstream machine learning tasks, such
+as supervised learning.
 
 .. image:: files/mnist_quadratic.gif
 	:width: 32 %
@@ -82,12 +88,12 @@ kinds of embeddings of the MNIST data.
 	:width: 32 %
 
 **PyMDE is easy to use.**
-It's very easy to get started with PyMDE. If your original data come
-as high-dimensional vectors or nodes in graph, you can call a high-level
-function to embed them into any target dimension, using just one line of code.
-Creating custom embeddings is also easy, because PyMDE separates the
-description of an embedding from how it is computed: you say what kind of
-embedding you want, and PyMDE will compute it for you.
+It's easy to get started with PyMDE. With just one line of code, you can
+embed high-dimensional vectors or the nodes of a graph into any target
+dimension. Creating custom embeddings is also
+easy, because PyMDE separates the description of an embedding from how it is
+computed: you say what kind of embedding you want, and PyMDE will compute it
+for you.
 
 In addition to computing embeddings, PyMDE can plot them (if
 the embedding dimension is three or less), create GIFs of the embedding
@@ -103,7 +109,8 @@ data.
 **PyMDE is fast.**
 PyMDE is competitive in runtime with more specialized embedding methods, and
 can scale to datasets with millions of items. With a GPU, it can be even
-faster.
+faster. PyMDE scales well with the embedding dimension, meaning that you can
+easily embed into dimensions such as 50, 100, or 250.
 
 .. toctree::
 	:hidden:

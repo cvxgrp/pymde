@@ -64,6 +64,10 @@
           
             
             
+              <div class="version">
+                v0.1.0
+              </div>
+            
           
 
           
@@ -169,14 +173,17 @@
       <li>Getting started</li>
     
     
+    <li class="wy-breadcrumbs-aside">
+    <a href="https://github.com/cvxgrp/pymde">View source</a>
+    </li>
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="../_sources/getting_started/index.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
     
+
   </ul>
 
   
@@ -354,7 +361,7 @@ these keyword arguments are described in the API documentation.</p>
 <a class="reference internal" href="../api/index.html#pymde.preserve_distances" title="pymde.preserve_distances"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.preserve_distances</span></code></a> can be used as feature vectors for supervised
 learning tasks. You can choose the dimension of the vectors by specifying the
 <code class="docutils literal notranslate"><span class="pre">embedding_dim</span></code> keyword argument, e.g.,</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">embedding</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span><span class="o">.</span><span class="n">embed</span><span class="p">()</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">embedding</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">preserve_neighbors</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span><span class="o">.</span><span class="n">embed</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
