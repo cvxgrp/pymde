@@ -22,7 +22,7 @@ The MDE framework
 -----------------
 
 In this section, we introduce the concept of an MDE problem, whose solution
-is an embedding. At a high-level, the objective of the MDE problem
+is an embedding. At a high-level, the objective of an MDE problem
 is to minimally distort known relationships between some pairs of items,
 while possibly satisfying some constraints.
 

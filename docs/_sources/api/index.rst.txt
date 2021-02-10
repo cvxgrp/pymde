@@ -160,6 +160,8 @@ Utilities
 
 .. autofunction:: pymde.rotate
 
+.. _api_plot:
+
 .. autofunction:: pymde.plot
 
 Datasets

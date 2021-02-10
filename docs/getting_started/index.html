@@ -310,8 +310,8 @@ authors have an edge between them if either has listed the author as a coauthor.
 The <a class="reference internal" href="../api/index.html#pymde.preserve_distances" title="pymde.preserve_distances"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.preserve_distances</span></code></a> function returns a <a class="reference internal" href="../api/index.html#pymde.MDE" title="pymde.MDE"><code class="xref any py py-class docutils literal notranslate"><span class="pre">pymde.MDE</span></code></a>
 object, and calling the <code class="docutils literal notranslate"><span class="pre">embed</span></code> method computes the embedding.</p>
 <p>Notice that we passed in a <code class="docutils literal notranslate"><span class="pre">device</span></code> to <code class="docutils literal notranslate"><span class="pre">pymde.preserve_distances</span></code>;
-this embedding preserves over 80 million distances, so using a GPU can speed
-things up.</p>
+this embedding approximately preserves over 80 million distances, so using a
+GPU can speed things up.</p>
 <p>Next we plot the embedding, coloring each point by how many coauthors the
 author has in the network (normalized to be a percentile).</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">pymde</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">embedding</span><span class="p">,</span> <span class="n">color_by</span><span class="o">=</span><span class="n">google_scholar</span><span class="o">.</span><span class="n">attributes</span><span class="p">[</span><span class="s1">&#39;coauthors&#39;</span><span class="p">])</span>
@@ -336,8 +336,22 @@ then consult the <a class="reference internal" href="../api/index.html#api-prese
 <div class="section" id="scatter-plots">
 <h4>Scatter plots<a class="headerlink" href="#scatter-plots" title="Permalink to this headline">¶</a></h4>
 <p>The <a class="reference internal" href="../api/index.html#pymde.plot" title="pymde.plot"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.plot</span></code></a> function can be used to plot embeddings with dimension
-at most 3. The takes an embedding as the argument, as well a number of optional
-keyword arguments. The full signature can be seen in the API documentation.</p>
+at most 3. It takes an embedding as the argument, as well a number of optional
+keyword arguments. For example, to plot an embedding and color each point
+by some attribute, use:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">pymde</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">embedding</span><span class="p">,</span> <span class="n">color_by</span><span class="o">=</span><span class="n">attribute</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">attribute</span></code> variable is a NumPy array of length <code class="docutils literal notranslate"><span class="pre">embedding.shape[0]</span></code>,
+in which <code class="docutils literal notranslate"><span class="pre">attribute[k]</span></code> is a tag or numerical value associated with item <code class="docutils literal notranslate"><span class="pre">k</span></code>.
+For example, in the MNIST data, each entry in <code class="docutils literal notranslate"><span class="pre">attribute</span></code> is an <code class="docutils literal notranslate"><span class="pre">int</span></code>
+between <code class="docutils literal notranslate"><span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">9</span></code> representing the digit depicted in the image;
+for single-cell data, each entry might be a string describing the type of
+cell. Typically the attribute is not used to create the embedding, so coloring
+by it is a sanity-check that the embedding has preserved prior knowledge about
+the original data.</p>
+<p>This function can be configured with a number of keyword arguments, which can
+be seen in the <a class="reference internal" href="../api/index.html#pymde.plot" title="pymde.plot"><code class="xref any py py-func docutils literal notranslate"><span class="pre">API</span> <span class="pre">documentation</span></code></a>.</p>
 </div>
 <div class="section" id="movies">
 <h4>Movies<a class="headerlink" href="#movies" title="Permalink to this headline">¶</a></h4>
@@ -351,8 +365,8 @@ the <code class="docutils literal notranslate"><span class="pre">snapshot_every<
 <p>The <code class="docutils literal notranslate"><span class="pre">snapshot_every=1</span></code> keyword argument instructs the <code class="docutils literal notranslate"><span class="pre">MDE</span></code> object to
 take a snapshot of the embedding during every iteration of the solution
 algorithm. The <code class="docutils literal notranslate"><span class="pre">play</span></code> method generates the GIF, and saves it to <code class="docutils literal notranslate"><span class="pre">savepath</span></code>.</p>
-<p><a class="reference internal" href="../api/index.html#pymde.MDE.play" title="pymde.MDE.play"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">pymde.MDE.play</span></code></a> can be configured with a number of keyword arguments;
-these keyword arguments are described in the API documentation.</p>
+<p>This method can be configured with a number of keyword arguments,
+which can be seen in the <a class="reference internal" href="../api/index.html#pymde.MDE.play" title="pymde.MDE.play"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">API</span> <span class="pre">documentation</span></code></a>.</p>
 </div>
 </div>
 </div>
@@ -374,9 +388,9 @@ method:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">embedding</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">quadratic</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">data_matrix</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>To create a spectral embedding, based on a sequence of edges (a <code class="docutils literal notranslate"><span class="pre">torch.Tensor</span></code>
+<p>To create a spectral embedding based on a sequence of edges (a <code class="docutils literal notranslate"><span class="pre">torch.Tensor</span></code>
 of shape <code class="docutils literal notranslate"><span class="pre">(n_edges,</span> <span class="pre">2)</span></code>) and weights, use <a class="reference internal" href="../api/index.html#pymde.quadratic.spectral" title="pymde.quadratic.spectral"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.quadratic.spectral</span></code></a>.
-A spectral embedding based on the nearest neighbors of each item of a data
+A Laplacian embedding based on the nearest neighbors of each row in a data
 matrix can be created with</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">embedding</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">preserve_neighbors</span><span class="p">(</span><span class="n">data_matrix</span><span class="p">,</span>
    <span class="n">attractive_penalty</span><span class="o">=</span><span class="n">pymde</span><span class="o">.</span><span class="n">penalties</span><span class="o">.</span><span class="n">Quadratic</span><span class="p">,</span>

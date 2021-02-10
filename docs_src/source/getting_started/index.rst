@@ -141,8 +141,8 @@ The :any:`pymde.preserve_distances` function returns a :any:`pymde.MDE`
 object, and calling the ``embed`` method computes the embedding.
 
 Notice that we passed in a ``device`` to ``pymde.preserve_distances``;
-this embedding preserves over 80 million distances, so using a GPU can speed
-things up.
+this embedding approximately preserves over 80 million distances, so using a
+GPU can speed things up.
 
 Next we plot the embedding, coloring each point by how many coauthors the
 author has in the network (normalized to be a percentile).
@@ -174,8 +174,25 @@ Plotting
 Scatter plots
 """""""""""""
 The :any:`pymde.plot` function can be used to plot embeddings with dimension
-at most 3. The takes an embedding as the argument, as well a number of optional
-keyword arguments. The full signature can be seen in the API documentation.
+at most 3. It takes an embedding as the argument, as well a number of optional
+keyword arguments. For example, to plot an embedding and color each point
+by some attribute, use:
+
+.. code:: python3
+
+   pymde.plot(embedding, color_by=attribute)
+
+The ``attribute`` variable is a NumPy array of length ``embedding.shape[0]``,
+in which ``attribute[k]`` is a tag or numerical value associated with item ``k``.
+For example, in the MNIST data, each entry in ``attribute`` is an ``int``
+between ``0`` and ``9`` representing the digit depicted in the image;
+for single-cell data, each entry might be a string describing the type of
+cell. Typically the attribute is not used to create the embedding, so coloring
+by it is a sanity-check that the embedding has preserved prior knowledge about
+the original data.
+
+This function can be configured with a number of keyword arguments, which can
+be seen in the :any:`API documentation <pymde.plot>`.
 
 Movies
 """"""
@@ -192,8 +209,8 @@ The ``snapshot_every=1`` keyword argument instructs the ``MDE`` object to
 take a snapshot of the embedding during every iteration of the solution
 algorithm. The ``play`` method generates the GIF, and saves it to ``savepath``.
 
-:any:`pymde.MDE.play` can be configured with a number of keyword arguments;
-these keyword arguments are described in the API documentation.
+This method can be configured with a number of keyword arguments,
+which can be seen in the :any:`API documentation <pymde.MDE.play>`.
 
 Generating feature vectors
 --------------------------
@@ -217,9 +234,9 @@ method:
 
    embedding = pymde.quadratic.pca(data_matrix, embedding_dim)
 
-To create a spectral embedding, based on a sequence of edges (a ``torch.Tensor``
+To create a spectral embedding based on a sequence of edges (a ``torch.Tensor``
 of shape ``(n_edges, 2)``) and weights, use :any:`pymde.quadratic.spectral`.
-A spectral embedding based on the nearest neighbors of each item of a data
+A Laplacian embedding based on the nearest neighbors of each row in a data
 matrix can be created with
 
 .. code:: python3
