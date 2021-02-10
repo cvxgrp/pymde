@@ -40,6 +40,12 @@ extensions = [
     'sphinx_rtd_theme',
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
+    'autoclasstoc',
+    'sphinx.ext.autosummary',
+]
+
+autoclasstoc_sections = [
+	'public-methods',
 ]
 
 # The name of the Pygments (syntax highlighting) style to use.

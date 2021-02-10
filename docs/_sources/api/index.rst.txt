@@ -25,6 +25,7 @@ MDE
     :members:
     :exclude-members: forward
 
+    .. autoclasstoc::
     .. automethod:: __init__
 
 .. autoclass:: pymde.optim.SolveStats
@@ -134,13 +135,11 @@ Preprocessing
 .. autoclass:: pymde.Graph
     :members:
 
-.. autofunction:: pymde.preprocess.data_matrix.k_nearest_neighbors
-
-.. autofunction:: pymde.preprocess.graph.k_nearest_neighbors
+.. autofunction:: pymde.preprocess.k_nearest_neighbors
 
 .. autofunction:: pymde.preprocess.dissimilar_edges
 
-.. autofunction:: pymde.preprocess.graph.shortest_paths
+.. autofunction:: pymde.preprocess.distances
 
 
 Classical embeddings

@@ -77,52 +77,30 @@ a distortion function based on weights, using one of the classes
 in :any:`pymde.penalties`. A common preprocessing step is to compute the
 ``k``-nearest neighbors of each item, where ``k`` is a parameter.
 
-When the data come as a matrix, we can use the Euclidean distance between rows
-to determine the neighbors; i.e., we take the ``k`` items closest to each item
-as the neighbors. You can accomplish this in PyMDE using
-:any:`pymde.preprocess.data_matrix.k_nearest_neighbors`
-
 .. code:: python3
 
-   knn_graph = pymde.preprocess.data_matrix.k_nearest_neighbors(data_matrix, k=10)
-
-This function returns a ``Graph`` instance representing the pairs of neighbors.
-If ``i`` is among the ``k``-nearest neighbors of ``j`` and vice verse, then
-``(i, j)`` gets a weight of +2; if only one is a neighbor of the other, then it
-gets a weight of +1; otherwise, if neither is a neighbor of the other, ``(i,
-j)`` is not included in the edges.
-
-When the data is an original graph (a scipy.sparse matrix or an instance
-of ``pymde.Graph``), you can use :any:`pymde.preprocess.graph.k_nearest_neighbors`:
-
-.. code:: python3
-
-   knn_graph = pymde.preprocess.graph.k_nearest_neighbors(graph, k=10, use_graph_distances=True)
-
-This function as an extra keyword argument, ``use_graph_distances``. When this
-keyword argument is ``True``, the distance between two nodes ``i`` and ``j`` is
-taken to be the length of the shortest-path between them (the edge weights are
-interpreted as distances). When it is ``False`` , the distance is just the
-weight of the edge ``(i, j)`` --- if this edge is not in the graph, the
-distance is infinity.
-
-
+   knn_graph = pymde.preprocess.k_nearest_neighbors(data, k=10)
 
 Preprocessing based on neighbors can be thought of as a "sparsifying"
 operation: they take data and return a sparse graph (the ``knn_graph``).
 
+.. autofunction:: pymde.preprocess.k_nearest_neighbors
+    :noindex:
+
 Distance-based preprocessing
 ----------------------------
 
-When the original data is a sparse graph (meaning the items are the nodes, and
-the number of edges in the graph is much less than the total possible) with
-nonnegative edge weights representing distances between items, you can
-use the :any:`pymde.preprocess.graph.shortest_paths` function to compute
-the shortest-path distance between some or all pairs of items.
+Another preprocessing step is to compute some distances between pairs of
+items. We can use the :any:`pymde.preprocess.distances` function to compute
+distances between pairs of items.
 
-This function takes a few important keyword arguments:
+.. code:: python3
 
-.. autofunction:: pymde.preprocess.graph.shortest_paths
+   distance_graph = pymde.preprocess.distances(data)
+
+When the original input is a graph, this function can be thought of as a
+"densifying" operation, since it returns a denser graph. You can control
+how dense the returned graph is with a keyword argument.
+
+.. autofunction:: pymde.preprocess.distances
    :noindex:
-
-

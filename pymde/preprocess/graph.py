@@ -47,7 +47,7 @@ def _validate_adjacency_matrix(matrix):
         )
 
 
-def _to_graph(edges, distances=None):
+def _to_graph(edges, distances=None, n_items=None):
     "Distances for repeated edges are summed."
     if isinstance(edges, torch.Tensor):
         edges = edges.cpu().numpy()
@@ -62,10 +62,11 @@ def _to_graph(edges, distances=None):
         [edges[flip_idx][:, 1], edges[flip_idx][:, 0]], axis=1
     )
 
-    n = edges.max() + 1
+    if n_items is None:
+        n_items = edges.max() + 1
     rows = edges[:, 0]
     cols = edges[:, 1]
-    graph = sp.coo_matrix((distances, (rows, cols)), shape=(n, n))
+    graph = sp.coo_matrix((distances, (rows, cols)), shape=(n_items, n_items))
     graph = graph + graph.T
     return Graph(graph.tocsr())
 
@@ -109,7 +110,7 @@ class Graph(object):
         self._distances = None
 
     @staticmethod
-    def from_edges(edges, weights=None):
+    def from_edges(edges, weights=None, n_items=None):
         """Construct a graph from edges and weights.
 
         Arguments
@@ -120,13 +121,16 @@ class Graph(object):
         weights: torch.Tensor, optional
             Tensor of weights, of shape ``(n_edges,)``, with each weight
             a float.
+        n_items: int, optional
+            The number of items in the graph; if ``None``, this is
+            taken to be the maximum value in ``edges`` plus 1.
 
         Returns
         -------
         pymde.Graph
             A Graph object representing ``edges`` and ``weights``.
         """
-        return _to_graph(edges, weights)
+        return _to_graph(edges, weights, n_items)
 
     @property
     def adjacency_matrix(self):
@@ -391,7 +395,8 @@ def shortest_paths(
     if verbose:
         LOGGER.info(
             f"Computing shortest path distances (retaining "
-            f"{100*retain_fraction:.2f} percent) ..."
+            f"{100*retain_fraction:.2f} percent with "
+            f"max_distance={max_length}) ..."
         )
 
     if n_workers is None and max_length is None and retain_fraction == 1.0:

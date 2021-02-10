@@ -13,6 +13,7 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/autoclasstoc.css" type="text/css" />
   <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
 
   
@@ -276,6 +277,185 @@ the vector distortion function, and possibly a constraint.</p>
 the <code class="docutils literal notranslate"><span class="pre">embed</span></code> method.</p>
 </dd></dl>
 
+<div class="autoclasstoc docutils container">
+<p class="rubric">Public Methods:</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pymde.MDE.__init__" title="pymde.MDE.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(n_items, embedding_dim, edges, …)</p></td>
+<td><p>Constructs an MDE problem.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pymde.MDE.to" title="pymde.MDE.to"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to</span></code></a>(device)</p></td>
+<td><p>Move MDE instance to another device.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__str__</span></code>()</p></td>
+<td><p>Return str(self).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pymde.MDE.differences" title="pymde.MDE.differences"><code class="xref py py-obj docutils literal notranslate"><span class="pre">differences</span></code></a>(X)</p></td>
+<td><p>Compute <code class="docutils literal notranslate"><span class="pre">X[i]</span> <span class="pre">-</span> <span class="pre">X[j]</span></code> for each row (i, j) in edges.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pymde.MDE.distances" title="pymde.MDE.distances"><code class="xref py py-obj docutils literal notranslate"><span class="pre">distances</span></code></a>([X])</p></td>
+<td><p>Compute embedding distances.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pymde.MDE.distortions" title="pymde.MDE.distortions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">distortions</span></code></a>([X])</p></td>
+<td><p>Compute distortions</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pymde.MDE.average_distortion" title="pymde.MDE.average_distortion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">average_distortion</span></code></a>([X])</p></td>
+<td><p>Compute average distortion.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pymde.MDE.high_distortion_pairs" title="pymde.MDE.high_distortion_pairs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">high_distortion_pairs</span></code></a>([X])</p></td>
+<td><p>Compute distortions, sorted from high to low.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pymde.MDE.embed" title="pymde.MDE.embed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">embed</span></code></a>([X, eps, max_iter, memory_size, …])</p></td>
+<td><p>Compute an embedding.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward</span></code>([X, eps, max_iter, memory_size, …])</p></td>
+<td><p>Compute an embedding.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pymde.MDE.plot" title="pymde.MDE.plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code></a>([color_by, color_map, colors, edges, …])</p></td>
+<td><p>Plot an embedding, in one, two, or three dimensions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pymde.MDE.distortions_cdf" title="pymde.MDE.distortions_cdf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">distortions_cdf</span></code></a>([figsize_inches])</p></td>
+<td><p>Plot a cumulative distribution function of the distortions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pymde.MDE.play" title="pymde.MDE.play"><code class="xref py py-obj docutils literal notranslate"><span class="pre">play</span></code></a>([color_by, color_map, colors, edges, …])</p></td>
+<td><p>Create a movie visualizing how the embedding was formed.</p></td>
+</tr>
+</tbody>
+</table>
+<details><summary>Inherited from <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></summary><table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pymde.MDE.__init__" title="pymde.MDE.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(n_items, embedding_dim, edges, …)</p></td>
+<td><p>Constructs an MDE problem.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward</span></code>([X, eps, max_iter, memory_size, …])</p></td>
+<td><p>Compute an embedding.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_buffer</span></code>(name, tensor[, persistent])</p></td>
+<td><p>Adds a buffer to the module.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_parameter</span></code>(name, param)</p></td>
+<td><p>Adds a parameter to the module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_module</span></code>(name, module)</p></td>
+<td><p>Adds a child module to the current module.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply</span></code>(fn)</p></td>
+<td><p>Applies <code class="docutils literal notranslate"><span class="pre">fn</span></code> recursively to every submodule (as returned by <code class="docutils literal notranslate"><span class="pre">.children()</span></code>) as well as self.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cuda</span></code>([device])</p></td>
+<td><p>Moves all model parameters and buffers to the GPU.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cpu</span></code>()</p></td>
+<td><p>Moves all model parameters and buffers to the CPU.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">type</span></code>(dst_type)</p></td>
+<td><p>Casts all parameters and buffers to <code class="xref py py-attr docutils literal notranslate"><span class="pre">dst_type</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">float</span></code>()</p></td>
+<td><p>Casts all floating point parameters and buffers to float datatype.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">double</span></code>()</p></td>
+<td><p>Casts all floating point parameters and buffers to <code class="docutils literal notranslate"><span class="pre">double</span></code> datatype.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">half</span></code>()</p></td>
+<td><p>Casts all floating point parameters and buffers to <code class="docutils literal notranslate"><span class="pre">half</span></code> datatype.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">bfloat16</span></code>()</p></td>
+<td><p>Casts all floating point parameters and buffers to <code class="docutils literal notranslate"><span class="pre">bfloat16</span></code> datatype.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pymde.MDE.to" title="pymde.MDE.to"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to</span></code></a>(device)</p></td>
+<td><p>Move MDE instance to another device.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_backward_hook</span></code>(hook)</p></td>
+<td><p>Registers a backward hook on the module.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_forward_pre_hook</span></code>(hook)</p></td>
+<td><p>Registers a forward pre-hook on the module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_forward_hook</span></code>(hook)</p></td>
+<td><p>Registers a forward hook on the module.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(*input, **kwargs)</p></td>
+<td><p>Call self as a function.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__setstate__</span></code>(state)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__getattr__</span></code>(name)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__setattr__</span></code>(name, value)</p></td>
+<td><p>Implement setattr(self, name, value).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__delattr__</span></code>(name)</p></td>
+<td><p>Implement delattr(self, name).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">state_dict</span></code>([destination, prefix, keep_vars])</p></td>
+<td><p>Returns a dictionary containing a whole state of the module.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_state_dict</span></code>(state_dict[, strict])</p></td>
+<td><p>Copies parameters and buffers from <code class="xref py py-attr docutils literal notranslate"><span class="pre">state_dict</span></code> into this module and its descendants.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameters</span></code>([recurse])</p></td>
+<td><p>Returns an iterator over module parameters.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">named_parameters</span></code>([prefix, recurse])</p></td>
+<td><p>Returns an iterator over module parameters, yielding both the name of the parameter as well as the parameter itself.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">buffers</span></code>([recurse])</p></td>
+<td><p>Returns an iterator over module buffers.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">named_buffers</span></code>([prefix, recurse])</p></td>
+<td><p>Returns an iterator over module buffers, yielding both the name of the buffer as well as the buffer itself.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">children</span></code>()</p></td>
+<td><p>Returns an iterator over immediate children modules.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">named_children</span></code>()</p></td>
+<td><p>Returns an iterator over immediate children modules, yielding both the name of the module as well as the module itself.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">modules</span></code>()</p></td>
+<td><p>Returns an iterator over all modules in the network.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">named_modules</span></code>([memo, prefix])</p></td>
+<td><p>Returns an iterator over all modules in the network, yielding both the name of the module as well as the module itself.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">train</span></code>([mode])</p></td>
+<td><p>Sets the module in training mode.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">eval</span></code>()</p></td>
+<td><p>Sets the module in evaluation mode.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">requires_grad_</span></code>([requires_grad])</p></td>
+<td><p>Change if autograd should record operations on parameters in this module.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">zero_grad</span></code>([set_to_none])</p></td>
+<td><p>Sets gradients of all model parameters to zero.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">share_memory</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">extra_repr</span></code>()</p></td>
+<td><p>Set the extra representation of the module</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__repr__</span></code>()</p></td>
+<td><p>Return repr(self).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__dir__</span></code>()</p></td>
+<td><p>Default dir() implementation.</p></td>
+</tr>
+</tbody>
+</table>
+</details></div>
+<hr class="docutils" />
 <dl class="py method">
 <dt id="pymde.MDE.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_items</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">embedding_dim</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">edges</span><span class="p">:</span> <span class="n">torch.Tensor</span></em>, <em class="sig-param"><span class="n">distortion_function</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>Callable<span class="p">, </span>pymde.functions.function.StochasticFunction<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">constraint</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="#pymde.constraints.Constraint" title="pymde.constraints.Constraint">pymde.constraints.Constraint</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">device</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.MDE.__init__" title="Permalink to this definition">¶</a></dt>
@@ -1207,7 +1387,7 @@ embedding by approximately solving the MDE problem.</p>
 
 <dl class="py method">
 <dt id="pymde.Graph.from_edges">
-<em class="property">static </em><code class="sig-name descname">from_edges</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">edges</span></em>, <em class="sig-param"><span class="n">weights</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.Graph.from_edges" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">from_edges</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">edges</span></em>, <em class="sig-param"><span class="n">weights</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">n_items</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.Graph.from_edges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct a graph from edges and weights.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1216,6 +1396,8 @@ embedding by approximately solving the MDE problem.</p>
 edge represented by a row, i.e. by two integers.</p></li>
 <li><p><strong>weights</strong> (<em>torch.Tensor</em><em>, </em><em>optional</em>) – Tensor of weights, of shape <code class="docutils literal notranslate"><span class="pre">(n_edges,)</span></code>, with each weight
 a float.</p></li>
+<li><p><strong>n_items</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of items in the graph; if <code class="docutils literal notranslate"><span class="pre">None</span></code>, this is
+taken to be the maximum value in <code class="docutils literal notranslate"><span class="pre">edges</span></code> plus 1.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1260,40 +1442,16 @@ a float.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt id="pymde.preprocess.data_matrix.k_nearest_neighbors">
-<code class="sig-prename descclassname">pymde.preprocess.data_matrix.</code><code class="sig-name descname">k_nearest_neighbors</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">k</span></em>, <em class="sig-param"><span class="n">max_distance</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.preprocess.data_matrix.k_nearest_neighbors" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute k-nearest neighbors for each row in data matrix.</p>
-<p>Computes the k-nearest neighbor graph of data matrix, under
-the Euclidean distance. Each row in the data matrix is treated as an item.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<em>{torch.Tensor</em><em>, </em><em>np.ndarray</em><em>, </em><em>scipy.sparse matrix}</em><em>(</em>) – shape=(n_items, n_features))
-The data matrix</p></li>
-<li><p><strong>k</strong> (<em>int</em>) – The number of nearest neighbors per item</p></li>
-<li><p><strong>max_distance</strong> (<em>float</em><em> (</em><em>optional</em><em>)</em>) – If not None, neighborhoods are restricted to have a radius
-no greater than <cite>max_distance</cite>.</p></li>
-<li><p><strong>verbose</strong> (<em>bool</em>) – If True, print verbose output.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>a neighborhood graph</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#pymde.Graph" title="pymde.Graph">pymde.Graph</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="pymde.preprocess.graph.k_nearest_neighbors">
-<code class="sig-prename descclassname">pymde.preprocess.graph.</code><code class="sig-name descname">k_nearest_neighbors</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">graph</span></em>, <em class="sig-param"><span class="n">k</span></em>, <em class="sig-param"><span class="n">graph_distances</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">max_distance</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.preprocess.graph.k_nearest_neighbors" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute k-nearest neighbors for each node in graph.</p>
-<p>This function computes a k-nearest neighbor graph.</p>
-<p>By default, the input graph is interpreted as a distance matrix, with
-<code class="docutils literal notranslate"><span class="pre">graph.adjacency_matrix[i,</span> <span class="pre">j]</span></code> giving the distance between i and j. If
-<cite>graph_distances</cite> is True, then the shortest-path metric is used to
-compute neighbors.</p>
+<dt id="pymde.preprocess.k_nearest_neighbors">
+<code class="sig-prename descclassname">pymde.preprocess.</code><code class="sig-name descname">k_nearest_neighbors</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">k</span></em>, <em class="sig-param"><span class="n">max_distance</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.preprocess.k_nearest_neighbors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute k-nearest neighbors, given data matrix or graph.</p>
+<p>This function computes a k-nearest neighbor graph, given either
+a data matrix or an original graph.</p>
+<p>When the input is a data matrix, each row is treated as the feature
+vector of an item, and the Euclidean distance is used to judge how
+close two items are to each other.</p>
+<p>When the input is a graph, each node is an item, and the distance between
+two items is taken to be the length of the shortest-path between them.</p>
 <p>In the returned graph, if i is a neighbor of j and j a neighbor of i, then
 the weight w_{ij} will be +2; if only one is a neighbor of the other, then
 w_{ij} will be +1; if neither are neighbors of each other, then (i, j) will
@@ -1301,17 +1459,16 @@ not be in the graph.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>graph</strong> (<a class="reference internal" href="#pymde.Graph" title="pymde.Graph"><em>pymde.Graph</em></a>) – The graph, representing a distance metric on the items.</p></li>
-<li><p><strong>k</strong> (<em>int</em>) – The number of nearest neighbors per item.</p></li>
-<li><p><strong>graph_distances</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, computes shortest-path distances on the graph; otherwise,
-interprets the graph as a distance matrix.</p></li>
+<li><p><strong>data</strong> (<em>torch.Tensor</em><em>, </em><em>np.ndarray</em><em>, </em><em>scipy.sparse matrix</em><em>, or </em><a class="reference internal" href="#pymde.Graph" title="pymde.Graph"><em>pymde.Graph</em></a>) – A data matrix, shape <code class="docutils literal notranslate"><span class="pre">(n_items,</span> <span class="pre">n_features)</span></code>, or a <code class="docutils literal notranslate"><span class="pre">pymde.Graph</span></code></p></li>
+<li><p><strong>k</strong> (<em>int</em>) – The number of nearest neighbors per item</p></li>
 <li><p><strong>max_distance</strong> (<em>float</em><em> (</em><em>optional</em><em>)</em>) – If not <code class="docutils literal notranslate"><span class="pre">None</span></code>, neighborhoods are restricted to have a radius
-no greater than max_distance.</p></li>
+no greater than <cite>max_distance</cite>.</p></li>
 <li><p><strong>verbose</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, print verbose output.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The k-nearest neighbor graph.</p>
+<dd class="field-even"><p>The k-nearest neighbor graph. Access the weights with
+<code class="docutils literal notranslate"><span class="pre">graph.weights</span></code>, and the edges with <code class="docutils literal notranslate"><span class="pre">graph.edges</span></code></p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#pymde.Graph" title="pymde.Graph">pymde.Graph</a></p>
@@ -1348,37 +1505,33 @@ the same number as <code class="docutils literal notranslate"><span class="pre">
 </dd></dl>
 
 <dl class="py function">
-<dt id="pymde.preprocess.graph.shortest_paths">
-<code class="sig-prename descclassname">pymde.preprocess.graph.</code><code class="sig-name descname">shortest_paths</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">graph</span></em>, <em class="sig-param"><span class="n">max_length</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">retain_fraction</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">n_workers</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.preprocess.graph.shortest_paths" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute shortest-path distances.</p>
-<p>This function computes the shortest-path distances on a graph.
-It returns a new graph, with an edge for each distance that was
-computed (each edge is weighted by the shortest-path distance between
-the two nodes in the original graph). The new graph can be interpreted
-as a “filled-in” version of the input graph.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">max_length</span></code> and <code class="docutils literal notranslate"><span class="pre">retain_fraction</span></code> keyword arguments can be used
-to compute only a subset of the distances. This can be useful
-if the graph has a very large number of nodes, in which storing all graph
-distances may be intractable.</p>
-<p>If the graph is sufficiently large, multiple cores will be used to
-accelerate the computation.</p>
+<dt id="pymde.preprocess.distances">
+<code class="sig-prename descclassname">pymde.preprocess.</code><code class="sig-name descname">distances</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">retain_fraction</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.preprocess.distances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute distances, given data matrix or graph.</p>
+<p>This function computes distances between some pairs of items, given
+either a data matrix or a <code class="docutils literal notranslate"><span class="pre">pymde.Graph</span></code> instance.</p>
+<p>When the input is a data matrix, each row is treated as the feature
+vector of an item.</p>
+<p>When the input is a graph, each node is an item, and the distance between
+two items is taken to be the length of the shortest-path between them.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">retain_fraction</span></code> keyword argument can be used
+to compute only a fraction of the distances. This can be useful
+when there are many items, in which case storing all
+the distances may be intractable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>graph</strong> (<a class="reference internal" href="#pymde.Graph" title="pymde.Graph"><em>pymde.Graph</em></a><em> or </em><em>scipy.sparse matrix</em>) – Graph instance, or an adjacency matrix</p></li>
-<li><p><strong>max_length</strong> (<em>float</em><em>, </em><em>optional</em>) – The maximum-length path to compute; paths longer than max_length
-are not computed/explored.</p></li>
-<li><p><strong>retain_fraction</strong> (<em>float</em>) – A float between 0 and 1, specifying the fraction of all (n choose 2)
-to compute. For example, if <code class="docutils literal notranslate"><span class="pre">retain_fraction</span></code> is 0.1, only 10
-percent of the edges will be stored.</p></li>
-<li><p><strong>n_workers</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of processes to use. Defaults to the number of available
-cores.</p></li>
-<li><p><strong>verbose</strong> (<em>bool</em>) – Whether to print verbose output.</p></li>
+<li><p><strong>data</strong> (<em>torch.Tensor</em><em>, </em><em>np.ndarray</em><em>, </em><em>scipy.sparse matrix</em><em>, or </em><a class="reference internal" href="#pymde.Graph" title="pymde.Graph"><em>pymde.Graph</em></a>) – A data matrix, shape <code class="docutils literal notranslate"><span class="pre">(n_items,</span> <span class="pre">n_features)</span></code>, or a <code class="docutils literal notranslate"><span class="pre">pymde.Graph</span></code></p></li>
+<li><p><strong>retain_fraction</strong> (<em>float</em><em>, </em><em>optional</em>) – A float between 0 and 1, specifying the fraction of all <code class="docutils literal notranslate"><span class="pre">(n_items</span>
+<span class="pre">choose</span> <span class="pre">2)</span></code> to compute. For example, if <code class="docutils literal notranslate"><span class="pre">retain_fraction</span></code> is 0.1,
+only 10 percent of the edges will be stored.</p></li>
+<li><p><strong>verbose</strong> – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, print verbose output.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A new graph, with an edge (and weight) for each shortest-path
-distance that was computed/stored.</p>
+<dd class="field-even"><p>A graph object holding the distances and corresponding edges.
+Access the distances with <code class="docutils literal notranslate"><span class="pre">graph.distances</span></code>, and the edges
+with <code class="docutils literal notranslate"><span class="pre">graph.edges</span></code>.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#pymde.Graph" title="pymde.Graph">pymde.Graph</a></p>

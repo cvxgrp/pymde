@@ -7,7 +7,6 @@ import torch
 
 from pymde import problem
 from pymde import quadratic
-from pymde import util
 from pymde import constraints
 from pymde.functions import penalties, losses
 from pymde import preprocess
@@ -98,67 +97,31 @@ def preserve_distances(
             ", or a pymde.Graph."
         )
 
-    max_distances = int(max_distances)
-
-    if scipy.sparse.issparse(data):
-        if not isinstance(data, scipy.sparse.csr_matrix):
-            data = data.tocsr()
-
-        n_items = data.shape[0]
-        if n_items * (n_items - 1) / 2 < max_distances:
-            edges = util.all_edges(n_items).cpu().numpy()
-        else:
-            edges = (
-                preprocess.sample_edges(n_items, max_distances).cpu().numpy()
-            )
-        delta = torch.tensor(
-            scipy.sparse.linalg.norm(
-                data[edges[:, 0]] - data[edges[:, 1]], axis=1
-            ),
-            dtype=torch.float,
-            device=device,
-        )
-        edges = torch.tensor(edges, device=device)
-    elif isinstance(data, (np.ndarray, torch.Tensor)):
-        if isinstance(data, np.ndarray):
-            data = torch.tensor(data, dtype=torch.float, device=device)
-        n_items = data.shape[0]
-
-        if n_items * (n_items - 1) / 2 < max_distances:
-            edges = util.all_edges(n_items).to(data.device)
-        else:
-            edges = preprocess.sample_edges(n_items, max_distances).to(
-                data.device
-            )
-
-        if verbose:
-            problem.LOGGER.info(f"Computing {int(edges.shape[0])} distances")
-        delta = (data[edges[:, 0]] - data[edges[:, 1]]).pow(2).sum(dim=1).sqrt()
-    else:
-        if data.n_edges < max_distances:
-            if data.n_all_edges > max_distances:
-                retain_fraction = max_distances / data.n_all_edges
-            else:
-                retain_fraction = 1.0
-            data = preprocess.graph.shortest_paths(
-                data, retain_fraction=retain_fraction, verbose=verbose
-            )
+    if isinstance(data, preprocess.graph.Graph):
         n_items = data.n_items
-        edges = data.edges.to(device)
-        delta = data.distances.to(device)
+    else:
+        n_items = data.shape[0]
+    n_all_edges = (n_items) * (n_items - 1) / 2
+    retain_fraction = max_distances / n_all_edges
+
+    graph = preprocess.generic.distances(
+        data, retain_fraction=retain_fraction, verbose=verbose
+    )
+    edges = graph.edges.to(device)
+    deviations = graph.distances.to(device)
 
     if constraint is None:
         constraint = constraints.Centered()
     elif isinstance(constraint, constraints._Standardized):
-        delta = preprocess.scale(
-            delta, constraint.natural_length(n_items, embedding_dim)
+        deviations = preprocess.scale(
+            deviations, constraint.natural_length(n_items, embedding_dim)
         )
 
     return problem.MDE(
         n_items=n_items,
         embedding_dim=embedding_dim,
         edges=edges,
-        distortion_function=loss(delta),
+        distortion_function=loss(deviations),
         constraint=constraint,
         device=device,
     )
@@ -274,28 +237,23 @@ def preserve_neighbors(
         constraint = constraints.Standardized()
 
     if isinstance(data, preprocess.graph.Graph):
+        # enforce a max distance, otherwise may very well run out of memory
+        # when n_items is large
         if max_distance is None:
             max_distance = (3 * torch.quantile(data.distances, 0.75)).item()
 
-        if verbose:
-            problem.LOGGER.info(
-                f"Constructing kNN graph "
-                f"(k={n_neighbors}, max_distance={max_distance:.2f})"
-            )
+    if verbose:
+        problem.LOGGER.info(
+            f"Computing {n_neighbors}-nearest neighbors, with "
+            f"max_distance={max_distance}"
+        )
 
-        knn_graph = preprocess.graph.k_nearest_neighbors(
-            data,
-            n_neighbors,
-            graph_distances=True,
-            max_distance=max_distance,
-            verbose=verbose,
-        )
-    else:
-        if verbose:
-            problem.LOGGER.info("Constructing kNN graph (k=%d)" % n_neighbors)
-        knn_graph = preprocess.data_matrix.k_nearest_neighbors(
-            data, n_neighbors, max_distance=max_distance, verbose=verbose
-        )
+    knn_graph = preprocess.generic.k_nearest_neighbors(
+        data,
+        k=n_neighbors,
+        max_distance=max_distance,
+        verbose=verbose,
+    )
     edges = knn_graph.edges.to(device)
     weights = knn_graph.weights.to(device)
 

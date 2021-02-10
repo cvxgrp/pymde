@@ -1,8 +1,91 @@
 import numpy as np
+import scipy.sparse as sp
 import torch
 
 from pymde import problem
 from pymde.preprocess.graph import Graph
+from pymde.preprocess.preprocess import sample_edges
+from pymde import util
+
+
+def distances(data, retain_fraction=1.0, verbose=False):
+    """Compute distances, given data matrix.
+
+    This function computes distances between some pairs of items, given
+    a data matrix. Each row in the data matrix is treated as an item.
+
+    Arguments
+    ---------
+    data: torch.Tensor, np.ndarray, or scipy.sparse matrix
+        The data matrix, shape ``(n_items, n_features)``.
+    retain_fraction: float, optional
+        A float between 0 and 1, specifying the fraction of all ``(n_items
+        choose 2)`` to compute. For example, if ``retain_fraction`` is 0.1,
+        only 10 percent of the edges will be stored.
+    verbose:
+        If ``True``, print verbose output.
+
+    Returns
+    -------
+    pymde.Graph
+        A graph object holding the distances and corresponding edges.
+        Access the distances with ``graph.distances``, and the edges
+        with ``graph.edges``.
+    """
+    if not sp.issparse(data) and not isinstance(
+        data, (np.ndarray, torch.Tensor)
+    ):
+        raise ValueError(
+            "`data` must be a scipy.sparse matrix, NumPy array, "
+            "or torch tensor"
+        )
+
+    n_items = int(data.shape[0])
+    all_edges = n_items * (n_items - 1) / 2
+    max_distances = int(retain_fraction * all_edges)
+
+    if max_distances is None:
+        max_distances = np.inf
+    elif max_distances <= 0:
+        raise ValueError("max_distances must be positive")
+
+    if n_items * (n_items - 1) / 2 < max_distances:
+        edges = util.all_edges(n_items)
+    else:
+        if verbose:
+            problem.LOGGER.info(f"Sampling {int(max_distances)} edges")
+        edges = sample_edges(n_items, int(max_distances))
+
+    if sp.issparse(data):
+        if not isinstance(data, sp.csr_matrix):
+            data = data.tocsr()
+
+        edges = edges.cpu().numpy()
+        if verbose:
+            problem.LOGGER.info(f"Computing {int(edges.shape[0])} distances")
+        delta = torch.tensor(
+            sp.linalg.norm(data[edges[:, 0]] - data[edges[:, 1]], axis=1),
+            dtype=torch.float,
+        )
+        edges = torch.tensor(edges)
+    elif isinstance(data, (np.ndarray, torch.Tensor)):
+        if isinstance(data, np.ndarray):
+            data = torch.tensor(data, dtype=torch.float, device="cpu")
+
+        edges = edges.to(data.device)
+        if verbose:
+            problem.LOGGER.info(f"Computing {int(edges.shape[0])} distances")
+        # TODO(akshayka): Batch this computation when the number of edges
+        # and/or the number of features is large.
+        delta = (
+            (data[edges[:, 0]] - data[edges[:, 1]])
+            .pow(2)
+            .sum(dim=1)
+            .float()
+            .sqrt()
+        )
+
+    return Graph.from_edges(edges, delta, n_items=n_items)
 
 
 def k_nearest_neighbors(data, k, max_distance=None, verbose=False):
