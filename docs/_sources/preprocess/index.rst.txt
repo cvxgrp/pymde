@@ -43,12 +43,12 @@ weights. For example
 
 or
 
-.. code::python3
+.. code:: python3
 
     edges = torch.tensor([
          [0, 1],
          [0, 2],
-         [1, 2]
+         [1, 2],
     ])
     weights = torch.ones(edges.shape[0])
     graph = pymde.Graph.from_edges(edges, weights)
