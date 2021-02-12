@@ -69,6 +69,8 @@ html_theme = 'sphinx_rtd_theme'
 
 html_show_sourcelink = False
 
+html_show_copyright = False
+
 display_version = True
 
 # Add any paths that contain custom static files (such as style sheets) here,
