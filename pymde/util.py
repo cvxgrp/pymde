@@ -121,6 +121,12 @@ def proj_standardized(X, demean=False, inplace=False):
             X.sub_(X.mean(axis=0))
         else:
             X -= X.mean(axis=0)
+
+    # pytorch 1.8.0 has a bug in which torch.svd fails when requires_grad
+    # is true on the input (even if called under torch.no_grad)
+    requires_grad = X.requires_grad
+    X.requires_grad_(False)
+
     n = torch.tensor(X.shape[0], dtype=X.dtype, device=X.device)
     m = X.shape[1]
     # TODO: Gracefully handle the rare svd failure
@@ -134,16 +140,20 @@ def proj_standardized(X, demean=False, inplace=False):
         try:
             U, _, V = torch.svd(X, out=(X, s, V))
         except RuntimeError as e:
+            X.requires_grad_(requires_grad)
             raise SolverError(str(e))
         torch.matmul(U[:, :m], V.T[:, :m], out=X)
         X.mul_(torch.sqrt(n))
+        X.requires_grad_(requires_grad)
         return X
     else:
         try:
             U, _, V = torch.svd(X)
         except RuntimeError as e:
+            X.requires_grad_(requires_grad)
             raise SolverError(str(e))
         proj = torch.sqrt(n) * U[:, :m] @ V.T[:, :m]
+        X.requires_grad_(requires_grad)
         return proj
 
 
