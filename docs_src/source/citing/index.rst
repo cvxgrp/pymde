@@ -9,11 +9,11 @@ BibTex entry:
 
 .. code:: bibtex
 
-	@article{agrawal2020minimum,
+	@article{agrawal2021minimum,
 	  author  = {Agrawal, Akshay and Ali, Alnur and Boyd, Stephen},
 	  title   = {Minimum-Distortion Embedding},
-	  url     = {https://web.stanford.edu/~boyd/papers/min_dist_emb.html},
-	  year    = {2020},
+	  journal = {arXiv},
+	  year    = {2021},
 	}
 
 If you want to keep tabs on the development of PyMDE (or just want to send

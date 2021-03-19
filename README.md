@@ -142,10 +142,10 @@ We have several [example notebooks](https://github.com/cvxgrp/pymde/tree/main/ex
 To cite our work, please use the following BibTex entry.
 
 ```
-@article{agrawal2020minimum,
+@article{agrawal2021minimum,
   author  = {Agrawal, Akshay and Ali, Alnur and Boyd, Stephen},
   title   = {Minimum-Distortion Embedding},
-  url     = {https://web.stanford.edu/~boyd/papers/min_dist_emb.html},
-  year    = {2020},
+  journal = {arXiv},
+  year    = {2021},
 }
 ```
