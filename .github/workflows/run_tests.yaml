@@ -23,6 +23,8 @@ jobs:
         python -m pip install --upgrade pip
         pip install setuptools wheel
         pip install flake8 pytest
+        # install cpu versions of torch for CI
+        pip install --find-links https://download.pytorch.org/whl/torch_stable.html torch==1.8.0+cpu torchvision==0.9.0+cpu
         #pip install numba  # install manually, to prevent other packages that require it from fetching a pre-release ...
         pip install -r requirements.txt
     - name: Lint with flake8
