@@ -212,6 +212,7 @@ def _rotate_3d(X, alpha, beta, gamma):
     return X @ rot_3d
 
 
+@tensor_arguments
 def rotate(X, degrees):
     if X.shape[1] not in [2, 3]:
         raise ValueError(
@@ -220,12 +221,12 @@ def rotate(X, degrees):
         )
 
     if X.shape[1] == 2:
-        if len(degrees) != 2:
-            raise ValueError("`degrees` must be a length-2 sequence.")
+        if degrees.numel() != 1:
+            raise ValueError("`degrees` must be a scalar.")
         return _rotate_2d(X, degrees)
     else:
-        if len(degrees) != 3:
-            raise ValueError("`degrees` must be a length-3 sequence.")
+        if degrees.numel() != 3:
+            raise ValueError("`degrees` must be a length-3 tensor.")
         return _rotate_3d(X, degrees[0], degrees[1], degrees[2])
 
 
