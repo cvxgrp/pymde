@@ -282,3 +282,160 @@ def covid19_scrna_wilk(root="./", download=True) -> Dataset:
     os.remove(os.path.join(root, filename))
     LOGGER.info("Dataset is now available.")
     return load_dataset()
+
+
+def population_genetics(root="./", download=True) -> Dataset:
+    """Population genetics dataset (Nelson, et al)
+
+    The population genetics dataset includes a PCA embedding (in R^20) of
+    single nucleotide polymorphism data associated with 1,387
+    individuals thought to be of European descent. (The data is from the
+    Population Reference Sample project by Nelson, et al.)
+
+    It also contains a "corrupted" version of the data, in which 154 additional
+    points have been injected; the first 10 coordinates of these synthetic
+    points are generated using a discrete uniform distribution on
+    {0, 1, 2}, and the last 10 are generated using a discrete uniform
+    distritubtion on {1/12, /18}.
+
+    A study of Novembre et al (2008) showed that a PCA embedding in R^2
+    roughly resembles the map of Europe, suggesting that the genes
+    encode geographical information. But PCA does not produce interesting
+    visualizations of the corrupted data. If distortion functions are chosen to
+    be robust (eg, using the Log1p or Huber attractive penalties), we can
+    create embeddings that preserve the geographical structure, while
+    placing the synthetic points to the side, in their own cluser.
+
+    - ``data``: the PCA embedding of the clean genetic data, in R^20
+    - ``corrupted_data``: the corrupted data, in R^20
+    - ``attributes``: two keys, ``clean_colors`` and ``corrupted_colors``.
+    """
+    try:
+        import pandas as pd
+    except ImportError:
+        raise ImportError("Please install pandas.")
+
+    root = os.path.expanduser(root)
+
+    url = "https://akshayagrawal.com/popres/popres.tar.gz"
+
+    extract_root = os.path.join(root, "population_genetics/")
+    data_file = os.path.join(extract_root, "data.csv")
+    corrupted_data_file = os.path.join(extract_root, "corrupted_data.csv")
+    clean_attr_file = os.path.join(extract_root, "data_colors.csv")
+    corrupted_attr_file = os.path.join(extract_root, "corrupted_colors.csv")
+
+    def load_dataset():
+        data = pd.read_csv(os.path.join(root, data_file)).to_numpy()
+        corrupted_data = pd.read_csv(
+            os.path.join(root, corrupted_data_file)
+        ).to_numpy()
+        attributes = {
+            "clean_colors": pd.read_csv(
+                os.path.join(root, clean_attr_file)
+            ).to_numpy(),
+            "corrupted_colors": pd.read_csv(
+                os.path.join(root, corrupted_attr_file)
+            ).to_numpy(),
+        }
+        metadata = {
+            "authors": "Nelson, et al",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/18760391/",
+        }
+        dataset = Dataset(data, attributes, metadata=metadata)
+        dataset.corrupted_data = corrupted_data
+        return dataset
+
+    files = [
+        data_file,
+        corrupted_data_file,
+        clean_attr_file,
+        corrupted_attr_file,
+    ]
+
+    if _is_cached(root, files):
+        LOGGER.info("Load cached dataset.")
+        return load_dataset()
+
+    if not download:
+        raise RuntimeError("`download` is False, but data is not cached.")
+
+    _install_headers()
+
+    filename = url.rpartition("/")[2]
+    torchvision.datasets.utils.download_and_extract_archive(
+        url, download_root=root, extract_root=extract_root, filename=filename
+    )
+    os.remove(os.path.join(root, filename))
+    LOGGER.info("Dataset is now available.")
+    return load_dataset()
+
+
+def counties(root="./", download=True) -> Dataset:
+    """US counties (2013-2017 ACS 5-Year Estimates)
+
+    This dataset contains 34 demographic features for each of the 3,220 US
+    counties. The features were collected by the 2013-2017 ACS 5-Year
+    Estimates longitudinal survey, run by the US Census Bureau.
+
+    - ``data``: the PCA embedding of the clean genetic data, in R^20
+    - ``corrupted_data``: the corrupted data, in R^20
+    - ``attributes``: two keys, ``clean_colors`` and ``corrupted_colors``.
+    """
+    try:
+        import pandas as pd
+    except ImportError:
+        raise ImportError("Please install pandas.")
+
+    root = os.path.expanduser(root)
+
+    url = "https://akshayagrawal.com/voting/voting.tar.gz"
+
+    extract_root = os.path.join(root, "counties/")
+    data_file = os.path.join(extract_root, "county_data.npy")
+    voting_attr_file = os.path.join(extract_root, "democratic_fraction.npy")
+
+    county_df_file = os.path.join(extract_root, "acs2017_county_data.csv")
+    voting_df_file = os.path.join(
+        extract_root, "2016_US_County_Level_Presidential_Results.csv"
+    )
+
+    def load_dataset():
+        data = np.load(os.path.join(root, data_file), allow_pickle=True)
+        county_dataframe = pd.read_csv(os.path.join(root, county_df_file))
+        voting_dataframe = pd.read_csv(os.path.join(root, voting_df_file))
+        attributes = {
+            "democratic_fraction": np.load(os.path.join(root, voting_attr_file))
+        }
+        metadata = {
+            "authors": "ACS 2013-2017 survey",
+            "url": "https://www.census.gov/newsroom/press-kits/2018/acs-5year.html",  # noqa: E501
+        }
+        dataset = Dataset(data, attributes, metadata=metadata)
+        dataset.county_dataframe = county_dataframe
+        dataset.voting_dataframe = voting_dataframe
+        return dataset
+
+    files = [
+        data_file,
+        voting_attr_file,
+        county_df_file,
+        voting_attr_file,
+    ]
+
+    if _is_cached(root, files):
+        LOGGER.info("Load cached dataset.")
+        return load_dataset()
+
+    if not download:
+        raise RuntimeError("`download` is False, but data is not cached.")
+
+    _install_headers()
+
+    filename = url.rpartition("/")[2]
+    torchvision.datasets.utils.download_and_extract_archive(
+        url, download_root=root, extract_root=extract_root, filename=filename
+    )
+    os.remove(os.path.join(root, filename))
+    LOGGER.info("Dataset is now available.")
+    return load_dataset()
