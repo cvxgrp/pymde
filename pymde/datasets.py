@@ -115,7 +115,6 @@ def MNIST(root="./", download=True) -> Dataset:
             },
         )
 
-
     if _is_cached(raw, raw_files) and _is_cached(processed, processed_files):
         LOGGER.info("Load cached dataset.")
         return load_dataset()
@@ -133,6 +132,7 @@ def MNIST(root="./", download=True) -> Dataset:
     LOGGER.info("Download complete.")
 
     return load_dataset()
+
 
 def google_scholar(root="./", download=True, full=False) -> Dataset:
     """Google Scholar dataset (Agrawal, et al.).
