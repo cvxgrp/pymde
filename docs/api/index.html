@@ -353,28 +353,34 @@ the <code class="docutils literal notranslate"><span class="pre">embed</span></c
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cuda</span></code>([device])</p></td>
 <td><p>Moves all model parameters and buffers to the GPU.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cpu</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">xpu</span></code>([device])</p></td>
+<td><p>Moves all model parameters and buffers to the XPU.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cpu</span></code>()</p></td>
 <td><p>Moves all model parameters and buffers to the CPU.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">type</span></code>(dst_type)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">type</span></code>(dst_type)</p></td>
 <td><p>Casts all parameters and buffers to <code class="xref py py-attr docutils literal notranslate"><span class="pre">dst_type</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">float</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">float</span></code>()</p></td>
 <td><p>Casts all floating point parameters and buffers to float datatype.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">double</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">double</span></code>()</p></td>
 <td><p>Casts all floating point parameters and buffers to <code class="docutils literal notranslate"><span class="pre">double</span></code> datatype.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">half</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">half</span></code>()</p></td>
 <td><p>Casts all floating point parameters and buffers to <code class="docutils literal notranslate"><span class="pre">half</span></code> datatype.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">bfloat16</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">bfloat16</span></code>()</p></td>
 <td><p>Casts all floating point parameters and buffers to <code class="docutils literal notranslate"><span class="pre">bfloat16</span></code> datatype.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pymde.MDE.to" title="pymde.MDE.to"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to</span></code></a>(device)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pymde.MDE.to" title="pymde.MDE.to"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to</span></code></a>(device)</p></td>
 <td><p>Move MDE instance to another device.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_backward_hook</span></code>(hook)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_backward_hook</span></code>(hook)</p></td>
+<td><p>Registers a backward hook on the module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_full_backward_hook</span></code>(hook)</p></td>
 <td><p>Registers a backward hook on the module.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_forward_pre_hook</span></code>(hook)</p></td>
@@ -855,7 +861,7 @@ such as <code class="docutils literal notranslate"><span class="pre">pymde.penal
 weights. (If <code class="docutils literal notranslate"><span class="pre">None</span></code>, only positive weights are used.) For example,
 <code class="docutils literal notranslate"><span class="pre">pymde.penalties.Log</span></code> or <code class="docutils literal notranslate"><span class="pre">pymde.penalties.InversePower</span></code>.</p></li>
 <li><p><strong>constraint</strong> (<a class="reference internal" href="#pymde.constraints.Constraint" title="pymde.constraints.Constraint"><em>pymde.constraints.Constraint</em></a><em> (</em><em>optional</em><em>)</em>) – Embedding constraint, like <code class="docutils literal notranslate"><span class="pre">pymde.Standardized()</span></code> or
-<code class="docutils literal notranslate"><span class="pre">pymde.Anchored(anchors,</span> <span class="pre">values)</span></code> (or <code class="docutils literal notranslate"><span class="pre">None</span></code>). Defaults no
+<code class="docutils literal notranslate"><span class="pre">pymde.Anchored(anchors,</span> <span class="pre">values)</span></code> (or <code class="docutils literal notranslate"><span class="pre">None</span></code>). Defaults to no
 constraint when a repulsive penalty is provided, otherwise defaults to
 <code class="docutils literal notranslate"><span class="pre">pymde.Standardized()</span></code>.</p></li>
 <li><p><strong>n_neighbors</strong> (<em>int</em><em> (</em><em>optional</em><em>)</em>) – The number of nearest neighbors to compute for each row (item) of
