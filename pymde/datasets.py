@@ -379,8 +379,11 @@ def counties(root="./", download=True) -> Dataset:
     Estimates longitudinal survey, run by the US Census Bureau.
 
     - ``data``: the PCA embedding of the clean genetic data, in R^20
-    - ``corrupted_data``: the corrupted data, in R^20
-    - ``attributes``: two keys, ``clean_colors`` and ``corrupted_colors``.
+    - ``county_dataframe``: the raw ACS data
+    - ``voting_dataframe``: the raw 2016 voting data
+    - ``attributes``: one key, ``democratic_fraction``, the fraction of
+      of voters who voted Democratic in each county in the 2016 presidential
+      election
     """
     try:
         import pandas as pd

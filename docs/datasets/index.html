@@ -101,6 +101,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#mnist">MNIST</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#google-scholar">Google Scholar</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#scrna-transcriptomes-from-covid-19-patients">scRNA transcriptomes from COVID-19 patients</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#population-genetics">Population genetics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#us-counties">US counties</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
@@ -191,7 +193,7 @@ dict, and metadata about the dataset (eg, its authors) is available in
 <p>The first time one of these functions is called, it will download the dataset and
 cache it locally, in the current directory (change the directory with
 the <code class="docutils literal notranslate"><span class="pre">root</span></code> keyword argument). Subsequent calls will use the cached data.</p>
-<p>PyMDE currently provides three datasets. If you would like to add an
+<p>PyMDE currently provides the below datasets. If you would like to add an
 additional dataset, please reach out to us on
 <a class="reference external" href="https://github.com/cvxgrp/pymde">Github</a>.</p>
 <div class="section" id="mnist">
@@ -251,6 +253,56 @@ Wilk et al. paper: <a class="reference external" href="https://www.nature.com/ar
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">data</span></code>: the PCA embedding</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">attributes</span></code>: two keys, <code class="docutils literal notranslate"><span class="pre">cell_type</span></code> and <code class="docutils literal notranslate"><span class="pre">health_status</span></code>.</p></li>
+</ul>
+</dd></dl>
+
+</div>
+<div class="section" id="population-genetics">
+<h2>Population genetics<a class="headerlink" href="#population-genetics" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt>
+<code class="sig-prename descclassname">pymde.datasets.</code><code class="sig-name descname">population_genetics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span><span class="o">=</span><span class="default_value">'./'</span></em>, <em class="sig-param"><span class="n">download</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="../api/index.html#pymde.datasets.Dataset" title="pymde.datasets.Dataset">pymde.datasets.Dataset</a></dt>
+<dd><p>Population genetics dataset (Nelson, et al)</p>
+<p>The population genetics dataset includes a PCA embedding (in R^20) of
+single nucleotide polymorphism data associated with 1,387
+individuals thought to be of European descent. (The data is from the
+Population Reference Sample project by Nelson, et al.)</p>
+<p>It also contains a “corrupted” version of the data, in which 154 additional
+points have been injected; the first 10 coordinates of these synthetic
+points are generated using a discrete uniform distribution on
+{0, 1, 2}, and the last 10 are generated using a discrete uniform
+distritubtion on {1/12, /18}.</p>
+<p>A study of Novembre et al (2008) showed that a PCA embedding in R^2
+roughly resembles the map of Europe, suggesting that the genes
+encode geographical information. But PCA does not produce interesting
+visualizations of the corrupted data. If distortion functions are chosen to
+be robust (eg, using the Log1p or Huber attractive penalties), we can
+create embeddings that preserve the geographical structure, while
+placing the synthetic points to the side, in their own cluser.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code>: the PCA embedding of the clean genetic data, in R^20</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">corrupted_data</span></code>: the corrupted data, in R^20</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">attributes</span></code>: two keys, <code class="docutils literal notranslate"><span class="pre">clean_colors</span></code> and <code class="docutils literal notranslate"><span class="pre">corrupted_colors</span></code>.</p></li>
+</ul>
+</dd></dl>
+
+</div>
+<div class="section" id="us-counties">
+<h2>US counties<a class="headerlink" href="#us-counties" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt>
+<code class="sig-prename descclassname">pymde.datasets.</code><code class="sig-name descname">counties</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span><span class="o">=</span><span class="default_value">'./'</span></em>, <em class="sig-param"><span class="n">download</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="../api/index.html#pymde.datasets.Dataset" title="pymde.datasets.Dataset">pymde.datasets.Dataset</a></dt>
+<dd><p>US counties (2013-2017 ACS 5-Year Estimates)</p>
+<p>This dataset contains 34 demographic features for each of the 3,220 US
+counties. The features were collected by the 2013-2017 ACS 5-Year
+Estimates longitudinal survey, run by the US Census Bureau.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code>: the PCA embedding of the clean genetic data, in R^20</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">county_dataframe</span></code>: the raw ACS data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">voting_dataframe</span></code>: the raw 2016 voting data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">attributes</span></code>: one key, <code class="docutils literal notranslate"><span class="pre">democratic_fraction</span></code>, the fraction of
+of voters who voted Democratic in each county in the 2016 presidential
+election</p></li>
 </ul>
 </dd></dl>
 

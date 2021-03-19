@@ -55,6 +55,24 @@ much longer than a minute, but it will take longer to compute on a CPU.
 
 - `Google Scholar notebook <https://github.com/cvxgrp/pymde/blob/main/examples/google_scholar.ipynb>`_ 
 
+Population Genetics
+-------------------
+The population genetics notebook embeds genomic data of individuals thought
+to be of European ancestry, and recovers what appears to be a map of Europe.
+
+- `Population genetics notebook <https://github.com/cvxgrp/pymde/blob/main/examples/population_genetics.ipynb>`_
+
+US Counties
+-----------
+The US counties notebook embeds 3,220 US counties, described by demographic
+data, into two dimensions. The resulting embedding is colored by the
+fraction of voters who voted for Democratic candidates in the 2016 presidential
+election (voting data was not used in computing the embedding). Moreover,
+the resulting embedding vaguely resembles a map of the US (though no geographic
+data was used in computing the embedding).
+
+- `US counties notebook <https://github.com/cvxgrp/pymde/blob/main/examples/counties.ipynb>`_
+
 Dissimilar Edges and Negative Weights
 -------------------------------------
 When creating an embedding for preserving neighbors, an important hyper-parameter

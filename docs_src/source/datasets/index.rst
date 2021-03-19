@@ -19,7 +19,7 @@ The first time one of these functions is called, it will download the dataset an
 cache it locally, in the current directory (change the directory with
 the ``root`` keyword argument). Subsequent calls will use the cached data.
 
-PyMDE currently provides three datasets. If you would like to add an
+PyMDE currently provides the below datasets. If you would like to add an
 additional dataset, please reach out to us on
 `Github <https://github.com/cvxgrp/pymde>`_.
 
@@ -40,4 +40,18 @@ scRNA transcriptomes from COVID-19 patients
 -------------------------------------------
 
 .. autofunction:: pymde.datasets.covid19_scrna_wilk
+   :noindex:
+
+
+Population genetics
+-------------------
+
+.. autofunction:: pymde.datasets.population_genetics
+   :noindex:
+
+
+US counties
+-----------
+
+.. autofunction:: pymde.datasets.counties
    :noindex:
