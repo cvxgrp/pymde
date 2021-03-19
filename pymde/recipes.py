@@ -184,7 +184,7 @@ def preserve_neighbors(
         ``pymde.penalties.Log`` or ``pymde.penalties.InversePower``.
     constraint: pymde.constraints.Constraint (optional)
         Embedding constraint, like ``pymde.Standardized()`` or
-        ``pymde.Anchored(anchors, values)`` (or ``None``). Defaults no
+        ``pymde.Anchored(anchors, values)`` (or ``None``). Defaults to no
         constraint when a repulsive penalty is provided, otherwise defaults to
         ``pymde.Standardized()``.
     n_neighbors: int (optional)

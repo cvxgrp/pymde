@@ -76,25 +76,63 @@ def MNIST(root="./", download=True) -> Dataset:
       in which each entry gives the digit depicted in the corresponding row of
       ``data``.
     """
-    mnist_train = torchvision.datasets.MNIST(
-        root=root, train=True, download=download
-    )
-    mnist_test = torchvision.datasets.MNIST(
-        root=root, train=False, download=download
-    )
+    url = "https://akshayagrawal.com/mnist/MNIST.tar.gz"
 
-    images = torch.cat([mnist_train.data, mnist_test.data])
-    digits = torch.cat([mnist_train.targets, mnist_test.targets])
-    attributes = {"digits": digits}
-    return Dataset(
-        data=images.reshape(-1, 784),
-        attributes=attributes,
-        metadata={
-            "authors": "LeCunn, et al.",
-            "url": "http://yann.lecun.com/exdb/mnist/",
-        },
-    )
+    root = os.path.expanduser(root)
 
+    extract_root = os.path.join(root, "MNIST")
+    raw = os.path.join(extract_root, "raw")
+    processed = os.path.join(extract_root, "processed")
+    raw_files = [
+        "t10k-images-idx3-ubyte.gz",
+        "t10k-labels-idx1-ubyte.gz",
+        "train-images-idx3-ubyte.gz",
+        "train-labels-idx1-ubyte.gz",
+    ]
+    processed_files = ["test.pt", "training.pt"]
+
+    def load_dataset():
+        mnist_train = torchvision.datasets.MNIST(
+            root=root,
+            train=True,
+            download=False,
+        )
+        mnist_test = torchvision.datasets.MNIST(
+            root=root,
+            train=False,
+            download=False,
+        )
+
+        images = torch.cat([mnist_train.data, mnist_test.data])
+        digits = torch.cat([mnist_train.targets, mnist_test.targets])
+        attributes = {"digits": digits}
+        return Dataset(
+            data=images.reshape(-1, 784),
+            attributes=attributes,
+            metadata={
+                "authors": "LeCunn, et al.",
+                "url": "http://yann.lecun.com/exdb/mnist/",
+            },
+        )
+
+
+    if _is_cached(raw, raw_files) and _is_cached(processed, processed_files):
+        LOGGER.info("Load cached dataset.")
+        return load_dataset()
+
+    if not download:
+        raise RuntimeError("`download` is False, but data is not cached.")
+
+    _install_headers()
+    filename = url.rpartition("/")[2]
+    LOGGER.info("Downloading MNIST dataset ...")
+    torchvision.datasets.utils.download_and_extract_archive(
+        url, download_root=root, filename=filename
+    )
+    os.remove(os.path.join(root, filename))
+    LOGGER.info("Download complete.")
+
+    return load_dataset()
 
 def google_scholar(root="./", download=True, full=False) -> Dataset:
     """Google Scholar dataset (Agrawal, et al.).
