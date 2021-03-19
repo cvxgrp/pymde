@@ -116,7 +116,7 @@ def MNIST(root="./", download=True) -> Dataset:
         )
 
     if _is_cached(raw, raw_files) and _is_cached(processed, processed_files):
-        LOGGER.info("Load cached dataset.")
+        LOGGER.info("Loading cached dataset.")
         return load_dataset()
 
     if not download:
@@ -203,7 +203,7 @@ def google_scholar(root="./", download=True, full=False) -> Dataset:
         ]
 
     if _is_cached(root, files):
-        LOGGER.info("Load cached dataset.")
+        LOGGER.info("Loading cached dataset.")
         return load_dataset()
 
     if not download:
@@ -267,7 +267,7 @@ def covid19_scrna_wilk(root="./", download=True) -> Dataset:
     ]
 
     if _is_cached(root, files):
-        LOGGER.info("Load cached dataset.")
+        LOGGER.info("Loading cached dataset.")
         return load_dataset()
 
     if not download:
@@ -354,7 +354,7 @@ def population_genetics(root="./", download=True) -> Dataset:
     ]
 
     if _is_cached(root, files):
-        LOGGER.info("Load cached dataset.")
+        LOGGER.info("Loading cached dataset.")
         return load_dataset()
 
     if not download:
@@ -424,7 +424,7 @@ def counties(root="./", download=True) -> Dataset:
     ]
 
     if _is_cached(root, files):
-        LOGGER.info("Load cached dataset.")
+        LOGGER.info("Loading cached dataset.")
         return load_dataset()
 
     if not download:
