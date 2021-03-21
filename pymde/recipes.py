@@ -192,7 +192,7 @@ def preserve_neighbors(
         ``data``. A sensible value is chosen by default, depending on the
         number of items.
     repulsive_fraction: float (optional)
-        How many repulsive edges to enclude, relative to the number
+        How many repulsive edges to include, relative to the number
         of attractive edges. 1 means as many repulsive edges as
         attractive edges. The higher this number, the more uniformly spread
         out the embedding will be.
