@@ -40,6 +40,9 @@ jobs:
       run: |
         python setup.py build_ext --inplace
         python setup.py install
+    - name: Try importing torch
+      run: |
+        python import_torch.py
     - name: Try importing pymde
       run: |
         python import_pymde.py
