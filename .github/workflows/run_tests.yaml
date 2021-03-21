@@ -32,14 +32,17 @@ jobs:
     - if: matrix.os == 'windows-latest'
       run: pip install --find-links https://download.pytorch.org/whl/torch_stable.html torch==1.8.0+cpu torchvision==0.9.0+cpu
       
-    - run: pip install -r requirements.txt
+#    - run: pip install -r requirements.txt
     - name: Lint with flake8
       run: |
         flake8 pymde/
-    - name: Install pymde
+#    - name: Install pymde
+#      run: |
+#        python setup.py build_ext --inplace
+#        python setup.py install
+    - name: Install pymde with pip  # should pull in pyproject.toml ...
       run: |
-        python setup.py build_ext --inplace
-        python setup.py install
+        pip install .
     - name: Try importing torch
       run: |
         python import_torch.py
