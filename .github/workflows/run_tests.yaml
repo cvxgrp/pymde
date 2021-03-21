@@ -42,6 +42,7 @@ jobs:
 #        python setup.py install
     - name: Install pymde with pip  # should pull in pyproject.toml ...
       run: |
+        python setup.py build_ext --inplace
         pip install .
     - name: Try importing torch
       run: |
