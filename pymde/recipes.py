@@ -12,7 +12,6 @@ from pymde.functions import penalties, losses
 from pymde import preprocess
 
 
-# TODO: test data matrix path
 def preserve_distances(
     data,
     embedding_dim=2,
@@ -21,7 +20,7 @@ def preserve_distances(
     max_distances=5e7,
     device="cpu",
     verbose=False,
-):
+) -> problem.MDE:
     """Construct an MDE problem based on original distances.
 
     This function constructs an MDE problem for preserving pairwise
@@ -139,7 +138,7 @@ def preserve_neighbors(
     init="quadratic",
     device="cpu",
     verbose=False,
-):
+) -> problem.MDE:
     """Construct an MDE problem designed to preserve local structure.
 
     This function constructs an MDE problem for preserving the
@@ -156,8 +155,8 @@ def preserve_neighbors(
     The MDE problem uses distortion functions derived from weights (i.e.,
     penalties).
 
-    To obtain an embedding, call the ``embed`` method on the returned object.
-    To plot it, use ``pymde.plot``.
+    To obtain an embedding, call the ``embed`` method on the returned ``MDE``
+    object. To plot it, use ``pymde.plot``.
 
     .. code:: python3
 
@@ -172,7 +171,7 @@ def preserve_neighbors(
         computed using Euclidean distance if the data is a matrix,
         or the shortest-path metric if the data is a graph.
     embedding_dim: int
-        The embedding dimension, R^m. Use 2 or 3 for visualization.
+        The embedding dimension. Use 2 or 3 for visualization.
     attractive_penalty: pymde.Function class (or factory)
         Callable that constructs a distortion function, given positive
         weights. Typically one of the classes from ``pymde.penalties``,
@@ -193,9 +192,11 @@ def preserve_neighbors(
         number of items.
     repulsive_fraction: float (optional)
         How many repulsive edges to include, relative to the number
-        of attractive edges. 1 means as many repulsive edges as
-        attractive edges. The higher this number, the more uniformly spread
-        out the embedding will be.
+        of attractive edges. ``1`` means as many repulsive edges as attractive
+        edges. The higher this number, the more uniformly spread out the
+        embedding will be. Defaults to ``0.5`` for standardized embeddings, and
+        ``1`` otherwise. (If ``repulsive_penalty`` is ``None``, this argument
+        is ignored.)
     max_distance: float (optional)
         If not None, neighborhoods are restricted to have a radius
         no greater than ``max_distance``.

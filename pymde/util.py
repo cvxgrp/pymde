@@ -56,6 +56,8 @@ def _is_numeric(arg):
 
 
 def to_tensor(args, device=None):
+    """Convert an arg or sequence of args to torch Tensors
+    """
     singleton = not isinstance(args, (list, tuple))
     if singleton:
         args = [args]
@@ -99,6 +101,15 @@ def tensor_arguments(func):
 
 
 def all_edges(n):
+    """Return a tensor of all (n choose 2) edges
+
+    Constructs all possible edges among n items. For example, if ``n`` is 4,
+    the return value will be equal to
+
+    .. code:: python3
+
+        torch.Tensor([[0, 1], [0, 2], [0, 3], [1, 2], [1, 3], [2, 3]])
+    """
     return torch.triu_indices(n, n, 1).T
 
 
@@ -224,6 +235,25 @@ def _rotate_3d(X, alpha, beta, gamma):
 
 @tensor_arguments
 def rotate(X, degrees):
+    """Rotate a 2 or 3D embedding
+
+    Rotates a 2/3D embedding by ``degrees``. If ``X`` is a 2D embedding,
+    ``degrees`` should be a scalar; if it is 3D, ``degrees`` should be
+    a length-3 ``torch.Tensor``, with one angle for each axis (the embedding
+    will be rotated along the x-axis first, then the y-axis, then the z-axis).
+
+    Arguments
+    ---------
+    X : torch.Tensor
+        The embedding to rotate.
+    degrees: torch.Tensor
+        The angles of rotation.
+
+    Returns
+    -------
+    torch.Tensor
+        The rotated embedding
+    """
     if X.shape[1] not in [2, 3]:
         raise ValueError(
             "Only 2 or 3 dimensional embeddings can be "
@@ -242,6 +272,11 @@ def rotate(X, degrees):
 
 @tensor_arguments
 def center(X):
+    """Center an embedding
+
+    Returns a new embedding, equal to the given embedding minus the mean
+    of its rows.
+    """
     return X - X.mean(dim=0)[None, :]
 
 
@@ -255,15 +290,15 @@ def align(source, target):
 
     Arguments
     ---------
-        source: torch.Tensor
-            The embedding to rotate.
-        target: torch.Tensor
-            The target embedding, of the same shape as source.
+    source: torch.Tensor
+        The embedding to be aligned.
+    target: torch.Tensor
+        The target embedding, of the same shape as source.
 
     Returns
     -------
-        torch.Tensor
-            The rotation of source best aligned to the target.
+    torch.Tensor
+        The rotation of source best aligned to the target.
     """
     source_mean = source.mean(dim=0)
     source = source - source_mean[None, :]

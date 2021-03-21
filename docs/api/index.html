@@ -825,7 +825,7 @@ the x and y axis.</p></li>
 <span id="api-preserve-neighbors"></span><h2>Preserve neighbors<a class="headerlink" href="#preserve-neighbors" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt id="pymde.preserve_neighbors">
-<code class="sig-prename descclassname">pymde.</code><code class="sig-name descname">preserve_neighbors</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">embedding_dim=2</em>, <em class="sig-param">attractive_penalty=&lt;class 'pymde.functions.penalties.Log1p'&gt;</em>, <em class="sig-param">repulsive_penalty=&lt;class 'pymde.functions.penalties.Log'&gt;</em>, <em class="sig-param">constraint=None</em>, <em class="sig-param">n_neighbors=None</em>, <em class="sig-param">repulsive_fraction=None</em>, <em class="sig-param">max_distance=None</em>, <em class="sig-param">init='quadratic'</em>, <em class="sig-param">device='cpu'</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.preserve_neighbors" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pymde.</code><code class="sig-name descname">preserve_neighbors</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">embedding_dim=2</em>, <em class="sig-param">attractive_penalty=&lt;class 'pymde.functions.penalties.Log1p'&gt;</em>, <em class="sig-param">repulsive_penalty=&lt;class 'pymde.functions.penalties.Log'&gt;</em>, <em class="sig-param">constraint=None</em>, <em class="sig-param">n_neighbors=None</em>, <em class="sig-param">repulsive_fraction=None</em>, <em class="sig-param">max_distance=None</em>, <em class="sig-param">init='quadratic'</em>, <em class="sig-param">device='cpu'</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span> &#x2192; pymde.problem.MDE<a class="headerlink" href="#pymde.preserve_neighbors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct an MDE problem designed to preserve local structure.</p>
 <p>This function constructs an MDE problem for preserving the
 local structure of original data. This MDE problem is well-suited for
@@ -838,8 +838,8 @@ Data matrices should be torch Tensors, NumPy arrays, or scipy sparse
 matrices; graphs should be instances of <code class="docutils literal notranslate"><span class="pre">pymde.Graph</span></code>.</p>
 <p>The MDE problem uses distortion functions derived from weights (i.e.,
 penalties).</p>
-<p>To obtain an embedding, call the <code class="docutils literal notranslate"><span class="pre">embed</span></code> method on the returned object.
-To plot it, use <code class="docutils literal notranslate"><span class="pre">pymde.plot</span></code>.</p>
+<p>To obtain an embedding, call the <code class="docutils literal notranslate"><span class="pre">embed</span></code> method on the returned <code class="docutils literal notranslate"><span class="pre">MDE</span></code>
+object. To plot it, use <code class="docutils literal notranslate"><span class="pre">pymde.plot</span></code>.</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">embedding</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">preserve_neighbors</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">embed</span><span class="p">()</span>
 <span class="n">pymde</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">embedding</span><span class="p">)</span>
 </pre></div>
@@ -851,7 +851,7 @@ To plot it, use <code class="docutils literal notranslate"><span class="pre">pym
 The original data, a data matrix or a graph. Neighbors are
 computed using Euclidean distance if the data is a matrix,
 or the shortest-path metric if the data is a graph.</p></li>
-<li><p><strong>embedding_dim</strong> (<em>int</em>) – The embedding dimension, R^m. Use 2 or 3 for visualization.</p></li>
+<li><p><strong>embedding_dim</strong> (<em>int</em>) – The embedding dimension. Use 2 or 3 for visualization.</p></li>
 <li><p><strong>attractive_penalty</strong> (<em>pymde.Function class</em><em> (or </em><em>factory</em><em>)</em>) – Callable that constructs a distortion function, given positive
 weights. Typically one of the classes from <code class="docutils literal notranslate"><span class="pre">pymde.penalties</span></code>,
 such as <code class="docutils literal notranslate"><span class="pre">pymde.penalties.log1p</span></code>, <code class="docutils literal notranslate"><span class="pre">pymde.penalties.Huber</span></code>, or
@@ -867,9 +867,11 @@ constraint when a repulsive penalty is provided, otherwise defaults to
 <code class="docutils literal notranslate"><span class="pre">data</span></code>. A sensible value is chosen by default, depending on the
 number of items.</p></li>
 <li><p><strong>repulsive_fraction</strong> (<em>float</em><em> (</em><em>optional</em><em>)</em>) – How many repulsive edges to include, relative to the number
-of attractive edges. 1 means as many repulsive edges as
-attractive edges. The higher this number, the more uniformly spread
-out the embedding will be.</p></li>
+of attractive edges. <code class="docutils literal notranslate"><span class="pre">1</span></code> means as many repulsive edges as attractive
+edges. The higher this number, the more uniformly spread out the
+embedding will be. Defaults to <code class="docutils literal notranslate"><span class="pre">0.5</span></code> for standardized embeddings, and
+<code class="docutils literal notranslate"><span class="pre">1</span></code> otherwise. (If <code class="docutils literal notranslate"><span class="pre">repulsive_penalty</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code>, this argument
+is ignored.)</p></li>
 <li><p><strong>max_distance</strong> (<em>float</em><em> (</em><em>optional</em><em>)</em>) – If not None, neighborhoods are restricted to have a radius
 no greater than <code class="docutils literal notranslate"><span class="pre">max_distance</span></code>.</p></li>
 <li><p><strong>init</strong> (<em>str</em>) – Initialization strategy; ‘quadratic’ or ‘random’.</p></li>
@@ -891,7 +893,7 @@ no greater than <code class="docutils literal notranslate"><span class="pre">max
 <span id="api-preserve-distances"></span><h2>Preserve distances<a class="headerlink" href="#preserve-distances" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt id="pymde.preserve_distances">
-<code class="sig-prename descclassname">pymde.</code><code class="sig-name descname">preserve_distances</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">embedding_dim=2</em>, <em class="sig-param">loss=&lt;class 'pymde.functions.losses.Absolute'&gt;</em>, <em class="sig-param">constraint=None</em>, <em class="sig-param">max_distances=50000000.0</em>, <em class="sig-param">device='cpu'</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.preserve_distances" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pymde.</code><code class="sig-name descname">preserve_distances</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">embedding_dim=2</em>, <em class="sig-param">loss=&lt;class 'pymde.functions.losses.Absolute'&gt;</em>, <em class="sig-param">constraint=None</em>, <em class="sig-param">max_distances=50000000.0</em>, <em class="sig-param">device='cpu'</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span> &#x2192; pymde.problem.MDE<a class="headerlink" href="#pymde.preserve_distances" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct an MDE problem based on original distances.</p>
 <p>This function constructs an MDE problem for preserving pairwise
 distances between items. This can be useful for preserving the global
@@ -1616,7 +1618,13 @@ edges is very large).</p></li>
 <dl class="py function">
 <dt id="pymde.all_edges">
 <code class="sig-prename descclassname">pymde.</code><code class="sig-name descname">all_edges</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.all_edges" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return a tensor of all (n choose 2) edges</p>
+<p>Constructs all possible edges among n items. For example, if <code class="docutils literal notranslate"><span class="pre">n</span></code> is 4,
+the return value will be equal to</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]])</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="py function">
 <dt id="pymde.align">
@@ -1628,7 +1636,7 @@ orthogonal Procrustes problem.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>source</strong> (<em>torch.Tensor</em>) – The embedding to rotate.</p></li>
+<li><p><strong>source</strong> (<em>torch.Tensor</em>) – The embedding to be aligned.</p></li>
 <li><p><strong>target</strong> (<em>torch.Tensor</em>) – The target embedding, of the same shape as source.</p></li>
 </ul>
 </dd>
@@ -1644,12 +1652,34 @@ orthogonal Procrustes problem.</p>
 <dl class="py function">
 <dt id="pymde.center">
 <code class="sig-prename descclassname">pymde.</code><code class="sig-name descname">center</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.center" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Center an embedding</p>
+<p>Returns a new embedding, equal to the given embedding minus the mean
+of its rows.</p>
+</dd></dl>
 
 <dl class="py function">
 <dt id="pymde.rotate">
 <code class="sig-prename descclassname">pymde.</code><code class="sig-name descname">rotate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">degrees</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymde.rotate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Rotate a 2 or 3D embedding</p>
+<p>Rotates a 2/3D embedding by <code class="docutils literal notranslate"><span class="pre">degrees</span></code>. If <code class="docutils literal notranslate"><span class="pre">X</span></code> is a 2D embedding,
+<code class="docutils literal notranslate"><span class="pre">degrees</span></code> should be a scalar; if it is 3D, <code class="docutils literal notranslate"><span class="pre">degrees</span></code> should be
+a length-3 <code class="docutils literal notranslate"><span class="pre">torch.Tensor</span></code>, with one angle for each axis (the embedding
+will be rotated along the x-axis first, then the y-axis, then the z-axis).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>torch.Tensor</em>) – The embedding to rotate.</p></li>
+<li><p><strong>degrees</strong> (<em>torch.Tensor</em>) – The angles of rotation.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The rotated embedding</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
 
 <span class="target" id="api-plot"></span><dl class="py function">
 <dt id="pymde.plot">
