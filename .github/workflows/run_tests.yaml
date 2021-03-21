@@ -9,7 +9,6 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        # add 3.9 once llvmlite supports python 3.9
         python-version: [3.7, 3.8, 3.9]
 
     steps:
@@ -41,6 +40,9 @@ jobs:
       run: |
         python setup.py build_ext --inplace
         python setup.py install
+    - name: Try importing pymde
+      run: |
+        python import_pymde.py
     - name: Test with pytest
       run: |
         pytest -v pymde/
