@@ -11,11 +11,10 @@ API documentation
    backward compatible with earlier versions, but sometimes we may be unable to
    do so.
 
-   If a version ever includes a breaking change, we will make sure
-   to communicate that clearly. Until we reach v1.0.0, an increase in the minor
-   version will indicate breaking changes (e.g., v0.2.0 may have some changes
-   that are incompatible with v0.1.0, but v0.1.5 will be fully compatible
-   with v0.1.0).
+   If a new version carries a breaking change, its minor version number will
+   be greater than the previous version (e.g., v0.2.0 may have some changes
+   that are incompatible with v0.1.5, but v0.1.5 will be fully compatible with
+   v0.1.0).
 
 
 MDE
