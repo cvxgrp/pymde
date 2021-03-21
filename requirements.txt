@@ -1,5 +1,5 @@
 cython
-numpy==1.17.5
-scipy==1.6
+numpyi >= 1.17.5
+scipyi >= 1.6
 torch --find-links https://download.pytorch.org/whl/torch_stable.html
 torchvision --find-links https://download.pytorch.org/whl/torch_stable.html
