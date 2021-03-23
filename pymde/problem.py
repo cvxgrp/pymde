@@ -734,9 +734,6 @@ class MDE(torch.nn.Module):
             tmpdir_obj = tempfile.TemporaryDirectory()
             tmpdir = tmpdir_obj.name
 
-        mde = copy.deepcopy(self)
-        mde.to("cpu")
-
         if axis_limits is None:
             lim_low = torch.tensor(float("inf"))
             lim_high = -torch.tensor(float("inf"))
@@ -749,7 +746,7 @@ class MDE(torch.nn.Module):
                     lim_high = high
             axis_limits = experiment_utils._square_lim(lim_low, lim_high)
 
-        for i in tqdm(range(len(mde.solve_stats.snapshots) + 1)):
+        for i in tqdm(range(len(self.solve_stats.snapshots) + 1)):
             # Repeat the last frame just once, to make the final embedding
             # look sticky.
             #
@@ -757,8 +754,8 @@ class MDE(torch.nn.Module):
             # a jupyter notebook, and disabling interactive mode (plt.ioff())
             # doesn't fix it
             experiment_utils._plot_gif_frame(
-                mde.solve_stats.snapshots[
-                    min(len(mde.solve_stats.snapshots) - 1, i)
+                self.solve_stats.snapshots[
+                    min(len(self.solve_stats.snapshots) - 1, i)
                 ],
                 color_by=color_by,
                 cmap=color_map,
@@ -775,7 +772,7 @@ class MDE(torch.nn.Module):
 
         if fps is None:
             # aim for a 4 second movie, but no fewer than 15 fps
-            n_frames = len(mde.solve_stats.snapshots)
+            n_frames = len(self.solve_stats.snapshots)
             fps = max(n_frames / 4.0, 15.0)
 
         frame_duration = 1000.0 / fps
