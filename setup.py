@@ -54,6 +54,7 @@ setup(
     ext_modules=[_graph],
     include_dirs=[np.get_include()],
     license="Apache License, Version 2.0",
+    package_data={"": ["LICENSE"]},
     url="https://github.com/cvxgrp/pymde",
     classifiers=[
         "Programming Language :: Python :: 3",
