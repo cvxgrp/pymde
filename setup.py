@@ -54,6 +54,7 @@ setup(
     packages=find_packages(),
     ext_modules=[_graph],
     license="Apache License, Version 2.0",
+    license_files=["LICENSE"],
     url="https://github.com/cvxgrp/pymde",
     classifiers=[
         "Programming Language :: Python :: 3",
