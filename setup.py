@@ -17,6 +17,7 @@ _graph = Extension(
     # once Cython 3.0 is released, uncomment the below line
     # define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")],
     extra_compile_args=["-O3"],
+    include_dirs=[np.get_include()],
 )
 
 
@@ -52,7 +53,6 @@ setup(
     ],
     packages=find_packages(),
     ext_modules=[_graph],
-    include_dirs=[np.get_include()],
     license="Apache License, Version 2.0",
     url="https://github.com/cvxgrp/pymde",
     classifiers=[
