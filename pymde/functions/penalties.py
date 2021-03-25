@@ -333,7 +333,7 @@ class Log(Function):
 
     def forward(self, distances):
         return self.weights * torch.log(
-            1 - torch.exp(-(distances ** self.exponent))
+            -torch.expm1(-(distances ** self.exponent))
         )
 
 
