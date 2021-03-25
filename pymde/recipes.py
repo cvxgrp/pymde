@@ -257,6 +257,7 @@ def preserve_neighbors(
     )
     edges = knn_graph.edges.to(device)
     weights = knn_graph.weights.to(device)
+    weights = weights.type(data.dtype)
 
     if init == "quadratic":
         if verbose:
@@ -271,6 +272,7 @@ def preserve_neighbors(
             f"Unsupported value '{init}' for keyword argument `init`; "
             "the supported values are 'quadratic' and 'random'."
         )
+    X_init = X_init.type(data.dtype)
 
     if repulsive_penalty is not None:
         if repulsive_fraction is None:
