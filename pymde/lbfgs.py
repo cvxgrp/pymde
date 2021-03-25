@@ -66,11 +66,14 @@ def _strong_wolfe(obj_func,
             t *= 0.5
         else:
             break
-    if (np.isnan(f_new).any() or
-            np.isinf(f_new).any() or
-            torch.isnan(g_new).any() or
-            torch.isinf(g_new).any()):
+    if np.isnan(f_new).any():
         raise SolverError("Function evaluation returned NaN.")
+    elif np.isinf(f_new).any():
+        raise SolverError("Function evaluation returned inf.")
+    elif torch.isnan(g_new).any():
+        raise SolverError("Gradient evaluation returned NaN.")
+    elif torch.isinf(g_new).any():
+        raise SolverError("Gradient evaluation returned inf.")
     ls_func_evals = 1
     gtd_new = g_new.dot(d)
 
