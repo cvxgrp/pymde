@@ -65,6 +65,67 @@ class Dataset(object):
             return list(self.attributes.values())[0]
 
 
+def FashionMNIST(root="./", download=True) -> Dataset:
+    """Fashion-MNIST dataset (Xiao, et al.).
+
+    The Fashion-MNIST dataset contains 70,000, 28x28 images of
+    Zalando fashion articles.
+
+    - ``data``: ``torch.Tensor`` with 70,000 rows, each of
+      length 784 (representing the pixels in the image).
+    - ``attributes`` dict: the key ``class`` holds an array
+      in which each entry gives the fashion article in the corresponding row of
+      ``data``.
+    """
+    root = os.path.expanduser(root)
+
+    extract_root = os.path.join(root, "FashionMNIST")
+    raw = os.path.join(extract_root, "raw")
+    processed = os.path.join(extract_root, "processed")
+    raw_files = [
+        "t10k-images-idx3-ubyte.gz",
+        "t10k-labels-idx1-ubyte.gz",
+        "train-images-idx3-ubyte.gz",
+        "train-labels-idx1-ubyte.gz",
+    ]
+    processed_files = ["test.pt", "training.pt"]
+
+    def load_dataset():
+        f_mnist_train = torchvision.datasets.FashionMNIST(
+            root=root,
+            train=True,
+            download=True,
+        )
+        f_mnist_test = torchvision.datasets.FashionMNIST(
+            root=root,
+            train=False,
+            download=True,
+        )
+
+        images = torch.cat([f_mnist_train.data, f_mnist_test.data])
+        label = torch.cat([f_mnist_train.targets, f_mnist_test.targets])
+        attributes = {"class": label}
+        return Dataset(
+            data=images.reshape(-1, 784),
+            attributes=attributes,
+            metadata={
+                "authors": "Xiao, et al.",
+                "url": "https://github.com/zalandoresearch/fashion-mnist",
+            },
+        )
+
+    if _is_cached(raw, raw_files) and _is_cached(processed, processed_files):
+        LOGGER.info("Loading cached dataset.")
+        return load_dataset()
+
+    if not download:
+        raise RuntimeError("`download` is False, but data is not cached.")
+
+    _install_headers()
+
+    return load_dataset()
+
+
 def MNIST(root="./", download=True) -> Dataset:
     """MNIST dataset (LeCun, et al.).
 
