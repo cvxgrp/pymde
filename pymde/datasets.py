@@ -68,7 +68,8 @@ class Dataset(object):
 def FashionMNIST(root="./", download=True) -> Dataset:
     """Fashion-MNIST dataset (Xiao, et al.).
 
-    The Fashion-MNIST dataset contains 70,000, 28x28 images of Zalando fashion articles.
+    The Fashion-MNIST dataset contains 70,000, 28x28 images of
+    Zalando fashion articles.
 
     - ``data``: ``torch.Tensor`` with 70,000 rows, each of
       length 784 (representing the pixels in the image).
@@ -90,19 +91,19 @@ def FashionMNIST(root="./", download=True) -> Dataset:
     processed_files = ["test.pt", "training.pt"]
 
     def load_dataset():
-        fashion_mnist_train = torchvision.datasets.FashionMNIST(
+        f_mnist_train = torchvision.datasets.FashionMNIST(
             root=root,
             train=True,
             download=True,
         )
-        fashion_mnist_test = torchvision.datasets.FashionMNIST(
+        f_mnist_test = torchvision.datasets.FashionMNIST(
             root=root,
             train=False,
             download=True,
         )
 
-        images = torch.cat([fashion_mnist_train.data, fashion_mnist_test.data])
-        label = torch.cat([fashion_mnist_train.targets, fashion_mnist_test.targets])
+        images = torch.cat([f_mnist_train.data, f_mnist_test.data])
+        label = torch.cat([f_mnist_train.targets, f_mnist_test.targets])
         attributes = {"class": label}
         return Dataset(
             data=images.reshape(-1, 784),
