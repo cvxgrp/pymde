@@ -28,6 +28,16 @@ function to embed vector data, how to create MDE problems for preserving
 neighbors from scratch, how to sanity-check an embedding, and how
 to use an embedding to look for outliers in the original data.
 
+.. _example_fashion_mnist:
+
+Fashion MNIST
+-------------
+
+The Fashion MNIST notebook is analogous to the MNIST notebook, except
+it uses the Fashion MNIST dataset.
+
+- `Fashion MNIST notebook <https://github.com/cvxgrp/pymde/blob/main/examples/fashion_mnist.ipynb>`_
+
 .. _example_scrna:
 
 Single-Cell Genomics

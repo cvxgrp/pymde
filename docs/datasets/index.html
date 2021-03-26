@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Datasets &mdash; pymde 0.1.4 documentation</title>
+  <title>Datasets &mdash; pymde 0.1.5 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                v0.1.4
+                v0.1.5
               </div>
             
           
@@ -99,6 +99,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../preprocess/index.html">Preprocessing</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Datasets</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#mnist">MNIST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fashion-mnist">Fashion MNIST</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#google-scholar">Google Scholar</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#scrna-transcriptomes-from-covid-19-patients">scRNA transcriptomes from COVID-19 patients</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#population-genetics">Population genetics</a></li>
@@ -208,6 +209,24 @@ additional dataset, please reach out to us on
 length 784 (representing the pixels in the image).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">attributes</span></code> dict: the key <code class="docutils literal notranslate"><span class="pre">digits</span></code> holds an array
 in which each entry gives the digit depicted in the corresponding row of
+<code class="docutils literal notranslate"><span class="pre">data</span></code>.</p></li>
+</ul>
+</dd></dl>
+
+</div>
+<div class="section" id="fashion-mnist">
+<h2>Fashion MNIST<a class="headerlink" href="#fashion-mnist" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt>
+<code class="sig-prename descclassname">pymde.datasets.</code><code class="sig-name descname">FashionMNIST</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span><span class="o">=</span><span class="default_value">'./'</span></em>, <em class="sig-param"><span class="n">download</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="../api/index.html#pymde.datasets.Dataset" title="pymde.datasets.Dataset">pymde.datasets.Dataset</a></dt>
+<dd><p>Fashion-MNIST dataset (Xiao, et al.).</p>
+<p>The Fashion-MNIST dataset contains 70,000, 28x28 images of
+Zalando fashion articles.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code>: <code class="docutils literal notranslate"><span class="pre">torch.Tensor</span></code> with 70,000 rows, each of
+length 784 (representing the pixels in the image).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">attributes</span></code> dict: the key <code class="docutils literal notranslate"><span class="pre">class</span></code> holds an array
+in which each entry gives the fashion article in the corresponding row of
 <code class="docutils literal notranslate"><span class="pre">data</span></code>.</p></li>
 </ul>
 </dd></dl>

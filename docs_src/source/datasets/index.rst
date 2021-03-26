@@ -29,6 +29,12 @@ MNIST
 .. autofunction:: pymde.datasets.MNIST
    :noindex:
 
+Fashion MNIST
+-------------
+
+.. autofunction:: pymde.datasets.FashionMNIST
+   :noindex:
+
 Google Scholar
 --------------
 
