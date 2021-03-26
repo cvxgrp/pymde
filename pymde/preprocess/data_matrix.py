@@ -154,6 +154,18 @@ def k_nearest_neighbors(data, k, max_distance=None, verbose=False):
         [edges[flip_idx][:, 1], edges[flip_idx][:, 0]], axis=1
     )
 
+    duplicated_edges_mask = edges[:, 0] == edges[:, 1]
+    if duplicated_edges_mask.any():
+        problem.LOGGER.warning(
+            "Your dataset appears to contain duplicated items (rows); "
+            "when embedding, you should typically have unique items."
+        )
+        problem.LOGGER.warning(
+            "The following items have duplicates "
+            f"{edges[duplicated_edges_mask][:, 0]}"
+        )
+        edges = edges[~duplicated_edges_mask]
+
     weights = torch.ones(edges.shape[0], device=device, dtype=torch.float)
     if max_distance is not None:
         weights[

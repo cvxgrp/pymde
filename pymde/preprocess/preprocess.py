@@ -13,7 +13,7 @@ def sample_edges(n, num_edges, exclude=None, seed=None):
     n : int
         The number of items
     num_edges : int
-        The (maximum) number of edges to sample
+        The (maximum) number of edges to sample. Must be at most (n choose 2).
     exclude: torch.Tensor, shape (-1, 2) (optional)
         edges to exclude from the sampled edges
     seed: int (optional)
@@ -29,6 +29,13 @@ def sample_edges(n, num_edges, exclude=None, seed=None):
     if isinstance(exclude, torch.Tensor):
         exclude = exclude.cpu().numpy()
 
+    if num_edges > int((n * (n - 1) / 2.0)):
+        raise ValueError(
+            f"Cannot sample more than ({n} choose 2)="
+            f"{int(n * (n - 1) / 2.0)} edges. "
+            f"(requested: {num_edges} edges)"
+        )
+
     if exclude is not None and (exclude.shape[0] / (n * (n - 1) / 2.0)) >= 0.2:
         A = sp.coo_matrix(
             (np.ones(exclude.shape[0]), (exclude[:, 0], exclude[:, 1])),
@@ -37,11 +44,8 @@ def sample_edges(n, num_edges, exclude=None, seed=None):
         A[np.tril_indices(A.shape[0])] = 1.0
         A_comp = sp.coo_matrix(1 - A)
         sampled_edges = np.stack([A_comp.row, A_comp.col], axis=1)
-        num_sampled_edges = min(exclude.shape[0], sampled_edges.shape[0])
-        idx = np.random.choice(
-            sampled_edges.shape[0], num_sampled_edges, replace=False
-        )
-        return sampled_edges[idx]
+        idx = np.random.choice(sampled_edges.shape[0], num_edges, replace=False)
+        return torch.tensor(sampled_edges[idx])
 
     # randomly sample edges (i, j) with i < j via a bijection to
     # triangular numbers

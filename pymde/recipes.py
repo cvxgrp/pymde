@@ -280,6 +280,15 @@ def preserve_neighbors(
                 repulsive_fraction = 1
 
         n_repulsive = int(repulsive_fraction * edges.shape[0])
+        n_choose_2 = int(n * (n - 1) / 2)
+        if n_repulsive > n_choose_2:
+            problem.LOGGER.info(
+                f"The number of repulsive edges requested ({n_repulsive}) "
+                f"is larger than the total number of edges ({n_choose_2}). "
+                f"Sampling at most ({n_choose_2}) edges ..."
+            )
+            n_repulsive = n_choose_2
+
         negative_edges = preprocess.sample_edges(
             n, n_repulsive, exclude=edges
         ).to(device)
