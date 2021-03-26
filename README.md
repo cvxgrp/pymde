@@ -12,7 +12,9 @@ abstract object.
 What sets PyMDE apart from other embedding libraries is that it provides a
 simple but general framework for embedding, called _Minimum-Distortion
 Embedding_ (MDE). With MDE, it is easy to recreate well-known embeddings and to
-create new ones, tailored to your particular application. PyMDE is competitive
+create new ones, tailored to your particular application. Unlike most other
+popular embedding methods, PyMDE can also compute embeddings that satisfy
+some constraints, such as having uncorrelated feature columns. PyMDE is competitive
 in runtime with more specialized embedding methods. With a GPU, it can be
 even faster.
 
@@ -149,3 +151,5 @@ To cite our work, please use the following BibTex entry.
   year    = {2021},
 }
 ```
+
+PyMDE was designed and developed by [Akshay Agrawal](https://www.akshayagrawal.com/).
