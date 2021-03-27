@@ -147,7 +147,9 @@ def _is_discrete(dtype):
     )
 
 
-def _plot_3d(X, color_by, cmap, colors, edges, s, background_color, figsize):
+def _plot_3d(
+    X, color_by, cmap, colors, edges, s, background_color, figsize, lim
+):
     from mpl_toolkits.mplot3d import Axes3D
 
     if isinstance(X, torch.Tensor):
@@ -185,9 +187,10 @@ def _plot_3d(X, color_by, cmap, colors, edges, s, background_color, figsize):
         linewidth=s / 20.0,
     )
 
-    lim_low = min(np.min(x), np.min(y), np.min(z)) * 1.1
-    lim_high = max(np.max(x), np.max(y), np.max(z)) * 1.1
-    lim = _square_lim(lim_low, lim_high)
+    if lim is None:
+        lim_low = min(np.min(x), np.min(y), np.min(z)) * 1.1
+        lim_high = max(np.max(x), np.max(y), np.max(z)) * 1.1
+        lim = _square_lim(lim_low, lim_high)
     ax.set_xlim(lim)
     ax.set_ylim(lim)
     ax.set_zlim(lim)
@@ -312,6 +315,7 @@ def _plot(
     if X.shape[1] == 3:
         ax = _plot_3d(
             X,
+            lim=lim,
             color_by=color_by,
             cmap=cmap,
             colors=colors,
@@ -528,6 +532,7 @@ def _plot_gif_frame(
     _plot(
         X=snapshot,
         color_by=color_by,
+        cmap=cmap,
         edges=edges,
         title=title,
         lim=lim,
