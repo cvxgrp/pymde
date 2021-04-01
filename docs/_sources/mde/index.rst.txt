@@ -420,13 +420,26 @@ An anchor constraint can be created with
 
 .. code:: python3
 
+   # anchors holds the item numbers that should be pinned
    anchors = torch.tensor([0., 1., 3.])
+   # the ith row of values is the value v_i for the ith item in anchors
    values = torch.tensor([
      [0., 0.],
      [1., 2.],
      [-1., -1.],
    ])
    constraint = pymde.Anchored(anchors, values)
+
+
+Below is a GIF showing the creation of an embedding of a binary tree,
+in which the leaves have been anchored to lie on a circle with radius 20.
+
+.. image:: files/anchor_constraint.gif
+	:width: 50 %
+
+See 
+`this notebook <https://github.com/cvxgrp/pymde/blob/main/examples/anchor_constraints.ipynb>`_
+for the code to make this embedding (and GIF).
 
 Custom constraints
 ^^^^^^^^^^^^^^^^^^

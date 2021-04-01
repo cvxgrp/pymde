@@ -671,7 +671,9 @@ to the natural length.</p>
 <p>where <span class="math notranslate nohighlight">\(\text{anchors}\)</span> is a subset of the items and <span class="math notranslate nohighlight">\(v_i\)</span>
 is a concrete value to which <span class="math notranslate nohighlight">\(x_i\)</span> should be pinned.</p>
 <p>An anchor constraint can be created with</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">anchors</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">])</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># anchors holds the item numbers that should be pinned</span>
+<span class="n">anchors</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">])</span>
+<span class="c1"># the ith row of values is the value v_i for the ith item in anchors</span>
 <span class="n">values</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span>
   <span class="p">[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span>
   <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">],</span>
@@ -680,6 +682,12 @@ is a concrete value to which <span class="math notranslate nohighlight">\(x_i\)<
 <span class="n">constraint</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">Anchored</span><span class="p">(</span><span class="n">anchors</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>Below is a GIF showing the creation of an embedding of a binary tree,
+in which the leaves have been anchored to lie on a circle with radius 20.</p>
+<a class="reference internal image-reference" href="../_images/anchor_constraint.gif"><img alt="../_images/anchor_constraint.gif" src="../_images/anchor_constraint.gif" style="width: 50%;" /></a>
+<p>See
+<a class="reference external" href="https://github.com/cvxgrp/pymde/blob/main/examples/anchor_constraints.ipynb">this notebook</a>
+for the code to make this embedding (and GIF).</p>
 </div>
 <div class="section" id="custom-constraints">
 <h3>Custom constraints<a class="headerlink" href="#custom-constraints" title="Permalink to this headline">¶</a></h3>
