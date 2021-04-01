@@ -1,5 +1,5 @@
 # PyMDE
-![](https://github.com/cvxgrp/pymde/workflows/Test/badge.svg) ![](https://github.com/cvxgrp/pymde/workflows/Deploy/badge.svg) [![Conda Version](https://img.shields.io/conda/vn/conda-forge/pymde.svg)](https://anaconda.org/conda-forge/pymde)
+![](https://github.com/cvxgrp/pymde/workflows/Test/badge.svg) ![](https://github.com/cvxgrp/pymde/workflows/Deploy/badge.svg) [![PyPI version](https://badge.fury.io/py/pymde.svg)](https://badge.fury.io/py/pymde) [![Conda Version](https://img.shields.io/conda/vn/conda-forge/pymde.svg)](https://anaconda.org/conda-forge/pymde)
 
 *The official documentation for PyMDE is available at www.pymde.org.*
 
