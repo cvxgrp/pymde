@@ -108,3 +108,16 @@ This notebook shows various ways of drawing graphs with PyMDE. It also
 introduces the ``pymde.Graph`` class.
 
 - `Drawing graphs notebook <https://github.com/cvxgrp/pymde/blob/main/examples/drawing_graphs.ipynb>`_
+
+Anchor Constraint
+-----------------
+With an anchor constraint, you can pin some embedding vectors to values
+that you specify ahead of time. This is useful when you have prior
+knowledge of where some of the items should end up (e.g., you might
+be doing semi-supervised learning, or you might be laying out a graph with
+some nodes pinned in place).
+
+This notebook gives an example of how to use an anchor constraint, using
+graph drawing as an example.
+
+- `Anchor constraints <https://github.com/cvxgrp/pymde/blob/main/examples/anchor_constraints.ipynb>`_
