@@ -50,6 +50,8 @@ setup(
         "scipy",
         "torch",
         "torchvision",
+        # torchvision requires requests but does not list it as a dependency
+        "requests",  
     ],
     packages=find_packages(),
     ext_modules=[_graph],
