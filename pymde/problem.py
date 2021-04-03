@@ -616,7 +616,7 @@ class MDE(torch.nn.Module):
             background_color=background_color,
             figsize_inches=figsize_inches,
             marker_size=marker_size,
-            savepath=None,
+            savepath=savepath,
         )
 
     def distortions_cdf(self, figsize_inches=(8, 3)):
