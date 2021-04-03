@@ -55,6 +55,7 @@ PyMDE has the following requirements:
 * torch
 * torchvision
 * pynndescent
+* requests
 
 ## Getting started
 Getting started with PyMDE is easy. For embeddings that work out-of-the box, we provide two main functions:

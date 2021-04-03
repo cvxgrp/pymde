@@ -16,10 +16,11 @@ PyMDE has the following requirements:
 
 * Python >= 3.7
 * numpy >= 1.17.5
+* pynndescent
+* requests
 * scipy
 * torch
 * torchvision
-* pynndescent
 
 If you have a CUDA-enabled GPU, PyMDE can use it to speed up embedding
 computations. PyMDE relies on PyTorch for CUDA acceleration. For
