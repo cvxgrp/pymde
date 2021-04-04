@@ -8,7 +8,7 @@ This page shows how to get started with PyMDE for four common tasks:
 * visualizing datasets in two or three dimensions;
 * generating feature vectors for supervised learning;
 * computing classical embeddings, like PCA and spectral embedding;
-* drawing graphs in the Cartesian plane.
+* drawing graphs in 2 or 3 dimensions;
 
 To learn how to create custom embeddings (induced by custom objective functions
 and constraints), sanity check embeddings, identify possible outliers in
@@ -262,7 +262,7 @@ matrix can be created with
 
 Drawing graphs
 --------------
-Finally, PyMDE can be used to draw graphs in the Cartesian plane.
+Finally, PyMDE can be used to draw graphs in 2 or 3 dimensions.
 Here is a very simple example that draws a cycle graph on 3 nodes.
 
 .. code:: python3
