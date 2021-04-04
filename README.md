@@ -53,7 +53,7 @@ pip install pymde
 Alternatively, to install with conda, use
 
 ```
-conda install -c conda-forge pymde
+conda install -c pytorch -c conda-forge pymde
 ```
 
 PyMDE has the following requirements:
