@@ -17,4 +17,9 @@ from pymde.experiment_utils import latexify, plot
 
 from pymde.functions import losses, penalties
 
-from pymde.recipes import preserve_distances, preserve_neighbors
+from pymde.quadratic import pca
+from pymde.recipes import (
+    laplacian_embedding,
+    preserve_distances,
+    preserve_neighbors,
+)

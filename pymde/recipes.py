@@ -330,3 +330,59 @@ def preserve_neighbors(
             dtype=mde._X_init.dtype,
         )
     return mde
+
+
+def laplacian_embedding(
+    data,
+    embedding_dim=2,
+    n_neighbors=None,
+    max_distance=None,
+    init="quadratic",
+    device="cpu",
+    verbose=False,
+) -> problem.MDE:
+    """Constructs an MDE problem for computing a Laplacian emedding.
+
+    The embedding preserves the nearest neighbors of each item, using
+    quadratic distortion functions and a standardization constraint.
+
+    Arguments
+    ---------
+    data: {torch.Tensor, numpy.ndarray, scipy.sparse matrix}(
+            shape=(n_items, n_features)) or pymde.Graph
+        The original data, a data matrix or a graph. Neighbors are
+        computed using Euclidean distance if the data is a matrix,
+        or the shortest-path metric if the data is a graph.
+    embedding_dim: int
+        The embedding dimension. Use 2 or 3 for visualization.
+    n_neighbors: int (optional)
+        The number of nearest neighbors to compute for each row (item) of
+        ``data``. A sensible value is chosen by default, depending on the
+        number of items.
+    max_distance: float (optional)
+        If not None, neighborhoods are restricted to have a radius
+        no greater than ``max_distance``.
+    init: str
+        Initialization strategy; 'quadratic' or 'random'. If the quadratic
+        initialization takes too much time, try a random initialization.
+    device: str (optional)
+        Device for the embedding (eg, 'cpu', 'cuda').
+    verbose: bool
+        If ``True``, print verbose output.
+
+    Returns
+    -------
+    pymde.MDE
+        A ``pymde.MDE`` object, based on the original data.
+    """
+    return preserve_neighbors(
+        data,
+        embedding_dim=embedding_dim,
+        attractive_penalty=penalties.Quadratic,
+        repulsive_penalty=None,
+        n_neighbors=n_neighbors,
+        max_distance=max_distance,
+        init=init,
+        device=device,
+        verbose=verbose,
+    )

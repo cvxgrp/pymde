@@ -164,7 +164,7 @@ def MNIST(root="./", download=True) -> Dataset:
             download=False,
         )
 
-        images = torch.cat([mnist_train.data, mnist_test.data])
+        images = torch.cat([mnist_train.data, mnist_test.data]).float()
         digits = torch.cat([mnist_train.targets, mnist_test.targets])
         attributes = {"digits": digits}
         return Dataset(
