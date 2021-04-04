@@ -41,10 +41,18 @@ and API documentation.
 - [Citing](#citing)
 
 ## Installation
-PyMDE is available on the Python Package Index. Install it with 
+PyMDE is available on the Python Package Index, and on Conda Forge.
+
+To install with pip, use
 
 ```
 pip install pymde
+```
+
+Alternatively, to install with conda, use
+
+```
+conda install -c conda-forge pymde
 ```
 
 PyMDE has the following requirements:
