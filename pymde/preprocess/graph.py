@@ -226,8 +226,9 @@ class Graph(object):
                 "Graphs with negative edge weights cannot be drawn."
             )
 
-        if self.n_edges < 1e7 and self.n_all_edges > 1e7:
-            retain_fraction = 1e7 / self.n_all_edges
+        if self.n_edges < self.n_all_edges:
+            # copmute shortest paths, but no more than 1e7 of them ...
+            retain_fraction = min(1., 1e7 / self.n_all_edges)
             distance_graph = shortest_paths(
                 self, retain_fraction=retain_fraction, verbose=verbose
             )

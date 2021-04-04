@@ -58,6 +58,7 @@ represented by an original vector containing the pixel values.
 .. code:: python3
 
    import pymde
+
    mnist = pymde.datasets.MNIST()
 
 Next, we embed.
@@ -84,12 +85,24 @@ we'll color each point by the digit represented by the underlying image.
 
 .. code:: python3
 
-   pymde.plot(embedding, color_by='mnist.attributes['digits']`)
+  pymde.plot(embedding, color_by='mnist.attributes['digits']`)
 
 .. image:: /files/mnist.png
 
 We can see that similar images are near each other in the embedding, while
 dissimilar images are not.
+
+It is also possible to embed into three or more dimensions. Here is an
+example with three dimensions.
+
+.. code:: python3
+
+  mde = pymde.preserve_neighbors(mnist.data, embedding_dim=3, verbose=True)
+  embedding = mde.embed(verbose=True)
+  pymde.plot(embedding, color_by='mnist.attributes['digits']`)
+
+.. image:: /files/mnist_3d.png
+
 
 Customizing embeddings
 """"""""""""""""""""""
@@ -264,5 +277,48 @@ Here is a very simple example that draws a cycle graph on 3 nodes.
 
 .. image:: /files/triangle.png
 
+Here is a more interesting example, in which we embed a ternary tree. The
+tree is created using the `NetworkX <https://networkx.org/>`_ package.
+
+.. code:: python3
+
+   import networkx
+
+   binary_tree = networkx.balanced_tree(3, 6)
+   graph = pymde.Graph(networkx.adjacency_matrix(binary_tree))
+   embedding = graph.draw()
+
+.. image:: /files/tree.png
+
+On a standard CPU, it takes PyMDE just 2 seconds to compute this layout;
+for comparison, it takes NetworkX 30 seconds to compute a similar layout.
+
+You can embed into 3 dimensions by passing ``embedding_dim=3`` to the ``draw``
+method.
+
 For more in-depth examples, see the :ref:`notebook on drawing graphs <example_graphs>`,
 and the API documentation of :any:`pymde.Graph`.
+
+Using a GPU
+-----------
+If you have a CUDA-enabled GPU, you can use it to speed up the optimization
+routine which computes the embedding.
+
+The functions ``pymde.preserve_neighbors`` and
+``pymde.preserve_distances``, as well as the method ``Graph.draw``, all take a
+keyword argument, called ``device``, which controls whether or not a GPU is
+used. Pass ``device='cuda'`` to use your GPU. (PyMDE computes embeddings on CPU
+by default.)
+
+For example, the below code shows how to create a neighbor-preserving
+embedding of MNIST using a GPU.
+
+.. code:: python3
+
+   import pymde
+
+   mnist = pymde.datasets.MNIST()
+   mde = pymde.preserve_neighbors(mnist.data, device='cuda', verbose=True)
+   embedding = mde.embed(verbose=True) 
+
+On an NVIDIA GeForce GTX 1070, the ``embed`` method took just 5 seconds.

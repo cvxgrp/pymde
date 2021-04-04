@@ -3,14 +3,25 @@
 Installation
 ============
 
-PyMDE is available on PyPI. Install it with
+PyMDE is available on PyPI, and on Conda Forge. We recommend installing PyMDE
+in a virtual environment of your choice, such as virtualenv, venv, or a conda
+environment.
+
+To install with Python pip, use
 
 .. code::
 
     pip install -U pymde
 
-We recommend installing PyMDE in a virtual environment of your choice,
-such as virtualenv, venv, or a conda environment.
+To install with conda, use
+
+.. code::
+
+  conda install -c conda-forge pymde
+
+
+Requirements
+------------
 
 PyMDE has the following requirements:
 
@@ -22,6 +33,8 @@ PyMDE has the following requirements:
 * torch
 * torchvision
 
+GPU acceleration
+----------------
 If you have a CUDA-enabled GPU, PyMDE can use it to speed up embedding
 computations. PyMDE relies on PyTorch for CUDA acceleration. For
 instructions on how to install a CUDA-enabled version of PyTorch, refer to the

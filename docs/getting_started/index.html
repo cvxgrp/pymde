@@ -115,6 +115,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#generating-feature-vectors">Generating feature vectors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#classical-embeddings">Classical embeddings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#drawing-graphs">Drawing graphs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-a-gpu">Using a GPU</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../mde/index.html">MDE</a></li>
@@ -241,6 +242,7 @@ is based on on preserving the <code class="docutils literal notranslate"><span c
 example. The original items are the images, and each item (image) is
 represented by an original vector containing the pixel values.</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymde</span>
+
 <span class="n">mnist</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">MNIST</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -267,6 +269,14 @@ we’ll color each point by the digit represented by the underlying image.</p>
 <img alt="../_images/mnist.png" src="../_images/mnist.png" />
 <p>We can see that similar images are near each other in the embedding, while
 dissimilar images are not.</p>
+<p>It is also possible to embed into three or more dimensions. Here is an
+example with three dimensions.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">mde</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">preserve_neighbors</span><span class="p">(</span><span class="n">mnist</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">embedding</span> <span class="o">=</span> <span class="n">mde</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">pymde</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">embedding</span><span class="p">,</span> <span class="n">color_by</span><span class="o">=</span><span class="s1">&#39;mnist.attributes[&#39;</span><span class="n">digits</span><span class="s1">&#39;]`)</span>
+</pre></div>
+</div>
+<img alt="../_images/mnist_3d.png" src="../_images/mnist_3d.png" />
 <div class="section" id="customizing-embeddings">
 <h4>Customizing embeddings<a class="headerlink" href="#customizing-embeddings" title="Permalink to this headline">¶</a></h4>
 <p>The <a class="reference internal" href="../api/index.html#pymde.preserve_neighbors" title="pymde.preserve_neighbors"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.preserve_neighbors</span></code></a> function takes a few keyword arguments
@@ -413,8 +423,42 @@ Here is a very simple example that draws a cycle graph on 3 nodes.</p>
 </pre></div>
 </div>
 <img alt="../_images/triangle.png" src="../_images/triangle.png" />
+<p>Here is a more interesting example, in which we embed a ternary tree. The
+tree is created using the <a class="reference external" href="https://networkx.org/">NetworkX</a> package.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">networkx</span>
+
+<span class="n">binary_tree</span> <span class="o">=</span> <span class="n">networkx</span><span class="o">.</span><span class="n">balanced_tree</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">networkx</span><span class="o">.</span><span class="n">adjacency_matrix</span><span class="p">(</span><span class="n">binary_tree</span><span class="p">))</span>
+<span class="n">embedding</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/tree.png" src="../_images/tree.png" />
+<p>On a standard CPU, it takes PyMDE just 2 seconds to compute this layout;
+for comparison, it takes NetworkX 30 seconds to compute a similar layout.</p>
+<p>You can embed into 3 dimensions by passing <code class="docutils literal notranslate"><span class="pre">embedding_dim=3</span></code> to the <code class="docutils literal notranslate"><span class="pre">draw</span></code>
+method.</p>
 <p>For more in-depth examples, see the <a class="reference internal" href="../examples/index.html#example-graphs"><span class="std std-ref">notebook on drawing graphs</span></a>,
 and the API documentation of <a class="reference internal" href="../api/index.html#pymde.Graph" title="pymde.Graph"><code class="xref any py py-class docutils literal notranslate"><span class="pre">pymde.Graph</span></code></a>.</p>
+</div>
+<div class="section" id="using-a-gpu">
+<h2>Using a GPU<a class="headerlink" href="#using-a-gpu" title="Permalink to this headline">¶</a></h2>
+<p>If you have a CUDA-enabled GPU, you can use it to speed up the optimization
+routine which computes the embedding.</p>
+<p>The functions <code class="docutils literal notranslate"><span class="pre">pymde.preserve_neighbors</span></code> and
+<code class="docutils literal notranslate"><span class="pre">pymde.preserve_distances</span></code>, as well as the method <code class="docutils literal notranslate"><span class="pre">Graph.draw</span></code>, all take a
+keyword argument, called <code class="docutils literal notranslate"><span class="pre">device</span></code>, which controls whether or not a GPU is
+used. Pass <code class="docutils literal notranslate"><span class="pre">device='cuda'</span></code> to use your GPU. (PyMDE computes embeddings on CPU
+by default.)</p>
+<p>For example, the below code shows how to create a neighbor-preserving
+embedding of MNIST using a GPU.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymde</span>
+
+<span class="n">mnist</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">MNIST</span><span class="p">()</span>
+<span class="n">mde</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">preserve_neighbors</span><span class="p">(</span><span class="n">mnist</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">embedding</span> <span class="o">=</span> <span class="n">mde</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>On an NVIDIA GeForce GTX 1070, the <code class="docutils literal notranslate"><span class="pre">embed</span></code> method took just 5 seconds.</p>
 </div>
 </div>
 
