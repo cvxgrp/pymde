@@ -17,7 +17,7 @@ To install with conda, use
 
 .. code::
 
-  conda install -c conda-forge pymde
+  conda install -c pytorch conda-forge pymde
 
 
 Requirements
