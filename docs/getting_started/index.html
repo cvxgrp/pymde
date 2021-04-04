@@ -99,10 +99,12 @@
 <li class="toctree-l2"><a class="reference internal" href="#visualizing-data">Visualizing data</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#preserving-neighbors">Preserving neighbors</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#customizing-embeddings">Customizing embeddings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#accessing-the-underlying-graph">Accessing the underlying graph</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#preserving-distances">Preserving distances</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#id2">Customizing embeddings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">Accessing the underlying graph</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#plotting">Plotting</a><ul>
@@ -295,6 +297,16 @@ then consult the <a class="reference internal" href="../api/index.html#api-prese
 including 3D embeddings, see the <a class="reference internal" href="../examples/index.html#example-mnist"><span class="std std-ref">MNIST</span></a> and
 <a class="reference internal" href="../examples/index.html#example-scrna"><span class="std std-ref">single-cell genomics</span></a> example notebooks.</p>
 </div>
+<div class="section" id="accessing-the-underlying-graph">
+<h4>Accessing the underlying graph<a class="headerlink" href="#accessing-the-underlying-graph" title="Permalink to this headline">¶</a></h4>
+<p>You can access the graph underlying the MDE problem returned by
+<code class="docutils literal notranslate"><span class="pre">pymde.preserve_neighbors</span></code>, using the following code.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">edges</span> <span class="o">=</span> <span class="n">mde</span><span class="o">.</span><span class="n">edges</span>
+<span class="n">weights</span> <span class="o">=</span> <span class="n">mde</span><span class="o">.</span><span class="n">distortion_function</span><span class="o">.</span><span class="n">weights</span>
+</pre></div>
+</div>
+<p>The value <code class="docutils literal notranslate"><span class="pre">weights[i]</span></code> is the weight for the edge <code class="docutils literal notranslate"><span class="pre">edges[i]</span></code>.</p>
+</div>
 </div>
 <div class="section" id="preserving-distances">
 <h3>Preserving distances<a class="headerlink" href="#preserving-distances" title="Permalink to this headline">¶</a></h3>
@@ -339,6 +351,17 @@ is close to the true diameter of the graph.</p>
 that can be used to customize the embedding.</p>
 <p>To learn about the keyword arguments, read the tutorial on <a class="reference internal" href="../mde/index.html#mde"><span class="std std-ref">MDE</span></a>,
 then consult the <a class="reference internal" href="../api/index.html#api-preserve-distances"><span class="std std-ref">API documentation</span></a>.</p>
+</div>
+<div class="section" id="id3">
+<h4>Accessing the underlying graph<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
+<p>You can access the graph underlying the MDE problem returned by
+<code class="docutils literal notranslate"><span class="pre">pymde.preserve_distances</span></code>, using the following code.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">edges</span> <span class="o">=</span> <span class="n">mde</span><span class="o">.</span><span class="n">edges</span>
+<span class="n">distances</span> <span class="o">=</span> <span class="n">mde</span><span class="o">.</span><span class="n">distortion_function</span><span class="o">.</span><span class="n">deviations</span>
+</pre></div>
+</div>
+<p>The value <code class="docutils literal notranslate"><span class="pre">distances[i]</span></code> is the weight (which should be interpreted as a
+distance) for the edge <code class="docutils literal notranslate"><span class="pre">edges[i]</span></code>.</p>
 </div>
 </div>
 <div class="section" id="plotting">

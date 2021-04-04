@@ -126,6 +126,18 @@ For more in-depth examples of creating neighborhood-based visualizations,
 including 3D embeddings, see the :ref:`MNIST <example_mnist>` and
 :ref:`single-cell genomics <example_scrna>` example notebooks.
 
+Accessing the underlying graph
+""""""""""""""""""""""""""""""
+You can access the graph underlying the MDE problem returned by
+``pymde.preserve_neighbors``, using the following code.
+
+.. code:: python3
+
+   edges = mde.edges
+   weights = mde.distortion_function.weights
+
+The value ``weights[i]`` is the weight for the edge ``edges[i]``.
+
 Preserving distances
 ^^^^^^^^^^^^^^^^^^^^
 Next, we'll create an embedding that roughly preserves the global structure
@@ -180,6 +192,19 @@ that can be used to customize the embedding.
 
 To learn about the keyword arguments, read the tutorial on :ref:`mde`,
 then consult the :ref:`API documentation <api_preserve_distances>`.
+
+Accessing the underlying graph
+""""""""""""""""""""""""""""""
+You can access the graph underlying the MDE problem returned by
+``pymde.preserve_distances``, using the following code.
+
+.. code:: python3
+
+   edges = mde.edges
+   distances = mde.distortion_function.deviations
+
+The value ``distances[i]`` is the weight (which should be interpreted as a
+distance) for the edge ``edges[i]``.
 
 Plotting
 ^^^^^^^^
