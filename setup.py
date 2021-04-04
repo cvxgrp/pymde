@@ -48,7 +48,7 @@ setup(
         "numpy >= 1.17.5",
         "pynndescent",
         "scipy",
-        "torch",
+        "torch >= 1.7.1",
         "torchvision",
         # torchvision requires requests but does not list it as a dependency
         "requests",  
