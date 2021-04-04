@@ -1,5 +1,5 @@
 # PyMDE
-![](https://github.com/cvxgrp/pymde/workflows/Test/badge.svg) ![](https://github.com/cvxgrp/pymde/workflows/Deploy/badge.svg) [![PyPI version](https://badge.fury.io/py/pymde.svg)](https://badge.fury.io/py/pymde) [![Conda Version](https://img.shields.io/conda/vn/conda-forge/pymde.svg)](https://anaconda.org/conda-forge/pymde)
+![](https://github.com/cvxgrp/pymde/workflows/Test/badge.svg) ![](https://github.com/cvxgrp/pymde/workflows/Deploy/badge.svg) [![PyPI version](https://badge.fury.io/py/pymde.svg)](https://pypi.org/project/pymde/) [![Conda Version](https://img.shields.io/conda/vn/conda-forge/pymde.svg)](https://anaconda.org/conda-forge/pymde)
 
 *The official documentation for PyMDE is available at www.pymde.org.*
 
@@ -12,20 +12,21 @@ abstract object.
 What sets PyMDE apart from other embedding libraries is that it provides a
 simple but general framework for embedding, called _Minimum-Distortion
 Embedding_ (MDE). With MDE, it is easy to recreate well-known embeddings and to
-create new ones, tailored to your particular application. PyMDE is competitive
+create new ones, tailored to your particular application.
+
+PyMDE is competitive
 in runtime with more specialized embedding methods. With a GPU, it can be
 even faster.
 
+## Overview
 PyMDE can be enjoyed by beginners and experts alike. It can be used to:
 
 * visualize datasets, small or large;
 * generate feature vectors for supervised learning;
 * compress high-dimensional vector data;
-* draw graphs;
+* draw graphs (in up to orders of magnitude less time than packages like NetworkX);
+* create custom embeddings, with custom objective functions and constraints (such as having uncorrelated feature columns);
 * and more.
-
-Unlike most other packages for embedding, PyMDE can compute embeddings that satisfy
-constraints, such as having uncorrelated feature columns. 
 
 PyMDE is very young software, under active development. If you run into issues,
 or have any feedback, please reach out by [filing a Github
