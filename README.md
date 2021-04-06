@@ -62,7 +62,7 @@ PyMDE has the following requirements:
 * numpy >= 1.17.5
 * scipy
 * torch >= 1.7.1
-* torchvision
+* torchvision >= 0.8.2
 * pynndescent
 * requests
 
