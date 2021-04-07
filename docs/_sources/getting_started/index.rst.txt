@@ -265,29 +265,29 @@ Classical embeddings
 --------------------
 
 PyMDE provides a few implementations of classical embeddings, for convenience.
-To produce a PCA embedding of a data matrix, call the :any:`pymde.quadratic.pca`
-method:
+To produce a PCA embedding of a data matrix, use the :any:`pymde.pca`
+method, which returns an embedding:
 
 .. code:: python3
 
-   embedding = pymde.quadratic.pca(data_matrix, embedding_dim)
+   embedding = pymde.pca(data_matrix, embedding_dim)
+
+To create a Laplacian embedding based on the nearest neighbors of each row in a
+data matrix or each node in a graph, use the :any:`pymde.laplacian_embedding`
+method, which returns an MDE problem:
+
+.. code:: python3
+
+   mde = pymde.laplacian_embedding(data, embedding_dim, verbose=True)
+   embedding = mde.embed()
 
 To create a spectral embedding based on a sequence of edges (a ``torch.Tensor``
 of shape ``(n_edges, 2)``) and weights, use :any:`pymde.quadratic.spectral`.
-A Laplacian embedding based on the nearest neighbors of each row in a data
-matrix can be created with
-
-.. code:: python3
-
-   embedding = pymde.preserve_neighbors(data_matrix,
-      attractive_penalty=pymde.penalties.Quadratic,
-      repulsive_penalty=None
-   ).embed()
-
+(These embeddings are called "quadratic embeddings" in the MDE monograph.)
 
 Drawing graphs
 --------------
-Finally, PyMDE can be used to draw graphs in 2 or 3 dimensions.
+PyMDE can be used to draw graphs in 2 or 3 dimensions.
 Here is a very simple example that draws a cycle graph on 3 nodes.
 
 .. code:: python3
@@ -302,7 +302,7 @@ Here is a very simple example that draws a cycle graph on 3 nodes.
 
 .. image:: /files/triangle.png
 
-Here is a more interesting example, in which we embed a ternary tree. The
+Here is a more interesting example, which embeds a ternary tree. The
 tree is created using the `NetworkX <https://networkx.org/>`_ package.
 
 .. code:: python3

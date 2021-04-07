@@ -144,7 +144,9 @@ Preprocessing
 Classical embeddings
 --------------------
 
-.. autofunction:: pymde.quadratic.pca
+.. autofunction:: pymde.pca
+
+.. autofunction:: pymde.laplacian_embedding
 
 .. autofunction:: pymde.quadratic.spectral
 

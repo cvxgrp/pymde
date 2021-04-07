@@ -59,9 +59,9 @@ def preserve_distances(
 
     Arguments
     ---------
-    data: {np.ndarray, torch.Tensor, scipy.sparse matrix}(
-            shape=(n_items, n_features)), or pymde.Graph
-        A data matrix or a ``pymde.Graph`` instance.
+    data: {np.ndarray, torch.Tensor, scipy.sparse matrix} or pymde.Graph
+        The original data, a data matrix of shape ``(n_items, n_features)`` or
+        a graph.
     embedding_dim: int
         The embedding dimension.
     loss: pymde.Function class (or factory)
@@ -165,11 +165,10 @@ def preserve_neighbors(
 
     Arguments
     ---------
-    data: {torch.Tensor, numpy.ndarray, scipy.sparse matrix}(
-            shape=(n_items, n_features)) or pymde.Graph
-        The original data, a data matrix or a graph. Neighbors are
-        computed using Euclidean distance if the data is a matrix,
-        or the shortest-path metric if the data is a graph.
+    data: {torch.Tensor, numpy.ndarray, scipy.sparse matrix} or pymde.Graph
+        The original data, a data matrix of shape ``(n_items, n_features)`` or
+        a graph. Neighbors are computed using Euclidean distance if the data is
+        a matrix, or the shortest-path metric if the data is a graph.
     embedding_dim: int
         The embedding dimension. Use 2 or 3 for visualization.
     attractive_penalty: pymde.Function class (or factory)
@@ -341,18 +340,17 @@ def laplacian_embedding(
     device="cpu",
     verbose=False,
 ) -> problem.MDE:
-    """Constructs an MDE problem for computing a Laplacian emedding.
+    """Constructs an MDE problem for computing a Laplacian embedding.
 
     The embedding preserves the nearest neighbors of each item, using
     quadratic distortion functions and a standardization constraint.
 
     Arguments
     ---------
-    data: {torch.Tensor, numpy.ndarray, scipy.sparse matrix}(
-            shape=(n_items, n_features)) or pymde.Graph
-        The original data, a data matrix or a graph. Neighbors are
-        computed using Euclidean distance if the data is a matrix,
-        or the shortest-path metric if the data is a graph.
+    data: {torch.Tensor, numpy.ndarray, scipy.sparse matrix} or pymde.Graph
+        The original data, a data matrix of shape ``(n_items, n_features)`` or
+        a graph. Neighbors are computed using Euclidean distance if the data is
+        a matrix, or the shortest-path metric if the data is a graph.
     embedding_dim: int
         The embedding dimension. Use 2 or 3 for visualization.
     n_neighbors: int (optional)

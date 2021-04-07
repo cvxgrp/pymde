@@ -3,8 +3,8 @@
 Examples
 ========
 
-As with most software, after reading the documentation, the best way
-to learn more is by playing with code.
+After reading the documentation, the best way
+to learn more is by playing with code examples.
 
 Our Python notebooks show how to use PyMDE on real (and synthetic)
 datasets. You can read these notebooks, or better yet, execute them and
@@ -109,8 +109,8 @@ introduces the ``pymde.Graph`` class.
 
 - `Drawing graphs notebook <https://github.com/cvxgrp/pymde/blob/main/examples/drawing_graphs.ipynb>`_
 
-Anchor Constraint
------------------
+Anchor Constraints
+------------------
 With an anchor constraint, you can pin some embedding vectors to values
 that you specify ahead of time. This is useful when you have prior
 knowledge of where some of the items should end up (e.g., you might
@@ -120,4 +120,4 @@ some nodes pinned in place).
 This notebook gives an example of how to use an anchor constraint, using
 graph drawing as an example.
 
-- `Anchor constraints <https://github.com/cvxgrp/pymde/blob/main/examples/anchor_constraints.ipynb>`_
+- `Anchor constraint notebook <https://github.com/cvxgrp/pymde/blob/main/examples/anchor_constraints.ipynb>`_

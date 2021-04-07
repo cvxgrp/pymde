@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Getting started &mdash; pymde 0.1.7 documentation</title>
+  <title>Getting started &mdash; pymde 0.1.8 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                v0.1.7
+                v0.1.8
               </div>
             
           
@@ -416,25 +416,25 @@ learning tasks. You can choose the dimension of the vectors by specifying the
 <div class="section" id="classical-embeddings">
 <h2>Classical embeddings<a class="headerlink" href="#classical-embeddings" title="Permalink to this headline">¶</a></h2>
 <p>PyMDE provides a few implementations of classical embeddings, for convenience.
-To produce a PCA embedding of a data matrix, call the <a class="reference internal" href="../api/index.html#pymde.quadratic.pca" title="pymde.quadratic.pca"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.quadratic.pca</span></code></a>
-method:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">embedding</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">quadratic</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">data_matrix</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">)</span>
+To produce a PCA embedding of a data matrix, use the <a class="reference internal" href="../api/index.html#pymde.pca" title="pymde.pca"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.pca</span></code></a>
+method, which returns an embedding:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">embedding</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">data_matrix</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To create a Laplacian embedding based on the nearest neighbors of each row in a
+data matrix or each node in a graph, use the <a class="reference internal" href="../api/index.html#pymde.laplacian_embedding" title="pymde.laplacian_embedding"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.laplacian_embedding</span></code></a>
+method, which returns an MDE problem:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">mde</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">laplacian_embedding</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">embedding</span> <span class="o">=</span> <span class="n">mde</span><span class="o">.</span><span class="n">embed</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>To create a spectral embedding based on a sequence of edges (a <code class="docutils literal notranslate"><span class="pre">torch.Tensor</span></code>
 of shape <code class="docutils literal notranslate"><span class="pre">(n_edges,</span> <span class="pre">2)</span></code>) and weights, use <a class="reference internal" href="../api/index.html#pymde.quadratic.spectral" title="pymde.quadratic.spectral"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.quadratic.spectral</span></code></a>.
-A Laplacian embedding based on the nearest neighbors of each row in a data
-matrix can be created with</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">embedding</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">preserve_neighbors</span><span class="p">(</span><span class="n">data_matrix</span><span class="p">,</span>
-   <span class="n">attractive_penalty</span><span class="o">=</span><span class="n">pymde</span><span class="o">.</span><span class="n">penalties</span><span class="o">.</span><span class="n">Quadratic</span><span class="p">,</span>
-   <span class="n">repulsive_penalty</span><span class="o">=</span><span class="kc">None</span>
-<span class="p">)</span><span class="o">.</span><span class="n">embed</span><span class="p">()</span>
-</pre></div>
-</div>
+(These embeddings are called “quadratic embeddings” in the MDE monograph.)</p>
 </div>
 <div class="section" id="drawing-graphs">
 <h2>Drawing graphs<a class="headerlink" href="#drawing-graphs" title="Permalink to this headline">¶</a></h2>
-<p>Finally, PyMDE can be used to draw graphs in 2 or 3 dimensions.
+<p>PyMDE can be used to draw graphs in 2 or 3 dimensions.
 Here is a very simple example that draws a cycle graph on 3 nodes.</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">edges</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span>
          <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
@@ -446,7 +446,7 @@ Here is a very simple example that draws a cycle graph on 3 nodes.</p>
 </pre></div>
 </div>
 <img alt="../_images/triangle.png" src="../_images/triangle.png" />
-<p>Here is a more interesting example, in which we embed a ternary tree. The
+<p>Here is a more interesting example, which embeds a ternary tree. The
 tree is created using the <a class="reference external" href="https://networkx.org/">NetworkX</a> package.</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">networkx</span>
 
