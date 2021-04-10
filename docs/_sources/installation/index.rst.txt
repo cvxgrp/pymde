@@ -31,7 +31,7 @@ PyMDE has the following requirements:
 * requests
 * scipy
 * torch >= 1.7.1
-* torchvision
+* torchvision >= 0.8.2
 
 GPU acceleration
 ----------------
