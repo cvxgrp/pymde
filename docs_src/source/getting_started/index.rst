@@ -85,7 +85,7 @@ we'll color each point by the digit represented by the underlying image.
 
 .. code:: python3
 
-  pymde.plot(embedding, color_by='mnist.attributes['digits']`)
+  pymde.plot(embedding, color_by=mnist.attributes['digits'])
 
 .. image:: /files/mnist.png
 
@@ -99,7 +99,7 @@ example with three dimensions.
 
   mde = pymde.preserve_neighbors(mnist.data, embedding_dim=3, verbose=True)
   embedding = mde.embed(verbose=True)
-  pymde.plot(embedding, color_by='mnist.attributes['digits']`)
+  pymde.plot(embedding, color_by=mnist.attributes['digits'])
 
 .. image:: /files/mnist_3d.png
 
