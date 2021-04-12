@@ -85,7 +85,7 @@ we'll color each point by the digit represented by the underlying image.
 
 .. code:: python3
 
-  pymde.plot(embedding, color_by='mnist.attributes['digits']`)
+  pymde.plot(embedding, color_by=mnist.attributes['digits'])
 
 .. image:: /files/mnist.png
 
@@ -99,7 +99,7 @@ example with three dimensions.
 
   mde = pymde.preserve_neighbors(mnist.data, embedding_dim=3, verbose=True)
   embedding = mde.embed(verbose=True)
-  pymde.plot(embedding, color_by='mnist.attributes['digits']`)
+  pymde.plot(embedding, color_by=mnist.attributes['digits'])
 
 .. image:: /files/mnist_3d.png
 
@@ -158,7 +158,7 @@ authors have an edge between them if either has listed the author as a coauthor.
    device = 'cuda' if torch.cuda.is_available() else 'cpu'
    google_scholar = pymde.datasets.google_scholar()
    mde = pymde.preserve_distances(google_scholar.data, device=device, verbose=True)
-   embedding = pymde.embed()
+   embedding = mde.embed()
 
 The ``data`` attribute of the ``google_scholar`` dataset is a
 :any:`pymde.Graph` object, which encodes the coauthorship network.

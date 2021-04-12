@@ -267,7 +267,7 @@ call the <a class="reference internal" href="../api/index.html#pymde.MDE.embed" 
 the embedding vector assigned to the image <code class="docutils literal notranslate"><span class="pre">mnist.data[k]</span></code>.</p>
 <p>We can visualize the embedding with a scatter plot. In the scatter plot,
 we’ll color each point by the digit represented by the underlying image.</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">pymde</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">embedding</span><span class="p">,</span> <span class="n">color_by</span><span class="o">=</span><span class="s1">&#39;mnist.attributes[&#39;</span><span class="n">digits</span><span class="s1">&#39;]`)</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">pymde</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">embedding</span><span class="p">,</span> <span class="n">color_by</span><span class="o">=</span><span class="n">mnist</span><span class="o">.</span><span class="n">attributes</span><span class="p">[</span><span class="s1">&#39;digits&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 <img alt="../_images/mnist.png" src="../_images/mnist.png" />
@@ -277,7 +277,7 @@ dissimilar images are not.</p>
 example with three dimensions.</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">mde</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">preserve_neighbors</span><span class="p">(</span><span class="n">mnist</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">embedding</span> <span class="o">=</span> <span class="n">mde</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">pymde</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">embedding</span><span class="p">,</span> <span class="n">color_by</span><span class="o">=</span><span class="s1">&#39;mnist.attributes[&#39;</span><span class="n">digits</span><span class="s1">&#39;]`)</span>
+<span class="n">pymde</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">embedding</span><span class="p">,</span> <span class="n">color_by</span><span class="o">=</span><span class="n">mnist</span><span class="o">.</span><span class="n">attributes</span><span class="p">[</span><span class="s1">&#39;digits&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 <img alt="../_images/mnist_3d.png" src="../_images/mnist_3d.png" />
@@ -326,7 +326,7 @@ authors have an edge between them if either has listed the author as a coauthor.
 <span class="n">device</span> <span class="o">=</span> <span class="s1">&#39;cuda&#39;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s1">&#39;cpu&#39;</span>
 <span class="n">google_scholar</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">google_scholar</span><span class="p">()</span>
 <span class="n">mde</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">preserve_distances</span><span class="p">(</span><span class="n">google_scholar</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">embedding</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">embed</span><span class="p">()</span>
+<span class="n">embedding</span> <span class="o">=</span> <span class="n">mde</span><span class="o">.</span><span class="n">embed</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">data</span></code> attribute of the <code class="docutils literal notranslate"><span class="pre">google_scholar</span></code> dataset is a
