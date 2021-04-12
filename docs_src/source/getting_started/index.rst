@@ -158,7 +158,7 @@ authors have an edge between them if either has listed the author as a coauthor.
    device = 'cuda' if torch.cuda.is_available() else 'cpu'
    google_scholar = pymde.datasets.google_scholar()
    mde = pymde.preserve_distances(google_scholar.data, device=device, verbose=True)
-   embedding = pymde.embed()
+   embedding = mde.embed()
 
 The ``data`` attribute of the ``google_scholar`` dataset is a
 :any:`pymde.Graph` object, which encodes the coauthorship network.
