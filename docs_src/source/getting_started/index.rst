@@ -10,9 +10,12 @@ This page shows how to get started with PyMDE for four common tasks:
 * computing classical embeddings, like PCA and spectral embedding;
 * drawing graphs in 2 or 3 dimensions;
 
-To learn how to create custom embeddings (induced by custom objective functions
-and constraints), sanity check embeddings, identify possible outliers in
-the original data, embed new data, and more, see the section on :ref:`mde`.
+.. note::
+
+  To learn how to create custom embeddings (with custom objective functions
+  and constraints), sanity check embeddings, identify possible outliers in
+  the original data, embed new data, and more, see the :ref:`MDE guide <mde>`.
+  (We recommend reading the getting started guide first.)
 
 .. _embedding_definition:
 
@@ -25,31 +28,31 @@ are *embedded* or mapped into a real vector space. The length of the vectors is
 called the *embedding dimension*. An embedding is represented concretely by a
 matrix, in which each row is the embedding vector of an item. 
 
-Embeddings provide concrete numerical representations of abstract items. They
-can be used for exploratory data analysis, to generate features for supervised
-learning, or to draw graphs, among other uses. When the embedding dimension
-is 2 or 3, embeddings can be used to create a sort of chart or atlas of
-the items, in which each point corresponds to an item (whose coordinates in
-space are given by the embedding vector). These visualizations can help
-scientists and analysts identify patterns or anomalies in the original data,
-and more generally make it easier to explore large collections of data. PyMDE
-can embed into 2 or 3 dimensions, but it can also be used to embed into many
-more dimensions, which is useful when generating features for downstream
-machine learning tasks.
+Embeddings provide concrete numerical representations of abstract items, for
+use in downstream computational tasks. For example, when the embedding
+dimension is 2 or 3, embeddings can be used to create a sort of chart or atlas
+of the items. In such a chart, each point corresponds to an item, and its coordinates in space
+are given by the embedding vector. These visualizations can help scientists and
+analysts identify patterns or anomalies in the original data, and more
+generally make it easier to explore large collections of data. PyMDE can embed
+into 2 or 3 dimensions, but it can also be used to embed into many more
+dimensions, which is useful when generating features for machine
+learning tasks.
 
 For an embedding to be useful, it
-must be faithful to the known relationships original data (the items) in some
-way. PyMDE provides two high-level functions for creating embeddings, based
-on related but different notions of faithfulness. These functions handle the
-common case in which item is associated with either an original
-high-dimensional vector or a node in a graph. The functions are
+must be faithful to the original data (the items) in some
+way. To make it easy to get started, PyMDE provides two high-level functions
+for creating embeddings, based on related but different notions of
+faithfulness. These functions handle the common case in which each item is
+associated with either an original high-dimensional vector or a node in a
+graph. The functions are
 
-- :any:`pymde.preserve_neighbors`, and
+- :any:`pymde.preserve_neighbors`,
 - :any:`pymde.preserve_distances`.
 
 The first creates embeddings that focus on the local structure of the data,
-putting similar items near each other and dissimilar items not near each other,
-while the second focuses more on the global structure, choosing embedding
+putting similar items near each other and dissimilar items not near each other.
+The second focuses more on the global structure, choosing embedding
 vectors to respect some notion of original distance or dissimilarity between
 items.
 

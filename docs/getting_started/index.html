@@ -207,9 +207,13 @@
 <li><p>computing classical embeddings, like PCA and spectral embedding;</p></li>
 <li><p>drawing graphs in 2 or 3 dimensions;</p></li>
 </ul>
-<p>To learn how to create custom embeddings (induced by custom objective functions
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To learn how to create custom embeddings (with custom objective functions
 and constraints), sanity check embeddings, identify possible outliers in
-the original data, embed new data, and more, see the section on <a class="reference internal" href="../mde/index.html#mde"><span class="std std-ref">MDE</span></a>.</p>
+the original data, embed new data, and more, see the <a class="reference internal" href="../mde/index.html#mde"><span class="std std-ref">MDE guide</span></a>.
+(We recommend reading the getting started guide first.)</p>
+</div>
 <div class="section" id="what-is-an-embedding">
 <span id="embedding-definition"></span><h2>What is an embedding?<a class="headerlink" href="#what-is-an-embedding" title="Permalink to this headline">¶</a></h2>
 <p>An <em>embedding</em> of a finite set of items (such as biological cells, images,
@@ -218,30 +222,30 @@ item to a vector of fixed length; the original items
 are <em>embedded</em> or mapped into a real vector space. The length of the vectors is
 called the <em>embedding dimension</em>. An embedding is represented concretely by a
 matrix, in which each row is the embedding vector of an item.</p>
-<p>Embeddings provide concrete numerical representations of abstract items. They
-can be used for exploratory data analysis, to generate features for supervised
-learning, or to draw graphs, among other uses. When the embedding dimension
-is 2 or 3, embeddings can be used to create a sort of chart or atlas of
-the items, in which each point corresponds to an item (whose coordinates in
-space are given by the embedding vector). These visualizations can help
-scientists and analysts identify patterns or anomalies in the original data,
-and more generally make it easier to explore large collections of data. PyMDE
-can embed into 2 or 3 dimensions, but it can also be used to embed into many
-more dimensions, which is useful when generating features for downstream
-machine learning tasks.</p>
+<p>Embeddings provide concrete numerical representations of abstract items, for
+use in downstream computational tasks. For example, when the embedding
+dimension is 2 or 3, embeddings can be used to create a sort of chart or atlas
+of the items. In such a chart, each point corresponds to an item, and its coordinates in space
+are given by the embedding vector. These visualizations can help scientists and
+analysts identify patterns or anomalies in the original data, and more
+generally make it easier to explore large collections of data. PyMDE can embed
+into 2 or 3 dimensions, but it can also be used to embed into many more
+dimensions, which is useful when generating features for machine
+learning tasks.</p>
 <p>For an embedding to be useful, it
-must be faithful to the known relationships original data (the items) in some
-way. PyMDE provides two high-level functions for creating embeddings, based
-on related but different notions of faithfulness. These functions handle the
-common case in which item is associated with either an original
-high-dimensional vector or a node in a graph. The functions are</p>
+must be faithful to the original data (the items) in some
+way. To make it easy to get started, PyMDE provides two high-level functions
+for creating embeddings, based on related but different notions of
+faithfulness. These functions handle the common case in which each item is
+associated with either an original high-dimensional vector or a node in a
+graph. The functions are</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="../api/index.html#pymde.preserve_neighbors" title="pymde.preserve_neighbors"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.preserve_neighbors</span></code></a>, and</p></li>
+<li><p><a class="reference internal" href="../api/index.html#pymde.preserve_neighbors" title="pymde.preserve_neighbors"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.preserve_neighbors</span></code></a>,</p></li>
 <li><p><a class="reference internal" href="../api/index.html#pymde.preserve_distances" title="pymde.preserve_distances"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.preserve_distances</span></code></a>.</p></li>
 </ul>
 <p>The first creates embeddings that focus on the local structure of the data,
-putting similar items near each other and dissimilar items not near each other,
-while the second focuses more on the global structure, choosing embedding
+putting similar items near each other and dissimilar items not near each other.
+The second focuses more on the global structure, choosing embedding
 vectors to respect some notion of original distance or dissimilarity between
 items.</p>
 <p>We’ll see how to use these functions below.</p>
