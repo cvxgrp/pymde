@@ -14,17 +14,35 @@ To learn how to create custom embeddings (induced by custom objective functions
 and constraints), sanity check embeddings, identify possible outliers in
 the original data, embed new data, and more, see the section on :ref:`mde`.
 
+.. _embedding_definition:
+
 What is an embedding?
 ---------------------
-An *embedding* of a finite set of items is an assignment of each item
-to a vector of fixed length. The length of the vectors is called the *embedding
-dimension*. An embedding is represented concretely by a matrix, in which each
-row is the embedding vector of an item.
+An *embedding* of a finite set of items (such as biological cells, images,
+words, nodes in a graph, or any other abstract object) is an assignment of each
+item to a vector of fixed length; the original items
+are *embedded* or mapped into a real vector space. The length of the vectors is
+called the *embedding dimension*. An embedding is represented concretely by a
+matrix, in which each row is the embedding vector of an item. 
 
-Commonly, each item is associated with either an original
-high-dimensional vector or a node in a graph. For these common cases,
-PyMDE provides high-level functions for computing embeddings in just one
-line. These functions are
+Embeddings provide concrete numerical representations of abstract items. They
+can be used for exploratory data analysis, to generate features for supervised
+learning, or to draw graphs, among other uses. When the embedding dimension
+is 2 or 3, embeddings can be used to create a sort of chart or atlas of
+the items, in which each point corresponds to an item (whose coordinates in
+space are given by the embedding vector). These visualizations can help
+scientists and analysts identify patterns or anomalies in the original data,
+and more generally make it easier to explore large collections of data. PyMDE
+can embed into 2 or 3 dimensions, but it can also be used to embed into many
+more dimensions, which is useful when generating features for downstream
+machine learning tasks.
+
+For an embedding to be useful, it
+must be faithful to the known relationships original data (the items) in some
+way. PyMDE provides two high-level functions for creating embeddings, based
+on related but different notions of faithfulness. These functions handle the
+common case in which item is associated with either an original
+high-dimensional vector or a node in a graph. The functions are
 
 - :any:`pymde.preserve_neighbors`, and
 - :any:`pymde.preserve_distances`.

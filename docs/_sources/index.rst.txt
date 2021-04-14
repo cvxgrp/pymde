@@ -6,12 +6,12 @@
 PyMDE: Minimum-Distortion Embedding
 ====================================
 
-PyMDE is a Python library for computing vector embeddings of items, such as
-images, biological cells, nodes in a network, or any other type of abstract
-object. The embeddings are designed to minimally distort relationships between
-pairs of items, while possibly satisfying some constraints.
-PyMDE is based on the monograph |paperlink|,
-which introduced a simple but general framework for embedding.
+PyMDE is a Python library for computing vector :ref:`embeddings <embedding_definition>`
+of items, such as images, biological cells, nodes in a network, or any other
+type of abstract object. The embeddings are designed to minimally distort
+relationships between pairs of items, while possibly satisfying some
+constraints. PyMDE is based on the monograph |paperlink|, which introduced a
+simple but general framework for embedding.
 
 .. |paperlink| raw:: html
 
