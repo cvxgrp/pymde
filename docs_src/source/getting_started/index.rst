@@ -330,8 +330,8 @@ tree is created using the `NetworkX <https://networkx.org/>`_ package.
 
    import networkx
 
-   binary_tree = networkx.balanced_tree(3, 6)
-   graph = pymde.Graph(networkx.adjacency_matrix(binary_tree))
+   ternary_tree = networkx.balanced_tree(3, 6)
+   graph = pymde.Graph(networkx.adjacency_matrix(ternary_tree))
    embedding = graph.draw()
 
 .. image:: /files/tree.png

@@ -471,8 +471,8 @@ Here is a very simple example that draws a cycle graph on 3 nodes.</p>
 tree is created using the <a class="reference external" href="https://networkx.org/">NetworkX</a> package.</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">networkx</span>
 
-<span class="n">binary_tree</span> <span class="o">=</span> <span class="n">networkx</span><span class="o">.</span><span class="n">balanced_tree</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
-<span class="n">graph</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">networkx</span><span class="o">.</span><span class="n">adjacency_matrix</span><span class="p">(</span><span class="n">binary_tree</span><span class="p">))</span>
+<span class="n">ternary_tree</span> <span class="o">=</span> <span class="n">networkx</span><span class="o">.</span><span class="n">balanced_tree</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">networkx</span><span class="o">.</span><span class="n">adjacency_matrix</span><span class="p">(</span><span class="n">ternary_tree</span><span class="p">))</span>
 <span class="n">embedding</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
 </pre></div>
 </div>
