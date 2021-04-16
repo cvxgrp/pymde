@@ -491,7 +491,7 @@ This will result in a plot like
 .. image:: /files/distortions_cdf.png
 
 In this particular case, we see that most distortions are very small, but
-roughly 10 of them are much larger. This means that embedding
+roughly 10 percent of them are much larger. This means that embedding
 the items was "easy", except for these 10 percent of edges.
 
 Outliers
