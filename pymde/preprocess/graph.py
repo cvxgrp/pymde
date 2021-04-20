@@ -180,7 +180,7 @@ class Graph(object):
     @property
     def n_all_edges(self):
         """n_items choose 2."""
-        return self.n_items * (self.n_items - 1) / 2
+        return self.n_items * (self.n_items - 1) // 2
 
     def neighbors(self, node: int) -> np.ndarray:
         """The indices of the neighbors of ``node``."""
@@ -550,6 +550,10 @@ def k_nearest_neighbors(
             "`graph` must be a pymde.Graph instance or "
             "scipy.sparse adjacency matrix."
         )
+
+    if graph.n_edges == graph.n_all_edges:
+        # the graph is already full; no need to compute shortest paths.
+        graph_distances = False
 
     if graph_distances:
         graph = shortest_paths(graph, max_length=max_distance, verbose=verbose)
