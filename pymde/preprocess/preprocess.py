@@ -29,14 +29,16 @@ def sample_edges(n, num_edges, exclude=None, seed=None):
     if isinstance(exclude, torch.Tensor):
         exclude = exclude.cpu().numpy()
 
-    if num_edges > int((n * (n - 1) / 2.0)):
+    n_all_edges = n * (n - 1) / 2
+    n_excluded = 0 if exclude is None else exclude.shape[0]
+    if num_edges > n_all_edges - n_excluded:
         raise ValueError(
-            f"Cannot sample more than ({n} choose 2)="
-            f"{int(n * (n - 1) / 2.0)} edges. "
+            f"Cannot sample more than ({n} choose 2) - {n_excluded} ="
+            f"{int(n * (n - 1) / 2.0) - n_excluded} edges. "
             f"(requested: {num_edges} edges)"
         )
 
-    if exclude is not None and (exclude.shape[0] / (n * (n - 1) / 2.0)) >= 0.2:
+    if exclude is not None and (exclude.shape[0] / n_all_edges) >= 0.2:
         A = sp.coo_matrix(
             (np.ones(exclude.shape[0]), (exclude[:, 0], exclude[:, 1])),
             shape=(n, n),
@@ -58,7 +60,7 @@ def sample_edges(n, num_edges, exclude=None, seed=None):
         - 2
         - np.floor(np.sqrt(-8 * edge_idx + 4 * n * (n - 1) - 7) / 2.0 - 0.5)
     )
-    v = edge_idx + u + 1 - n * (n - 1) / 2 + (n - u) * ((n - u) - 1) / 2
+    v = edge_idx + u + 1 - n_all_edges + (n - u) * ((n - u) - 1) / 2
     sampled_edges = np.stack([u, v], axis=1).astype(np.int64)
 
     if exclude is not None:

@@ -1,6 +1,7 @@
 import numpy as np
 import torch
 
+from pymde import constraints
 from pymde import preprocess
 from pymde import recipes
 from pymde import util
@@ -51,3 +52,27 @@ def test_laplacian_embedding(device):
     testing.assert_allclose(
         laplacian_emb.cpu().numpy(), also_laplacian.cpu().numpy()
     )
+
+
+@testing.cpu_and_cuda
+def test_anchor_initialization(device):
+    n_items = 10
+
+    np.random.seed(0)
+    torch.manual_seed(0)
+    data_matrix = torch.randn(n_items, 5)
+
+    anchors = torch.tensor([0, 1, 3])
+    values = torch.tensor([2.0, 1.0, 3.0]).reshape(3, 1)
+    constraint = constraints.Anchored(anchors, values)
+
+    # preserve neighbors
+    mde = recipes.preserve_neighbors(
+        data_matrix, embedding_dim=1, constraint=constraint, init="random"
+    )
+    testing.assert_allclose(mde._X_init[anchors], values)
+
+    mde = recipes.preserve_neighbors(
+        data_matrix, embedding_dim=1, constraint=constraint, init="quadratic"
+    )
+    testing.assert_allclose(mde._X_init[anchors], values)

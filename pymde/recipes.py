@@ -263,6 +263,10 @@ def preserve_neighbors(
         X_init = quadratic.spectral(
             n, embedding_dim, edges, weights, device=device
         )
+        if not isinstance(
+            constraint, (constraints._Centered, constraints._Standardized)
+        ):
+            constraint.project_onto_constraint(X_init, inplace=True)
     elif init == "random":
         X_init = constraint.initialization(n, embedding_dim, device)
     else:
@@ -278,15 +282,10 @@ def preserve_neighbors(
             else:
                 repulsive_fraction = 1
 
-        n_repulsive = int(repulsive_fraction * edges.shape[0])
         n_choose_2 = int(n * (n - 1) / 2)
-        if n_repulsive > n_choose_2:
-            problem.LOGGER.info(
-                f"The number of repulsive edges requested ({n_repulsive}) "
-                f"is larger than the total number of edges ({n_choose_2}). "
-                f"Sampling at most ({n_choose_2}) edges ..."
-            )
-            n_repulsive = n_choose_2
+        n_repulsive = int(repulsive_fraction * (edges.shape[0]))
+        # cannot sample more edges than there are available
+        n_repulsive = min(n_repulsive, n_choose_2 - edges.shape[0])
 
         negative_edges = preprocess.sample_edges(
             n, n_repulsive, exclude=edges
