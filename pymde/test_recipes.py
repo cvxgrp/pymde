@@ -76,3 +76,25 @@ def test_anchor_initialization(device):
         data_matrix, embedding_dim=1, constraint=constraint, init="quadratic"
     )
     testing.assert_allclose(mde._X_init[anchors], values)
+
+
+@testing.cpu_and_cuda
+def test_no_anchor_anchor_edges(device):
+    np.random.seed(0)
+    torch.manual_seed(0)
+    data_matrix = torch.randn(3, 2)
+
+    anchors = torch.tensor([0, 1])
+    values = torch.tensor([2.0, 3.0]).reshape(2, 1)
+    constraint = constraints.Anchored(anchors, values)
+
+    mde = recipes.preserve_distances(
+        data_matrix, embedding_dim=1, constraint=constraint
+    )
+    expected_edges = torch.tensor([[0, 2], [1, 2]])
+    testing.assert_all_equal(expected_edges, mde.edges)
+
+    mde = recipes.preserve_neighbors(
+        data_matrix, embedding_dim=1, constraint=constraint
+    )
+    testing.assert_all_equal(expected_edges, mde.edges)

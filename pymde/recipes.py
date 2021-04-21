@@ -12,6 +12,21 @@ from pymde.functions import penalties, losses
 from pymde import preprocess
 
 
+def _remove_anchor_anchor_edges(edges, data, anchors):
+    # exclude edges in which both items are anchors, since these
+    # items are already pinned in place by the anchor constraint
+    #
+    # TODO(akshayka): handle edge case in which every item is anchored,
+    # in which case the edge list will be empty after this exclusion
+    neither_anchors_mask = ~(
+        (edges[:, 0][..., None] == anchors).any(-1)
+        * (edges[:, 1][..., None] == anchors).any(-1)
+    )
+    edges = edges[neither_anchors_mask]
+    data = data[neither_anchors_mask]
+    return edges, data
+
+
 def preserve_distances(
     data,
     embedding_dim=2,
@@ -114,6 +129,10 @@ def preserve_distances(
     elif isinstance(constraint, constraints._Standardized):
         deviations = preprocess.scale(
             deviations, constraint.natural_length(n_items, embedding_dim)
+        )
+    elif isinstance(constraint, constraints.Anchored):
+        edges, deviations = _remove_anchor_anchor_edges(
+            edges, deviations, constraint.anchors
         )
 
     return problem.MDE(
@@ -257,6 +276,12 @@ def preserve_neighbors(
     edges = knn_graph.edges.to(device)
     weights = knn_graph.weights.to(device)
 
+    if isinstance(constraint, constraints.Anchored):
+        # remove anchor-anchor edges before generating intialization
+        edges, weights = _remove_anchor_anchor_edges(
+            edges, weights, constraint.anchors
+        )
+
     if init == "quadratic":
         if verbose:
             problem.LOGGER.info("Computing quadratic initialization.")
@@ -278,6 +303,8 @@ def preserve_neighbors(
     if repulsive_penalty is not None:
         if repulsive_fraction is None:
             if isinstance(constraint, constraints._Standardized):
+                # standardization constraint already implicity spreads,
+                # so use a lower replusion
                 repulsive_fraction = 0.5
             else:
                 repulsive_fraction = 1
@@ -290,11 +317,17 @@ def preserve_neighbors(
         negative_edges = preprocess.sample_edges(
             n, n_repulsive, exclude=edges
         ).to(device)
-        edges = torch.cat([edges, negative_edges])
 
         negative_weights = -torch.ones(
             negative_edges.shape[0], dtype=X_init.dtype, device=device
         )
+
+        if isinstance(constraint, constraints.Anchored):
+            negative_edges, negative_weights = _remove_anchor_anchor_edges(
+                negative_edges, negative_weights, constraint.anchors
+            )
+
+        edges = torch.cat([edges, negative_edges])
         weights = torch.cat([weights, negative_weights])
 
         f = penalties.PushAndPull(
