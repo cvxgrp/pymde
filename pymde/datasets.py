@@ -12,6 +12,7 @@ takes at least two arguments:
         (default True)
 """
 
+import pickle
 import os
 
 import numpy as np
@@ -485,6 +486,61 @@ def counties(root="./", download=True) -> Dataset:
         voting_attr_file,
         county_df_file,
         voting_attr_file,
+    ]
+
+    if _is_cached(root, files):
+        LOGGER.info("Loading cached dataset.")
+        return load_dataset()
+
+    if not download:
+        raise RuntimeError("`download` is False, but data is not cached.")
+
+    _install_headers()
+
+    filename = url.rpartition("/")[2]
+    torchvision.datasets.utils.download_and_extract_archive(
+        url, download_root=root, extract_root=extract_root, filename=filename
+    )
+    os.remove(os.path.join(root, filename))
+    LOGGER.info("Dataset is now available.")
+    return load_dataset()
+
+
+def google_scholar_interests(root="./", download=True) -> Dataset:
+    """Google Scholar academic interests
+
+    This dataset contains a cooccurrence matrix of the 5000 most popular
+    academic interests listed by authors on Google Scholar
+
+    - ``data``: a cooccurrence matrix, counting the number of times two
+      two interests appeared among a single author's listed interests,
+      with data[i, j] giving the cooccurrence count of interests[i] and
+      interests[j]
+    - ``attributes``: one key, ``interests``, where interests[i] is the
+      interest corresponding to the ith row/column of ``data``.
+    """
+    root = os.path.expanduser(root)
+
+    url = "https://akshayagrawal.com/scholar/interests.tar.gz"
+
+    extract_root = os.path.join(root, "interests/")
+    data_file = os.path.join(extract_root, "topic_cooccurrence_matrix.npz")
+    interests_attr_file = os.path.join(extract_root, "interests.pkl")
+
+    def load_dataset():
+        data = Graph(sp.load_npz(data_file))
+        with open(interests_attr_file, "rb") as f:
+            interests = pickle.load(f)
+        attributes = {"interests": interests}
+        metadata = {
+            "authors": "Agrawal",
+        }
+        dataset = Dataset(data, attributes, metadata=metadata)
+        return dataset
+
+    files = [
+        data_file,
+        interests_attr_file,
     ]
 
     if _is_cached(root, files):
