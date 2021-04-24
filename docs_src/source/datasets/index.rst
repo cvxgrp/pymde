@@ -42,6 +42,13 @@ Google Scholar
    :noindex:
 
 
+Academic interests
+---------------------------------
+
+.. autofunction:: pymde.datasets.google_scholar_interests
+   :noindex:
+
+
 scRNA transcriptomes from COVID-19 patients
 -------------------------------------------
 

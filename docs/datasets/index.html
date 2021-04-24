@@ -103,6 +103,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#mnist">MNIST</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fashion-mnist">Fashion MNIST</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#google-scholar">Google Scholar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#academic-interests">Academic interests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#scrna-transcriptomes-from-covid-19-patients">scRNA transcriptomes from COVID-19 patients</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#population-genetics">Population genetics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#us-counties">US counties</a></li>
@@ -256,6 +257,25 @@ is roughly 1GB in size.</p>
 of coauthors of each other, normalized to be a percentile.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">other_data</span></code>: holds a dataframe describing the dataset, keyed by
 <code class="docutils literal notranslate"><span class="pre">dataframe</span></code>.</p></li>
+</ul>
+</dd></dl>
+
+</div>
+<div class="section" id="academic-interests">
+<h2>Academic interests<a class="headerlink" href="#academic-interests" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt>
+<code class="sig-prename descclassname">pymde.datasets.</code><code class="sig-name descname">google_scholar_interests</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span><span class="o">=</span><span class="default_value">'./'</span></em>, <em class="sig-param"><span class="n">download</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="../api/index.html#pymde.datasets.Dataset" title="pymde.datasets.Dataset">pymde.datasets.Dataset</a></dt>
+<dd><p>Google Scholar academic interests</p>
+<p>This dataset contains a cooccurrence matrix of the 5000 most popular
+academic interests listed by authors on Google Scholar</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code>: a cooccurrence matrix, counting the number of times two
+two interests appeared among a single author’s listed interests,
+with <code class="docutils literal notranslate"><span class="pre">data[i,</span> <span class="pre">j]</span></code> giving the cooccurrence count of <code class="docutils literal notranslate"><span class="pre">interests[i]</span></code> and
+<code class="docutils literal notranslate"><span class="pre">interests[j]</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">attributes</span></code>: one key, <code class="docutils literal notranslate"><span class="pre">interests</span></code>, where <code class="docutils literal notranslate"><span class="pre">interests[i]</span></code> is the
+interest corresponding to the ith row/column of <code class="docutils literal notranslate"><span class="pre">data</span></code>.</p></li>
 </ul>
 </dd></dl>
 

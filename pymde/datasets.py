@@ -514,9 +514,9 @@ def google_scholar_interests(root="./", download=True) -> Dataset:
 
     - ``data``: a cooccurrence matrix, counting the number of times two
       two interests appeared among a single author's listed interests,
-      with data[i, j] giving the cooccurrence count of interests[i] and
-      interests[j]
-    - ``attributes``: one key, ``interests``, where interests[i] is the
+      with ``data[i, j]`` giving the cooccurrence count of ``interests[i]`` and
+      ``interests[j]``
+    - ``attributes``: one key, ``interests``, where ``interests[i]`` is the
       interest corresponding to the ith row/column of ``data``.
     """
     root = os.path.expanduser(root)

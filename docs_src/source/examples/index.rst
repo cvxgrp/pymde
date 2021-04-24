@@ -65,6 +65,15 @@ much longer than a minute, but it will take longer to compute on a CPU.
 
 - `Google Scholar notebook <https://github.com/cvxgrp/pymde/blob/main/examples/google_scholar.ipynb>`_ 
 
+Word Embedding of Academic Interests
+------------------------------------
+The academic interests notebook shows how to make basic word embeddings.
+In this notebook the words being embedded are the 5000 most popular academic
+interests on Google Scholar.
+
+- `Word embedding notebook <https://github.com/cvxgrp/pymde/blob/main/examples/word_embedding.ipynb>`_ 
+
+
 Population Genetics
 -------------------
 The population genetics notebook embeds genomic data of individuals thought
@@ -101,7 +110,7 @@ Drawing Graphs
 --------------
 PyMDE can be used to layout graphs in the Cartesian plane in an aesthetically
 pleasing way. Compared to many other graph layout libraries, PyMDE can scale
-to higher datasets. And, of course, PyMDE lets you design custom layouts, by
+to much larger datasets. PyMDE also lets you design custom layouts, by
 choosing your own distortion functions and constraints.
 
 This notebook shows various ways of drawing graphs with PyMDE. It also
