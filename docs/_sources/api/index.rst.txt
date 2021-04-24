@@ -173,6 +173,14 @@ Datasets
 
 .. autofunction:: pymde.datasets.MNIST
 
+.. autofunction:: pymde.datasets.FashionMNIST
+
 .. autofunction:: pymde.datasets.google_scholar
 
+.. autofunction:: pymde.datasets.google_scholar_interests
+
 .. autofunction:: pymde.datasets.covid19_scrna_wilk
+
+.. autofunction:: pymde.datasets.population_genetics
+
+.. autofunction:: pymde.datasets.counties
