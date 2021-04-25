@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Examples &mdash; pymde 0.1.10 documentation</title>
+  <title>Examples &mdash; pymde 0.1.11 documentation</title>
   
 
   
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                v0.1.10
+                v0.1.11
               </div>
             
           
@@ -105,12 +105,13 @@
 <li class="toctree-l2"><a class="reference internal" href="#fashion-mnist">Fashion MNIST</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#single-cell-genomics">Single-Cell Genomics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#google-scholar">Google Scholar</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#word-embedding-of-academic-interests">Word Embedding of Academic Interests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#word-embedding">Word Embedding</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#population-genetics">Population Genetics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#us-counties">US Counties</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#dissimilar-edges-and-negative-weights">Dissimilar Edges and Negative Weights</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#drawing-graphs">Drawing Graphs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#anchor-constraints">Anchor Constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#updating-embeddings">Updating Embeddings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#drawing-graphs">Drawing Graphs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dissimilar-edges-and-negative-weights">Dissimilar Edges and Negative Weights</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api/index.html">API documentation</a></li>
@@ -238,11 +239,10 @@ much longer than a minute, but it will take longer to compute on a CPU.</p>
 <li><p><a class="reference external" href="https://github.com/cvxgrp/pymde/blob/main/examples/google_scholar.ipynb">Google Scholar notebook</a></p></li>
 </ul>
 </div>
-<div class="section" id="word-embedding-of-academic-interests">
-<h2>Word Embedding of Academic Interests<a class="headerlink" href="#word-embedding-of-academic-interests" title="Permalink to this headline">¶</a></h2>
-<p>The academic interests notebook shows how to make basic word embeddings.
-In this notebook the words being embedded are the 5000 most popular academic
-interests on Google Scholar.</p>
+<div class="section" id="word-embedding">
+<h2>Word Embedding<a class="headerlink" href="#word-embedding" title="Permalink to this headline">¶</a></h2>
+<p>This notebook shows how to make basic word embeddings. The words being embedded
+are the 5000 most popular academic interests on Google Scholar.</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/cvxgrp/pymde/blob/main/examples/word_embedding.ipynb">Word embedding notebook</a></p></li>
 </ul>
@@ -267,30 +267,6 @@ data was used in computing the embedding).</p>
 <li><p><a class="reference external" href="https://github.com/cvxgrp/pymde/blob/main/examples/counties.ipynb">US counties notebook</a></p></li>
 </ul>
 </div>
-<div class="section" id="dissimilar-edges-and-negative-weights">
-<h2>Dissimilar Edges and Negative Weights<a class="headerlink" href="#dissimilar-edges-and-negative-weights" title="Permalink to this headline">¶</a></h2>
-<p>When creating an embedding for preserving neighbors, an important hyper-parameter
-is the number of dissimilar edges to include, and the size of the negative weights.
-Using as many dissimilar edges as there are similar edges, and choosing
-the negative weights to all be -1, usually works just fine. But different
-choices do lead to different embeddings.</p>
-<p>This notebook explores the effect these hyper-parameters have on the embedding.</p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://github.com/cvxgrp/pymde/blob/main/examples/dissimilar_edges_and_negative_weights.ipynb">Dissimilar edges and negative weights notebook</a></p></li>
-</ul>
-</div>
-<div class="section" id="drawing-graphs">
-<span id="example-graphs"></span><h2>Drawing Graphs<a class="headerlink" href="#drawing-graphs" title="Permalink to this headline">¶</a></h2>
-<p>PyMDE can be used to layout graphs in the Cartesian plane in an aesthetically
-pleasing way. Compared to many other graph layout libraries, PyMDE can scale
-to much larger datasets. PyMDE also lets you design custom layouts, by
-choosing your own distortion functions and constraints.</p>
-<p>This notebook shows various ways of drawing graphs with PyMDE. It also
-introduces the <code class="docutils literal notranslate"><span class="pre">pymde.Graph</span></code> class.</p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://github.com/cvxgrp/pymde/blob/main/examples/drawing_graphs.ipynb">Drawing graphs notebook</a></p></li>
-</ul>
-</div>
 <div class="section" id="anchor-constraints">
 <h2>Anchor Constraints<a class="headerlink" href="#anchor-constraints" title="Permalink to this headline">¶</a></h2>
 <p>With an anchor constraint, you can pin some embedding vectors to values
@@ -304,6 +280,41 @@ graph drawing as an example.</p>
 <li><p><a class="reference external" href="https://github.com/cvxgrp/pymde/blob/main/examples/anchor_constraints.ipynb">Anchor constraint notebook</a></p></li>
 </ul>
 </div>
+<div class="section" id="updating-embeddings">
+<h2>Updating Embeddings<a class="headerlink" href="#updating-embeddings" title="Permalink to this headline">¶</a></h2>
+<p>With PyMDE, you can easily add new points to an existing embedding using
+an anchor constraint (to pin the existing embedding in place).</p>
+<p>This notebook gives an example of how to do this, using MNIST as an example.
+We first embed half the images in the MNIST dataset. Then we augment
+the embedding with vectors for the remaining images.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/cvxgrp/pymde/blob/main/examples/updating_an_existing_embedding.ipynb">Updating embedding notebook</a></p></li>
+</ul>
+</div>
+<div class="section" id="drawing-graphs">
+<h2>Drawing Graphs<a class="headerlink" href="#drawing-graphs" title="Permalink to this headline">¶</a></h2>
+<p>PyMDE can be used to layout graphs in the Cartesian plane in an aesthetically
+pleasing way. Compared to many other graph layout libraries, PyMDE can scale
+to much larger datasets. PyMDE also lets you design custom layouts, by
+choosing your own distortion functions and constraints.</p>
+<p>This notebook shows various ways of drawing graphs with PyMDE. It also
+introduces the <code class="docutils literal notranslate"><span class="pre">pymde.Graph</span></code> class.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/cvxgrp/pymde/blob/main/examples/drawing_graphs.ipynb">Drawing graphs notebook</a></p></li>
+</ul>
+</div>
+<div class="section" id="dissimilar-edges-and-negative-weights">
+<h2>Dissimilar Edges and Negative Weights<a class="headerlink" href="#dissimilar-edges-and-negative-weights" title="Permalink to this headline">¶</a></h2>
+<p>When creating an embedding for preserving neighbors, an important hyper-parameter
+is the number of dissimilar edges to include, and the size of the negative weights.
+Using as many dissimilar edges as there are similar edges, and choosing
+the negative weights to all be -1, usually works just fine. But different
+choices do lead to different embeddings.</p>
+<p>This notebook explores the effect these hyper-parameters have on the embedding.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/cvxgrp/pymde/blob/main/examples/dissimilar_edges_and_negative_weights.ipynb">Dissimilar edges and negative weights notebook</a></p></li>
+</ul>
+<span class="target" id="example-graphs"></span></div>
 </div>
 
 

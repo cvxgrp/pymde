@@ -65,11 +65,10 @@ much longer than a minute, but it will take longer to compute on a CPU.
 
 - `Google Scholar notebook <https://github.com/cvxgrp/pymde/blob/main/examples/google_scholar.ipynb>`_ 
 
-Word Embedding of Academic Interests
-------------------------------------
-The academic interests notebook shows how to make basic word embeddings.
-In this notebook the words being embedded are the 5000 most popular academic
-interests on Google Scholar.
+Word Embedding
+--------------
+This notebook shows how to make basic word embeddings. The words being embedded
+are the 5000 most popular academic interests on Google Scholar.
 
 - `Word embedding notebook <https://github.com/cvxgrp/pymde/blob/main/examples/word_embedding.ipynb>`_ 
 
@@ -92,6 +91,42 @@ data was used in computing the embedding).
 
 - `US counties notebook <https://github.com/cvxgrp/pymde/blob/main/examples/counties.ipynb>`_
 
+Anchor Constraints
+------------------
+With an anchor constraint, you can pin some embedding vectors to values
+that you specify ahead of time. This is useful when you have prior
+knowledge of where some of the items should end up (e.g., you might
+be doing semi-supervised learning, or you might be laying out a graph with
+some nodes pinned in place).
+
+This notebook gives an example of how to use an anchor constraint, using
+graph drawing as an example.
+
+- `Anchor constraint notebook <https://github.com/cvxgrp/pymde/blob/main/examples/anchor_constraints.ipynb>`_
+
+Updating Embeddings
+-------------------
+With PyMDE, you can easily add new points to an existing embedding using
+an anchor constraint (to pin the existing embedding in place).
+
+This notebook gives an example of how to do this, using MNIST as an example.
+We first embed half the images in the MNIST dataset. Then we augment
+the embedding with vectors for the remaining images.
+
+- `Updating embedding notebook <https://github.com/cvxgrp/pymde/blob/main/examples/updating_an_existing_embedding.ipynb>`_
+
+Drawing Graphs
+--------------
+PyMDE can be used to layout graphs in the Cartesian plane in an aesthetically
+pleasing way. Compared to many other graph layout libraries, PyMDE can scale
+to much larger datasets. PyMDE also lets you design custom layouts, by
+choosing your own distortion functions and constraints.
+
+This notebook shows various ways of drawing graphs with PyMDE. It also
+introduces the ``pymde.Graph`` class.
+
+- `Drawing graphs notebook <https://github.com/cvxgrp/pymde/blob/main/examples/drawing_graphs.ipynb>`_
+
 Dissimilar Edges and Negative Weights
 -------------------------------------
 When creating an embedding for preserving neighbors, an important hyper-parameter
@@ -106,27 +141,3 @@ This notebook explores the effect these hyper-parameters have on the embedding.
 
 .. _example_graphs:
 
-Drawing Graphs
---------------
-PyMDE can be used to layout graphs in the Cartesian plane in an aesthetically
-pleasing way. Compared to many other graph layout libraries, PyMDE can scale
-to much larger datasets. PyMDE also lets you design custom layouts, by
-choosing your own distortion functions and constraints.
-
-This notebook shows various ways of drawing graphs with PyMDE. It also
-introduces the ``pymde.Graph`` class.
-
-- `Drawing graphs notebook <https://github.com/cvxgrp/pymde/blob/main/examples/drawing_graphs.ipynb>`_
-
-Anchor Constraints
-------------------
-With an anchor constraint, you can pin some embedding vectors to values
-that you specify ahead of time. This is useful when you have prior
-knowledge of where some of the items should end up (e.g., you might
-be doing semi-supervised learning, or you might be laying out a graph with
-some nodes pinned in place).
-
-This notebook gives an example of how to use an anchor constraint, using
-graph drawing as an example.
-
-- `Anchor constraint notebook <https://github.com/cvxgrp/pymde/blob/main/examples/anchor_constraints.ipynb>`_
