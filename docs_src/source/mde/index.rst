@@ -548,19 +548,37 @@ Embedding new points
 --------------------
 
 Suppose we have embedded some number of items, and later we obtain additional
-items of the same type that we wish to embed. (For example, we might
+items of the same type that we wish to embed. For example, we might
 have embedded the MNIST dataset, and later we obtain more images we'd like
-to embed.)
+to embed.
 
-We have two options for embedding the new points. We could of course combine
-the new images with the old images and compute a new embedding. This however
-will result in an entirely new embedding. We might instead want to embed
-the new items, without changing the vectors for the old data. To do say,
+Often we want to embed
+the new items without changing the vectors for the old data. To do so,
 we can solve a small MDE problem involving the new items and some of the old
 ones: some edges will be between new items, and importantly some edges will
 connect the new items to old items. The old items can be held in place
 with an anchor constraint.
 
-PyMDE provides all the tools needed to embed new points, while holding
-the old ones fixed, but it does not yet have a high-level API for doing this.
-We plan to add one soon.
+For example, here is how to update an embedding of MNIST.
+
+.. code:: python3
+
+  import pymde
+  import torch
+
+  mnist = pymde.datasets.MNIST()
+
+  n_train = 35000
+  train_data = mnist.data[:n_train]
+  val_data = mnist.data[n_train:]
+
+  train_embedding = pymde.preserve_neighbors(
+      train_data, verbose=True).embed(verbose=True)
+  updated_embedding = pymde.preserve_neighbors(
+      torch.vstack([train_data, val_data]),
+      constraint=pymde.Anchored(torch.arange(n_train), train_embedding),
+      verbose=True).embed(verbose=True)
+
+A complete example is provided in the below notebook.
+
+- `Updating embedding notebook <https://github.com/cvxgrp/pymde/blob/main/examples/updating_an_existing_embedding.ipynb>`_

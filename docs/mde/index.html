@@ -817,20 +817,37 @@ them on the same scale, but it will make less sense otherwise).</p>
 <div class="section" id="embedding-new-points">
 <h2>Embedding new points<a class="headerlink" href="#embedding-new-points" title="Permalink to this headline">¶</a></h2>
 <p>Suppose we have embedded some number of items, and later we obtain additional
-items of the same type that we wish to embed. (For example, we might
+items of the same type that we wish to embed. For example, we might
 have embedded the MNIST dataset, and later we obtain more images we’d like
-to embed.)</p>
-<p>We have two options for embedding the new points. We could of course combine
-the new images with the old images and compute a new embedding. This however
-will result in an entirely new embedding. We might instead want to embed
-the new items, without changing the vectors for the old data. To do say,
+to embed.</p>
+<p>Often we want to embed
+the new items without changing the vectors for the old data. To do so,
 we can solve a small MDE problem involving the new items and some of the old
 ones: some edges will be between new items, and importantly some edges will
 connect the new items to old items. The old items can be held in place
 with an anchor constraint.</p>
-<p>PyMDE provides all the tools needed to embed new points, while holding
-the old ones fixed, but it does not yet have a high-level API for doing this.
-We plan to add one soon.</p>
+<p>For example, here is how to update an embedding of MNIST.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymde</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="n">mnist</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">MNIST</span><span class="p">()</span>
+
+<span class="n">n_train</span> <span class="o">=</span> <span class="mi">35000</span>
+<span class="n">train_data</span> <span class="o">=</span> <span class="n">mnist</span><span class="o">.</span><span class="n">data</span><span class="p">[:</span><span class="n">n_train</span><span class="p">]</span>
+<span class="n">val_data</span> <span class="o">=</span> <span class="n">mnist</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">n_train</span><span class="p">:]</span>
+
+<span class="n">train_embedding</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">preserve_neighbors</span><span class="p">(</span>
+    <span class="n">train_data</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">updated_embedding</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">preserve_neighbors</span><span class="p">(</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">train_data</span><span class="p">,</span> <span class="n">val_data</span><span class="p">]),</span>
+    <span class="n">constraint</span><span class="o">=</span><span class="n">pymde</span><span class="o">.</span><span class="n">Anchored</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_train</span><span class="p">),</span> <span class="n">train_embedding</span><span class="p">),</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A complete example is provided in the below notebook.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/cvxgrp/pymde/blob/main/examples/updating_an_existing_embedding.ipynb">Updating embedding notebook</a></p></li>
+</ul>
 </div>
 </div>
 
