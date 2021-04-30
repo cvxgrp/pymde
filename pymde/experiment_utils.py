@@ -238,6 +238,7 @@ def _plot_3d(
         if isinstance(edges, torch.Tensor):
             edges = edges.cpu().numpy()
         linewidth = 4.0 / np.log(edges.shape[0])
+        edge_color = 'w' if background_color is None else 'k'
         for e in edges:
             xi = X[e[0]]
             xj = X[e[1]]
@@ -245,7 +246,7 @@ def _plot_3d(
                 [xi[0], xj[0]],
                 [xi[1], xj[1]],
                 [xi[2], xj[2]],
-                color="white",
+                color=edge_color,
                 alpha=0.5,
                 linewidth=linewidth,
                 zorder=5,
@@ -343,6 +344,22 @@ def _plot(
             ax.set_ylim(lim)
             ax.set_aspect("equal", adjustable="box")
 
+        if edges is not None:
+            linewidth = 6.0 / np.log(edges.shape[0])
+            scatter_color = 'w' if background_color is None else 'k'
+            for e in edges:
+                ax.plot(
+                    [X[e[0], 0], X[e[1], 0]],
+                    [X[e[0], 1], X[e[1], 1]],
+                    linestyle="-",
+                    markersize=s / 2.,
+                    color=scatter_color,
+                    alpha=0.5,
+                    linewidth=linewidth,
+                )
+            if background_color is None:
+                ax.set_facecolor("k")
+
         # scatterplot of embedding
         if color_by is not None:
             discrete = _is_discrete(color_by.dtype)
@@ -373,21 +390,6 @@ def _plot(
             )
         else:
             ax.scatter(X[:, 0], X[:, 1], s=s, alpha=1.0)
-
-        if edges is not None:
-            linewidth = 6.0 / np.log(edges.shape[0])
-            for e in edges:
-                ax.plot(
-                    [X[e[0], 0], X[e[1], 0]],
-                    [X[e[0], 1], X[e[1], 1]],
-                    linestyle="-",
-                    marker="o",
-                    markersize=s,
-                    color="white",
-                    alpha=0.5,
-                    linewidth=linewidth,
-                )
-            ax.set_facecolor("k")
 
         if title is not None:
             ax.set_title(title)
