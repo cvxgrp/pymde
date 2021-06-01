@@ -40,11 +40,11 @@ Some examples of losses inlcude:
 .. code:: python3
 
     deviations = torch.tensor([1., 2., 3.])
-    f = pymde.losses.Quadratic(weights)
+    f = pymde.losses.Quadratic(deviations)
 
     distances = torch.tensor([2., 5., 4.])
     distortions = f(distances)
-    # the distortions are (2 - 1)**2 == 1, (5 - 2)**2 == 9, (4 - 3)**2 = 1
+    # the distortions are (2 - 1)**2 == 1, (5 - 2)**2 == 9, (4 - 3)**2 == 1
     print(distortions)
 
 prints
