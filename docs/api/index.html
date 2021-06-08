@@ -1150,11 +1150,11 @@ distance.</p>
 </div>
 <p><strong>Example.</strong></p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">deviations</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">])</span>
-<span class="n">f</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">losses</span><span class="o">.</span><span class="n">Quadratic</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">losses</span><span class="o">.</span><span class="n">Quadratic</span><span class="p">(</span><span class="n">deviations</span><span class="p">)</span>
 
 <span class="n">distances</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">])</span>
 <span class="n">distortions</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span>
-<span class="c1"># the distortions are (2 - 1)**2 == 1, (5 - 2)**2 == 9, (4 - 3)**2 = 1</span>
+<span class="c1"># the distortions are (2 - 1)**2 == 1, (5 - 2)**2 == 9, (4 - 3)**2 == 1</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">distortions</span><span class="p">)</span>
 </pre></div>
 </div>
