@@ -179,7 +179,7 @@ class _Standardized(Constraint):
         X -= X.mean(axis=0)
         if not isinstance(n_items, torch.Tensor):
             n_items = torch.tensor(n_items, dtype=X.dtype, device=device)
-        lmbda, Q = torch.symeig(X.T @ X, eigenvectors=True)
+        lmbda, Q = torch.linalg.eigh(X.T @ X, UPLO="U")
         X = X @ Q @ torch.diag(lmbda ** (-0.5)) * (n_items.type(X.dtype).sqrt())
         return X
 
