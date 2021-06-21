@@ -147,7 +147,7 @@ class MDE(torch.nn.Module):
                 edges = edges.to(self.device)
             p = torch.tensor(edges.shape[0], device=self.device)
 
-        complete_graph_edges = n_items * (n_items - 1) // 2
+        complete_graph_edges = (n_items * (n_items - 1) / 2).long()
         if p is not None and p > complete_graph_edges:
             raise ValueError(
                 "Your graph has more than (n_items choose 2) edges."
