@@ -19,7 +19,7 @@ def _remove_anchor_anchor_edges(edges, data, anchors, opt=None, blk=1e8):
 
     TODO(akshayka): handle edge case in which every item is anchored,
     in which case the edge list will be empty after this exclusion
-    
+
     Arguments
     ---------
     edges:       edge list N x 2
@@ -40,14 +40,16 @@ def _remove_anchor_anchor_edges(edges, data, anchors, opt=None, blk=1e8):
         return edges, data
     blk = int(blk)
     ne = edges.shape[0]
-    ea = ne * na # torch uses "ea" bytes of tmp mem for opt==0 (maybe too large)
+    ea = (
+        ne * na
+    )  # torch uses "ea" bytes of tmp mem for opt==0 (maybe too large)
 
-    if opt is None: # set both opt and blk according to simple heuristic
+    if opt is None:  # set both opt and blk according to simple heuristic
         opt = 0
         blk = int(1e8)
-        if ea > blk: # opt=0 is a possibility
+        if ea > blk:  # opt=0 is a possibility
             opt = 1  # fall-back to 3
-            if ne>=150000:
+            if ne >= 150000:
                 blk = 262144
 
     if opt == 0 and ea < blk:
@@ -56,46 +58,47 @@ def _remove_anchor_anchor_edges(edges, data, anchors, opt=None, blk=1e8):
             * (edges[:, 1][..., None] == anchors).any(-1)
         )
 
-    elif opt==1 and na < blk: # no need to block anchor-loop
-        #astep=na
-        estep=int(blk/na)
-        assert(estep > 0)
-        
-        msk0 = torch.zeros(ne, dtype=torch.bool)
-        msk1 = torch.zeros(ne, dtype=torch.bool)
-        e = 0
-        while e < ne:
-            ehi = e+estep if e+estep < ne else ne
-            msk0[e:ehi] |= (edges[e:ehi,0][...,None] == anchors).any(-1)
-            msk1[e:ehi] |= (edges[e:ehi,1][...,None] == anchors).any(-1)
-            e += estep
-        neither_anchors_mask = ~(msk0 & msk1) # neither
+    elif opt == 1 and na < blk:  # no need to block anchor-loop
+        # astep=na
+        estep = int(blk / na)
+        assert estep > 0
 
-    else: # o.w block both edge and anchor loops
-        astep=min(na,blk)
-        estep=int(blk/astep)
-        assert(astep > 0)
-        assert(estep > 0)
-        
         msk0 = torch.zeros(ne, dtype=torch.bool)
         msk1 = torch.zeros(ne, dtype=torch.bool)
         e = 0
         while e < ne:
-            ehi = e+estep if e+estep < ne else ne
-            e0 = edges[e:ehi,0][...,None]
-            e1 = edges[e:ehi,1][...,None]
+            ehi = e + estep if e + estep < ne else ne
+            msk0[e:ehi] |= (edges[e:ehi, 0][..., None] == anchors).any(-1)
+            msk1[e:ehi] |= (edges[e:ehi, 1][..., None] == anchors).any(-1)
+            e += estep
+        neither_anchors_mask = ~(msk0 & msk1)  # neither
+
+    else:  # o.w block both edge and anchor loops
+        astep = min(na, blk)
+        estep = int(blk / astep)
+        assert astep > 0
+        assert estep > 0
+
+        msk0 = torch.zeros(ne, dtype=torch.bool)
+        msk1 = torch.zeros(ne, dtype=torch.bool)
+        e = 0
+        while e < ne:
+            ehi = e + estep if e + estep < ne else ne
+            e0 = edges[e:ehi, 0][..., None]
+            e1 = edges[e:ehi, 1][..., None]
             a = 0
             while a < na:
-                ahi = a+astep if a+astep < na else na
+                ahi = a + astep if a + astep < na else na
                 msk0[e:ehi] |= (e0 == anchors[a:ahi]).any(-1)
                 msk1[e:ehi] |= (e1 == anchors[a:ahi]).any(-1)
                 a += astep
             e += estep
-        neither_anchors_mask = ~(msk0 & msk1) # neither
+        neither_anchors_mask = ~(msk0 & msk1)  # neither
 
     edges = edges[neither_anchors_mask]
     data = data[neither_anchors_mask]
     return edges, data
+
 
 def preserve_distances(
     data,
