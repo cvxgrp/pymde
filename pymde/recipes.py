@@ -18,9 +18,13 @@ def _remove_anchor_anchor_edges(edges, data, anchors):
     #
     # TODO(akshayka): handle edge case in which every item is anchored,
     # in which case the edge list will be empty after this exclusion
+
+    # doing this in a vectorized fashion can easily OOM a machine, if
+    # number of edges * number of anchors is large. The Python for loops
+    # below are slow, but not too slow.
     neither_anchors_mask = ~(
-        (edges[:, 0][..., None] == anchors).any(-1)
-        * (edges[:, 1][..., None] == anchors).any(-1)
+        sum(edges[:, 0] == i for i in anchors).bool()
+        * sum(edges[:, 1] == i for i in anchors).bool()
     )
     edges = edges[neither_anchors_mask]
     data = data[neither_anchors_mask]
