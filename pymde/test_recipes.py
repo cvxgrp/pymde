@@ -28,18 +28,15 @@ def test_k_nearest_neighbors():
 
 @testing.cpu_and_cuda
 def test_laplacian_embedding(device):
-    np.random.seed(0)
     torch.manual_seed(0)
     data_matrix = torch.randn(100, 10)
 
-    np.random.seed(0)
-    torch.manual_seed(0)
+    util.seed(0)
     laplacian_emb = recipes.laplacian_embedding(
         data_matrix, device=device
     ).embed()
 
-    np.random.seed(0)
-    torch.manual_seed(0)
+    util.seed(0)
     also_laplacian = recipes.preserve_neighbors(
         data_matrix,
         attractive_penalty=penalties.Quadratic,
@@ -58,8 +55,7 @@ def test_laplacian_embedding(device):
 def test_anchor_initialization(device):
     n_items = 10
 
-    np.random.seed(0)
-    torch.manual_seed(0)
+    util.seed(0)
     data_matrix = torch.randn(n_items, 5)
 
     anchors = torch.tensor([0, 1, 3])
@@ -80,8 +76,7 @@ def test_anchor_initialization(device):
 
 @testing.cpu_and_cuda
 def test_no_anchor_anchor_edges(device):
-    np.random.seed(0)
-    torch.manual_seed(0)
+    util.seed(0)
     data_matrix = torch.randn(3, 2)
 
     anchors = torch.tensor([0, 1])
@@ -98,3 +93,44 @@ def test_no_anchor_anchor_edges(device):
         data_matrix, embedding_dim=1, constraint=constraint
     )
     testing.assert_all_equal(expected_edges, mde.edges)
+
+
+@testing.cpu_and_cuda
+def test_neighbor_reproducibility(device):
+    def _run_test(n_items):
+        torch.manual_seed(0)
+        Y = torch.rand((n_items, 128))
+
+        prev_edges = None
+        for i in range(5):
+            util.seed(0)
+            edges = recipes.preserve_neighbors(Y).edges
+            if prev_edges is not None:
+                assert (edges == prev_edges).all()
+            prev_edges = edges
+
+    _run_test(36)
+    _run_test(1001)
+
+
+@testing.cpu_and_cuda
+def test_distances_reproducibility(device):
+    def _run_test(n_items):
+        torch.manual_seed(0)
+        Y = torch.rand((n_items, 128))
+
+        prev_edges = None
+        prev_deviations = None
+        for i in range(5):
+            util.seed(0)
+            mde = recipes.preserve_distances(Y, max_distances=1e5)
+            edges = mde.edges
+            deviations = mde.distortion_function.deviations
+            if prev_edges is not None:
+                assert (edges == prev_edges).all()
+                assert (deviations == prev_deviations).all()
+            prev_edges = edges
+            prev_deviations = deviations
+
+    _run_test(36)
+    _run_test(1001)

@@ -65,8 +65,7 @@ def test_pca():
 
 
 def test_spectral():
-    np.random.seed(0)
-    torch.random.manual_seed(0)
+    util.seed(0)
     n = 5
     m = 3
     L = -np.abs(np.random.randn(n, n).astype(np.float32))

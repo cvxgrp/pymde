@@ -5,6 +5,9 @@ import scipy.sparse as sp
 import torch
 
 
+from pymde import util
+
+
 def sample_edges(n, num_edges, exclude=None, seed=None):
     """Randomly sample num_edges edges (optionally) not in excluded edges
 
@@ -51,7 +54,10 @@ def sample_edges(n, num_edges, exclude=None, seed=None):
 
     # randomly sample edges (i, j) with i < j via a bijection to
     # triangular numbers
-    randomstate = np.random.default_rng(seed)
+    if seed is not None:
+        randomstate = np.random.default_rng(seed)
+    else:
+        randomstate = util.np_rng()
     edge_idx = randomstate.choice(
         int(n * (n - 1) / 2), num_edges, replace=False, shuffle=False
     )

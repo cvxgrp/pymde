@@ -84,7 +84,8 @@ def _spectral(
             X_init = mde.fit(max_iter=40, use_line_search=False)
         else:
             X_init = util.proj_standardized(
-                torch.tensor(np.random.randn(n, m), device=device), demean=True
+                torch.tensor(util.np_rng().randn(n, m), device=device),
+                demean=True,
             )
         eigenvalues, eigenvectors = scipy.sparse.linalg.lobpcg(
             A=L,
