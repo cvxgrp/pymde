@@ -102,12 +102,17 @@ def test_neighbor_reproducibility(device):
         Y = torch.rand((n_items, 128))
 
         prev_edges = None
+        prev_weights = None
         for i in range(5):
             util.seed(0)
-            edges = recipes.preserve_neighbors(Y).edges
+            mde = recipes.preserve_neighbors(Y)
+            edges = mde.edges
+            weights = mde.distortion_function.weights
             if prev_edges is not None:
                 assert (edges == prev_edges).all()
+                assert (weights == prev_weights).all()
             prev_edges = edges
+            prev_weights = weights
 
     _run_test(36)
     _run_test(1001)
