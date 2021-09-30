@@ -12,6 +12,7 @@ from pymde.util import all_edges
 from pymde.util import align
 from pymde.util import center
 from pymde.util import rotate
+from pymde.util import seed
 
 from pymde.experiment_utils import latexify, plot
 

@@ -153,6 +153,7 @@ Classical embeddings
 Utilities
 ---------
 
+
 .. autofunction:: pymde.all_edges
 
 .. autofunction:: pymde.align
@@ -160,6 +161,8 @@ Utilities
 .. autofunction:: pymde.center
 
 .. autofunction:: pymde.rotate
+
+.. autofunction:: pymde.seed
 
 .. _api_plot:
 

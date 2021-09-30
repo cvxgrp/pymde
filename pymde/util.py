@@ -10,6 +10,7 @@ from pymde.average_distortion import _project_gradient
 
 
 _DEVICE = torch.device("cpu")
+_NP_RNG = np.random.default_rng()
 
 
 class SolverError(Exception):
@@ -56,8 +57,7 @@ def _is_numeric(arg):
 
 
 def to_tensor(args, device=None):
-    """Convert an arg or sequence of args to torch Tensors
-    """
+    """Convert an arg or sequence of args to torch Tensors"""
     singleton = not isinstance(args, (list, tuple))
     if singleton:
         args = [args]
@@ -371,6 +371,23 @@ def hutchpp(linear_operator, dimension, n_queries):
     return torch.trace(Q.T @ A.matvec(Q)) + (3.0 / m) * torch.trace(
         proj.T @ A.matvec(proj)
     )
+
+
+def np_rng():
+    return _NP_RNG
+
+
+def seed(seed: int):
+    """Set the random seed
+
+    This function sets the random seed that PyMDE uses in various
+    preprocessing methods.
+    """
+    torch.manual_seed(seed)
+    # pynndescent relies on numpy's legacy (global) random state
+    np.random.seed(seed)
+    global _NP_RNG
+    _NP_RNG = np.random.default_rng(seed)
 
 
 def random_edges(n, p, seed=0):

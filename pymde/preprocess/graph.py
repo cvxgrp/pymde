@@ -7,6 +7,7 @@ import torch
 
 from pymde import constraints
 from pymde import problem
+from pymde import util
 from pymde.functions import penalties, losses
 from pymde.preprocess import _graph
 
@@ -328,7 +329,7 @@ def _shortest_paths(shape, node, max_length, unweighted, sample_prob):
     indices = indices[indices > node]
     if sample_prob < 1.0:
         sample_mask = (
-            np.random.default_rng().uniform(size=indices.size) <= sample_prob
+            util.np_rng().uniform(size=indices.size) <= sample_prob
         )
         indices = indices[sample_mask]
 

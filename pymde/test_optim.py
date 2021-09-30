@@ -122,8 +122,7 @@ def test_average_distortion_grad(device):
 def test_fit_spectral(device):
     # TODO deflake this test
     pytest.skip("This test is flaky on macOS.")
-    np.random.seed(0)
-    torch.random.manual_seed(0)
+    util.seed(0)
     n = 200
     m = 3
     max_iter = 1000
