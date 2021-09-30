@@ -377,7 +377,12 @@ def np_rng():
     return _NP_RNG
 
 
-def seed(seed):
+def seed(seed: int):
+    """Set the random seed
+
+    This function sets the random seed that PyMDE uses in various
+    preprocessing methods.
+    """
     torch.manual_seed(seed)
     # pynndescent relies on numpy's legacy (global) random state
     np.random.seed(seed)

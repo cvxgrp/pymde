@@ -368,3 +368,25 @@ embedding of MNIST using a GPU.
    embedding = mde.embed(verbose=True) 
 
 On an NVIDIA GeForce GTX 1070, the ``embed`` method took just 5 seconds.
+
+Reproducibility
+---------------
+PyMDE's optimization algorithm does not rely on randomness. However,
+some functions, such as ``pymde.preserve_neighbors``, may use random sampling
+when generating the edges for an MDE problem. This means that if you call
+``pymde.preserve_neighbors`` multiple times on the same data set, you might
+obtain slightly different MDE problems and therefore slightly different
+embeddings. To prevent this from happening, you can set random seed state via
+the ``pymde.seed`` function.
+
+For example, the following code block will always create the same embedding.
+
+.. code:: python3
+
+   import pymde
+
+   mnist = pymde.datasets.MNIST()
+
+   pymde.seed(0)
+   mde = pymde.preserve_neighbors(mnist.data, verbose=True)
+   embedding = mde.embed(verbose=True)

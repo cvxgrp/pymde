@@ -1,79 +1,40 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Preprocessing &mdash; pymde 0.1.11 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/autoclasstoc.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
-
-  
-  
+  <title>Preprocessing &mdash; pymde 0.1.12 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/autoclasstoc.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-  
-
-  
-  
-
-  
-
-  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Datasets" href="../datasets/index.html" />
     <link rel="prev" title="MDE" href="../mde/index.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> pymde
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                v0.1.11
+                v0.1.12
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -81,19 +42,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <p class="caption"><span class="caption-text">CONTENTS</span></p>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">CONTENTS</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/index.html">Getting started</a></li>
@@ -113,76 +63,36 @@
 <li class="toctree-l1"><a class="reference internal" href="../citing/index.html">Citing</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">pymde</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Preprocessing</li>
-    
-    
     <li class="wy-breadcrumbs-aside">
     <a href="https://github.com/cvxgrp/pymde">View source</a>
     </li>
     
       <li class="wy-breadcrumbs-aside">
-        
-          
-        
       </li>
-    
 
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="preprocessing">
-<span id="preprocess"></span><h1>Preprocessing<a class="headerlink" href="#preprocessing" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="preprocessing">
+<span id="preprocess"></span><h1>Preprocessing<a class="headerlink" href="#preprocessing" title="Permalink to this headline"></a></h1>
 <p>This part of the tutorial discusses ways to preprocess your original
 data in order to create the set of edges, and their associated weights or
 original deviations, needed to create an MDE problem. These preprocessing
@@ -200,8 +110,8 @@ MDE problems. But you can just as well preprocess the data yourself, to
 create custom embeddings.</p>
 <p>PyMDE provides a few preprocessing methods for original data that come
 as a data matrix (one row for each item) or a graph (one node for each item).</p>
-<div class="section" id="graph">
-<h2>Graph<a class="headerlink" href="#graph" title="Permalink to this headline">¶</a></h2>
+<section id="graph">
+<h2>Graph<a class="headerlink" href="#graph" title="Permalink to this headline"></a></h2>
 <p>The preprocessing methods often work with or return <code class="docutils literal notranslate"><span class="pre">pymde.Graph</span></code> instances,
 which package up a list of edges and their associated weights.</p>
 <p>A graph can be created from a weighted adjacency matrix (a scipy.sparse matrix,
@@ -233,11 +143,11 @@ weights. For example</p>
 </div>
 <p>The <a class="reference internal" href="../api/index.html#api-graph"><span class="std std-ref">API documentation</span></a> describes the <a class="reference internal" href="../api/index.html#pymde.Graph" title="pymde.Graph"><code class="xref any py py-class docutils literal notranslate"><span class="pre">pymde.Graph</span></code></a> class
 in more detail.</p>
-</div>
-<div class="section" id="neighbor-based-preprocessing">
-<h2>Neighbor-based preprocessing<a class="headerlink" href="#neighbor-based-preprocessing" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="similar-items">
-<h3>Similar items<a class="headerlink" href="#similar-items" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="neighbor-based-preprocessing">
+<h2>Neighbor-based preprocessing<a class="headerlink" href="#neighbor-based-preprocessing" title="Permalink to this headline"></a></h2>
+<section id="similar-items">
+<h3>Similar items<a class="headerlink" href="#similar-items" title="Permalink to this headline"></a></h3>
 <p>A <em>neighbor</em> of an item can be thought of an item that is in some sense
 similar to it. One class of preprocessing methods computes some neighbors
 of each item, and uses the pairs of neighbors as edges, associating these
@@ -251,8 +161,8 @@ in <a class="reference internal" href="../api/index.html#module-pymde.penalties"
 <p>Preprocessing based on neighbors can be thought of as a “sparsifying”
 operation: they take data and return a sparse graph (the <code class="docutils literal notranslate"><span class="pre">knn_graph</span></code>).</p>
 <dl class="py function">
-<dt>
-<code class="sig-prename descclassname">pymde.preprocess.</code><code class="sig-name descname">k_nearest_neighbors</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">k</span></em>, <em class="sig-param"><span class="n">max_distance</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">pymde.preprocess.</span></span><span class="sig-name descname"><span class="pre">k_nearest_neighbors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Compute k-nearest neighbors, given data matrix or graph.</p>
 <p>This function computes a k-nearest neighbor graph, given either
 a data matrix or an original graph.</p>
@@ -285,10 +195,10 @@ no greater than <cite>max_distance</cite>.</p></li>
 </dl>
 </dd></dl>
 
-</div>
-</div>
-<div class="section" id="distance-based-preprocessing">
-<h2>Distance-based preprocessing<a class="headerlink" href="#distance-based-preprocessing" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="distance-based-preprocessing">
+<h2>Distance-based preprocessing<a class="headerlink" href="#distance-based-preprocessing" title="Permalink to this headline"></a></h2>
 <p>Another preprocessing step is to compute some distances between pairs of
 items. We can use the <a class="reference internal" href="../api/index.html#pymde.preprocess.distances" title="pymde.preprocess.distances"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.preprocess.distances</span></code></a> function to compute
 distances between pairs of items.</p>
@@ -299,8 +209,8 @@ distances between pairs of items.</p>
 “densifying” operation, since it returns a denser graph. You can control
 how dense the returned graph is with a keyword argument.</p>
 <dl class="py function">
-<dt>
-<code class="sig-prename descclassname">pymde.preprocess.</code><code class="sig-name descname">distances</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">retain_fraction</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">pymde.preprocess.</span></span><span class="sig-name descname"><span class="pre">distances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retain_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Compute distances, given data matrix or graph.</p>
 <p>This function computes distances between some pairs of items, given
 either a data matrix or a <code class="docutils literal notranslate"><span class="pre">pymde.Graph</span></code> instance.</p>
@@ -333,17 +243,15 @@ with <code class="docutils literal notranslate"><span class="pre">graph.edges</s
 </dl>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="../datasets/index.html" class="btn btn-neutral float-right" title="Datasets" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../mde/index.html" class="btn btn-neutral float-left" title="MDE" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../datasets/index.html" class="btn btn-neutral float-right" title="Datasets" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
@@ -351,39 +259,25 @@ with <code class="docutils literal notranslate"><span class="pre">graph.edges</s
   <div role="contentinfo">
 By <a href="https://akshayagrawal.com">Akshay Agrawal</a>.
 
-    <p>
-
-    </p>
+    <p></p>
 
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>
