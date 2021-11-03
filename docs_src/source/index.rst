@@ -10,8 +10,7 @@ PyMDE is a Python library for computing vector :ref:`embeddings <embedding_defin
 of items, such as images, biological cells, nodes in a network, or any other
 type of abstract object. The embeddings are designed to minimally distort
 relationships between pairs of items, while possibly satisfying some
-constraints. PyMDE is based on the monograph |paperlink|, which introduced a
-simple but general framework for embedding.
+constraints.
 
 .. |paperlink| raw:: html
 
@@ -34,6 +33,10 @@ Unlike other popular embedding methods, PyMDE also lets you
 * design custom embeddings (and recreate well-known ones, like PCA, Laplacian eigenmap, LargeVis, and UMAP);
 * sanity-check embeddings using principled methods;
 * look for outliers in original data.
+
+For more background about the methods that PyMDE uses,
+please see our monograph |paperlink|, which introduces a simple but general
+framework for embedding.
 
 Example
 -------

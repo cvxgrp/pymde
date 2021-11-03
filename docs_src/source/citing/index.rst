@@ -9,12 +9,15 @@ BibTex entry:
 
 .. code:: bibtex
 
-	@article{agrawal2021minimum,
-	  author  = {Agrawal, Akshay and Ali, Alnur and Boyd, Stephen},
-	  title   = {Minimum-Distortion Embedding},
-	  journal = {arXiv},
-	  year    = {2021},
-	}
+   @article{agrawal2021minimum,
+     author = {Akshay Agrawal and Alnur Ali and Stephen Boyd},
+     title = {Minimum-Distortion Embedding},
+     year = {2021},
+     volume = {14},
+     journal = {Foundations and Trends® in Machine Learning},
+     number = {3},
+     pages = {211-378},
+   }
 
 If you want to keep tabs on the development of PyMDE (or just want to send
 a virtual kudos), consider leaving a star on the
