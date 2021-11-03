@@ -12,6 +12,10 @@ type of abstract object. The embeddings are designed to minimally distort
 relationships between pairs of items, while possibly satisfying some
 constraints.
 
+For more background about the methods that PyMDE uses,
+please see our monograph |paperlink|, which introduces a simple but general
+framework for embedding.
+
 .. |paperlink| raw:: html
 
   <em><a href="https://web.stanford.edu/~boyd/papers/min_dist_emb.html">Minimum-Distortion Embedding</a></em>
@@ -34,9 +38,6 @@ Unlike other popular embedding methods, PyMDE also lets you
 * sanity-check embeddings using principled methods;
 * look for outliers in original data.
 
-For more background about the methods that PyMDE uses,
-please see our monograph |paperlink|, which introduces a simple but general
-framework for embedding.
 
 Example
 -------
