@@ -63,8 +63,8 @@ def _remove_anchor_anchor_edges(edges, data, anchors, opt=None, blk=1e8):
         estep = int(blk / na)
         assert estep > 0
 
-        msk0 = torch.zeros(ne, dtype=torch.bool)
-        msk1 = torch.zeros(ne, dtype=torch.bool)
+        msk0 = torch.zeros(ne, dtype=torch.bool, device=edges.get_device())
+        msk1 = torch.zeros(ne, dtype=torch.bool, device=edges.get_device())
         e = 0
         while e < ne:
             ehi = e + estep if e + estep < ne else ne
@@ -79,8 +79,8 @@ def _remove_anchor_anchor_edges(edges, data, anchors, opt=None, blk=1e8):
         assert astep > 0
         assert estep > 0
 
-        msk0 = torch.zeros(ne, dtype=torch.bool)
-        msk1 = torch.zeros(ne, dtype=torch.bool)
+        msk0 = torch.zeros(ne, dtype=torch.bool, device=edges.get_device())
+        msk1 = torch.zeros(ne, dtype=torch.bool, device=edges.get_device())
         e = 0
         while e < ne:
             ehi = e + estep if e + estep < ne else ne
