@@ -64,12 +64,12 @@ def test_anchor_initialization(device):
 
     # preserve neighbors
     mde = recipes.preserve_neighbors(
-        data_matrix, embedding_dim=1, constraint=constraint, init="random"
+        data_matrix, embedding_dim=1, constraint=constraint, init="random", device=device
     )
     testing.assert_allclose(mde._X_init[anchors], values)
 
     mde = recipes.preserve_neighbors(
-        data_matrix, embedding_dim=1, constraint=constraint, init="quadratic"
+        data_matrix, embedding_dim=1, constraint=constraint, init="quadratic", device=device
     )
     testing.assert_allclose(mde._X_init[anchors], values)
 
