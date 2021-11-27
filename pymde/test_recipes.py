@@ -29,7 +29,7 @@ def test_k_nearest_neighbors():
 @testing.cpu_and_cuda
 def test_laplacian_embedding(device):
     torch.manual_seed(0)
-    data_matrix = torch.randn(100, 10)
+    data_matrix = torch.randn(100, 10, device=device)
 
     util.seed(0)
     laplacian_emb = recipes.laplacian_embedding(
@@ -56,56 +56,62 @@ def test_anchor_initialization(device):
     n_items = 10
 
     util.seed(0)
-    data_matrix = torch.randn(n_items, 5)
+    data_matrix = torch.randn(n_items, 5, device=device)
 
-    anchors = torch.tensor([0, 1, 3])
-    values = torch.tensor([2.0, 1.0, 3.0]).reshape(3, 1)
+    anchors = torch.tensor([0, 1, 3], device=device)
+    values = torch.tensor([2.0, 1.0, 3.0], device=device).reshape(3, 1)
     constraint = constraints.Anchored(anchors, values)
 
     # preserve neighbors
     mde = recipes.preserve_neighbors(
-        data_matrix, embedding_dim=1, constraint=constraint, init="random"
+        data_matrix, embedding_dim=1, constraint=constraint,
+        init="random", device=device
     )
-    testing.assert_allclose(mde._X_init[anchors], values)
+    testing.assert_allclose(
+        mde._X_init[anchors].cpu().numpy(), values.cpu().numpy())
 
     mde = recipes.preserve_neighbors(
-        data_matrix, embedding_dim=1, constraint=constraint, init="quadratic"
+        data_matrix, embedding_dim=1, constraint=constraint,
+        init="quadratic", device=device
     )
-    testing.assert_allclose(mde._X_init[anchors], values)
+    testing.assert_allclose(
+        mde._X_init[anchors].cpu().numpy(), values.cpu().numpy())
 
 
 @testing.cpu_and_cuda
 def test_no_anchor_anchor_edges(device):
     util.seed(0)
-    data_matrix = torch.randn(3, 2)
+    data_matrix = torch.randn(3, 2, device=device)
 
-    anchors = torch.tensor([0, 1])
-    values = torch.tensor([2.0, 3.0]).reshape(2, 1)
+    anchors = torch.tensor([0, 1], device=device)
+    values = torch.tensor([2.0, 3.0], device=device).reshape(2, 1)
     constraint = constraints.Anchored(anchors, values)
 
     mde = recipes.preserve_distances(
-        data_matrix, embedding_dim=1, constraint=constraint
+        data_matrix, embedding_dim=1, constraint=constraint, device=device
     )
-    expected_edges = torch.tensor([[0, 2], [1, 2]])
-    testing.assert_all_equal(expected_edges, mde.edges)
+    expected_edges = torch.tensor([[0, 2], [1, 2]], device=device)
+    testing.assert_all_equal(
+        expected_edges.cpu().numpy(), mde.edges.cpu().numpy())
 
     mde = recipes.preserve_neighbors(
-        data_matrix, embedding_dim=1, constraint=constraint
+        data_matrix, embedding_dim=1, constraint=constraint, device=device
     )
-    testing.assert_all_equal(expected_edges, mde.edges)
+    testing.assert_all_equal(
+        expected_edges.cpu().numpy(), mde.edges.cpu().numpy())
 
 
 @testing.cpu_and_cuda
 def test_neighbor_reproducibility(device):
     def _run_test(n_items):
         torch.manual_seed(0)
-        Y = torch.rand((n_items, 128))
+        Y = torch.rand((n_items, 128), device=device)
 
         prev_edges = None
         prev_weights = None
         for i in range(5):
             util.seed(0)
-            mde = recipes.preserve_neighbors(Y)
+            mde = recipes.preserve_neighbors(Y, device=device)
             edges = mde.edges
             weights = mde.distortion_function.weights
             if prev_edges is not None:
@@ -122,13 +128,14 @@ def test_neighbor_reproducibility(device):
 def test_distances_reproducibility(device):
     def _run_test(n_items):
         torch.manual_seed(0)
-        Y = torch.rand((n_items, 128))
+        Y = torch.rand((n_items, 128), device=device)
 
         prev_edges = None
         prev_deviations = None
         for i in range(5):
             util.seed(0)
-            mde = recipes.preserve_distances(Y, max_distances=1e5)
+            mde = recipes.preserve_distances(
+                Y, max_distances=1e5, device=device)
             edges = mde.edges
             deviations = mde.distortion_function.deviations
             if prev_edges is not None:
