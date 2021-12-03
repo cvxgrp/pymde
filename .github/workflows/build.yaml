@@ -34,6 +34,7 @@ jobs:
           python -m cibuildwheel --output-dir wheelhouse
         env:
           CIBW_BUILD: "cp37* cp38* cp39*"
+          CIBW_SKIP: "*musllinux*"
 
       - uses: actions/upload-artifact@v2
         with:
