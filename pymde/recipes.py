@@ -292,7 +292,8 @@ def preserve_neighbors(
         If not None, neighborhoods are restricted to have a radius
         no greater than ``max_distance``.
     init: str
-        Initialization strategy; 'quadratic' or 'random'.
+        Initialization strategy; 'quadratic', 'random', "fast_quadratic". If the quadratic
+        initialization takes too much time, try a random or fast_quadratic initialization.
     device: str (optional)
         Device for the embedding (eg, 'cpu', 'cuda').
     verbose: bool
@@ -355,11 +356,12 @@ def preserve_neighbors(
             edges, weights, constraint.anchors
         )
 
-    if init == "quadratic":
+    if init == "quadratic" or init == "fast_quadratic":
         if verbose:
-            problem.LOGGER.info("Computing quadratic initialization.")
+            problem.LOGGER.info(f"Computing {init} initialization.")
+        cg = init == "fast_quadratic"
         X_init = quadratic.spectral(
-            n, embedding_dim, edges, weights, device=device
+            n, embedding_dim, edges, weights, device=device, cg=cg
         )
         if not isinstance(
             constraint, (constraints._Centered, constraints._Standardized)
