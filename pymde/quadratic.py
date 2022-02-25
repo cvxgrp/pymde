@@ -67,7 +67,7 @@ def _spectral(
     L,
     m,
     cg=False,
-    max_iter=100,
+    max_iter=40,
     edges=None,
     weights=None,
     warm_start=False,
