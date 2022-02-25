@@ -169,7 +169,7 @@ def spectral(
     use_scipy = cg == False
     L = _laplacian(n_items, embedding_dim, edges, weights, use_scipy=use_scipy)
     emb = _spectral(L, embedding_dim, cg=cg, device=device, max_iter=max_iter)
-    if scipy:
+    if use_scipy:
         emb -= emb.mean(axis=0)
         emb = torch.tensor(emb, dtype=weights.dtype, device=device)
     else:
