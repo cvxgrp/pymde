@@ -168,16 +168,24 @@ def proj_standardized(X, demean=False, inplace=False):
         return proj
 
 
-def adjacency_matrix(n, m, edges, weights):
-    if isinstance(weights, torch.Tensor):
-        weights = weights.detach().cpu().numpy()
-    if isinstance(edges, torch.Tensor):
-        edges = edges.detach().cpu().numpy()
-    A = scipy.sparse.coo_matrix(
-        (weights, (edges[:, 0], edges[:, 1])), shape=(n, n), dtype=np.float32
-    )
-    A = A + A.T
-    return A.tocoo()
+def adjacency_matrix(n, m, edges, weights, use_scipy=True):
+
+    if use_scipy:
+        if isinstance(weights, torch.Tensor):
+            weights = weights.detach().cpu().numpy()
+        if isinstance(edges, torch.Tensor):
+            edges = edges.detach().cpu().numpy()
+        A = scipy.sparse.coo_matrix(
+            (weights, (edges[:, 0], edges[:, 1])), shape=(n, n), dtype=np.float32
+        )
+        A = A + A.T
+        return A.tocoo()
+    else:
+        A = torch.sparse_coo_tensor(
+            edges.transpose(0,1), weights, size=(n, n), dtype=torch.float32, device=edges.device
+        )
+        A = A + A.transpose(0, 1)
+        return A
 
 
 @tensor_arguments

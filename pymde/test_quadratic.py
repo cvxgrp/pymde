@@ -66,7 +66,7 @@ def test_pca():
 
 def test_spectral():
     util.seed(0)
-    n = 5
+    n = 10
     m = 3
     L = -np.abs(np.random.randn(n, n).astype(np.float32))
     L += L.T
@@ -75,7 +75,7 @@ def test_spectral():
     offdiag = np.triu_indices(n, 1)
     edges = np.column_stack(offdiag)
     weights = -L[offdiag]
-    X = quadratic.spectral(n, m, edges, torch.tensor(weights))
+    X = quadratic.spectral(n, m, torch.tensor(edges), torch.tensor(weights))
     testing.assert_allclose(1.0 / n * X.T @ X, np.eye(m))
     X *= 1.0 / np.sqrt(n)
 
@@ -85,5 +85,9 @@ def test_spectral():
     eigenvectors = eigenvectors[:, 1:]
     for col in range(m):
         testing.assert_allclose(
-            eigenvectors[:, col], X[:, col], up_to_sign=True
+            eigenvectors[:, col], X[:, col], up_to_sign=True, rtol=1e-3
         )
+
+    # test cg=True
+    X = quadratic.spectral(n, m, torch.tensor(edges), torch.tensor(weights), cg=True)
+
