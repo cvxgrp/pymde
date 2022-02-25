@@ -90,4 +90,8 @@ def test_spectral():
 
     # test cg=True
     X = quadratic.spectral(n, m, torch.tensor(edges), torch.tensor(weights), cg=True)
-
+    X *= 1.0 / np.sqrt(n)
+    for col in range(m):
+        testing.assert_allclose(
+            eigenvectors[:, col], X[:, col], up_to_sign=True, rtol=1e-3
+        )
