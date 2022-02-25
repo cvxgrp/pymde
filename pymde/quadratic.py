@@ -170,8 +170,7 @@ def spectral(
     emb = _spectral(L, embedding_dim, cg=cg, device=device, max_iter=max_iter)
     if scipy:
         emb -= emb.mean(axis=0)
+        emb = torch.tensor(emb, dtype=weights.dtype, device=device)
     else:
         emb -= emb.mean(dim=0)
-    return util.proj_standardized(
-        torch.tensor(emb, dtype=weights.dtype, device=device)
-    )
+    return util.proj_standardized(emb)
