@@ -51,18 +51,15 @@ def _laplacian(n, m, edges, weights, use_scipy=True):
         diag = np.asarray(A.sum(axis=1)).squeeze()
         L.setdiag(diag)
     else:
-        L = L.coalesce()
         # diag is currently 0
         diag_vals = torch.sparse.sum(A, dim=1).to_dense()
         diag_inds = torch.tensor([[i, i] for i in range(len(A))], device=L.device, dtype=L.dtype)
         diag_inds = diag_inds.transpose(0, 1)
-        edges = L.indices()
-        weights = L.values()
-        edges = torch.cat([edges, diag_inds], dim=1)
-        weights = torch.cat([weights, diag_vals])
-        L = torch.sparse_coo_tensor(
-            edges, weights, size=(n, n), dtype=torch.float32, device=edges.device
+        diag_matrix = torch.sparse_coo_tensor(
+            diag_inds, diag_vals, size=(n, n), dtype=torch.float32, device=edges.device
         )
+        L = L + diag_matrix
+        L = L.coalesce()
     return L
 
 
