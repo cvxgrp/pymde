@@ -91,9 +91,13 @@ def _spectral(
         k = m
         if warm_start:
             mde = problem.MDE(
-                n, m, edges, f=penalties.Quadratic(weights), device=device
+                n,
+                m,
+                edges,
+                distortion_function=penalties.Quadratic(weights),
+                device=device
             )
-            X_init = mde.fit(max_iter=40, use_line_search=False)
+            X_init = mde.embed(max_iter=40)
         else:
             X_init = util.proj_standardized(
                 torch.randn((n, m), device=device),
