@@ -95,3 +95,12 @@ def test_spectral():
         testing.assert_allclose(
             eigenvectors[:, col], X[:, col], up_to_sign=True, rtol=1e-3
         )
+
+    # test cg=True with torch
+    # doesn't actually move data to device
+    X = quadratic.spectral(n, m, torch.tensor(edges), torch.tensor(weights), cg=True, device="cuda")
+    X *= 1.0 / np.sqrt(n)
+    for col in range(m):
+        testing.assert_allclose(
+            eigenvectors[:, col], X[:, col], up_to_sign=True, rtol=1e-3
+        )

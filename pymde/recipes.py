@@ -292,8 +292,12 @@ def preserve_neighbors(
         If not None, neighborhoods are restricted to have a radius
         no greater than ``max_distance``.
     init: str
-        Initialization strategy; 'quadratic', 'random', "fast_quadratic". If the quadratic
-        initialization takes too much time, try a random or fast_quadratic initialization.
+        Initialization strategy; 'quadratic', 'quadratic_cg', 'random'. If the quadratic
+        initialization takes too much time, try a random initialization.
+        Strategy 'quadratic_cg' differs from 'quadratic' as it uses a conjugate gradient
+        method for spectral initialization (compared to Lanczos method for 'quadratic').
+        When `device=='cuda'` and `init=='quadratic_cg'` a torch-implemented version of
+        'quadratic_cg' will be used, which is fully on device.
     device: str (optional)
         Device for the embedding (eg, 'cpu', 'cuda').
     verbose: bool
@@ -356,10 +360,10 @@ def preserve_neighbors(
             edges, weights, constraint.anchors
         )
 
-    if init == "quadratic" or init == "fast_quadratic":
+    if init == "quadratic" or init == "quadratic_cg":
         if verbose:
             problem.LOGGER.info(f"Computing {init} initialization.")
-        cg = init == "fast_quadratic"
+        cg = init == "quadratic_cg"
         X_init = quadratic.spectral(
             n, embedding_dim, edges, weights, device=device, cg=cg
         )

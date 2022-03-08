@@ -103,15 +103,29 @@ def _spectral(
                 torch.randn((n, m), device=device),
                 demean=True,
             )
-        eigenvalues, eigenvectors = torch.lobpcg(
-            A=L,
-            X=X_init,
-            tol=None,
-            # largest: find the smallest eigenvalues
-            largest=False,
-            niter=max_iter,
-        )
-        order = torch.argsort(eigenvalues)[0:k]
+        if device == "cuda":
+            eigenvalues, eigenvectors = torch.lobpcg(
+                A=L,
+                X=X_init,
+                tol=None,
+                # largest: find the smallest eigenvalues
+                largest=False,
+                niter=max_iter,
+            )
+            order = torch.argsort(eigenvalues)[0:k]
+        else:
+            eigenvalues, eigenvectors = scipy.sparse.linalg.lobpcg(
+                A=L,
+                X=X_init.cpu().numpy(),
+                # Y: search in the orthogonal complement of the ones vector
+                Y=np.ones((L.shape[0], 1)),
+                tol=None,
+                # largest: find the smallest eigenvalues
+                largest=False,
+                maxiter=max_iter,
+            )
+            order = np.argsort(eigenvalues)[0:k]
+
     return eigenvectors[:, order]
 
 
@@ -166,7 +180,7 @@ def spectral(
         A spectral embedding, projected onto the standardization constraint
     """
     # use torch sparse and linalg for lobpcg
-    use_scipy = cg == False
+    use_scipy = cg == False or device == "cpu"
     L = _laplacian(n_items, embedding_dim, edges, weights, use_scipy=use_scipy)
     emb = _spectral(L, embedding_dim, cg=cg, device=device, max_iter=max_iter)
     if use_scipy:
