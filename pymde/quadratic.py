@@ -53,10 +53,16 @@ def _laplacian(n, m, edges, weights, use_scipy=True):
     else:
         # diag is currently 0
         diag_vals = torch.sparse.sum(A, dim=1).to_dense()
-        diag_inds = torch.tensor([[i, i] for i in range(len(A))], device=L.device, dtype=L.dtype)
+        diag_inds = torch.tensor(
+            [[i, i] for i in range(len(A))], device=L.device, dtype=L.dtype
+        )
         diag_inds = diag_inds.transpose(0, 1)
         diag_matrix = torch.sparse_coo_tensor(
-            diag_inds, diag_vals, size=(n, n), dtype=torch.float32, device=edges.device
+            diag_inds,
+            diag_vals,
+            size=(n, n),
+            dtype=torch.float32,
+            device=edges.device,
         )
         L = L + diag_matrix
         L = L.coalesce()
@@ -95,7 +101,7 @@ def _spectral(
                 m,
                 edges,
                 distortion_function=penalties.Quadratic(weights),
-                device=device
+                device=device,
             )
             X_init = mde.embed(max_iter=40)
         else:
