@@ -32,21 +32,21 @@ def assert_all_equal(x, y):
 
 
 def cpu(func):
-
     @functools.wraps(func)
     def wrapper(self):
         current_device = util.get_default_device()
-        util.set_default_device('cpu')
+        util.set_default_device("cpu")
         func(self)
         util.set_default_device(current_device)
+
     return wrapper
 
 
 def cpu_and_cuda(func):
     if torch.cuda.is_available():
-        return pytest.mark.parametrize("device", ['cpu', 'cuda'])(func)
+        return pytest.mark.parametrize("device", ["cpu", "cuda"])(func)
     else:
-        return pytest.mark.parametrize("device", ['cpu'])(func)
+        return pytest.mark.parametrize("device", ["cpu"])(func)
 
 
 @contextmanager

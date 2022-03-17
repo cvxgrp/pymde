@@ -238,7 +238,7 @@ def _plot_3d(
         if isinstance(edges, torch.Tensor):
             edges = edges.cpu().numpy()
         linewidth = 4.0 / np.log(edges.shape[0])
-        edge_color = 'w' if background_color is None else 'k'
+        edge_color = "w" if background_color is None else "k"
         for e in edges:
             xi = X[e[0]]
             xj = X[e[1]]
@@ -346,13 +346,13 @@ def _plot(
 
         if edges is not None:
             linewidth = 6.0 / np.log(edges.shape[0])
-            scatter_color = 'w' if background_color is None else 'k'
+            scatter_color = "w" if background_color is None else "k"
             for e in edges:
                 ax.plot(
                     [X[e[0], 0], X[e[1], 0]],
                     [X[e[0], 1], X[e[1], 1]],
                     linestyle="-",
-                    markersize=s / 2.,
+                    markersize=s / 2.0,
                     color=scatter_color,
                     alpha=0.5,
                     linewidth=linewidth,

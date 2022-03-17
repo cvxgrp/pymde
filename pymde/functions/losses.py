@@ -95,7 +95,7 @@ class _ClippedQuadratic(Function):
 
     def forward(self, distances):
         diff = self.deviations - distances
-        return torch.min(diff ** 2, (self.threshold + 1) ** 2)
+        return torch.min(diff**2, (self.threshold + 1) ** 2)
 
 
 class Huber(Function):

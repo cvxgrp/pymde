@@ -64,18 +64,26 @@ def test_anchor_initialization(device):
 
     # preserve neighbors
     mde = recipes.preserve_neighbors(
-        data_matrix, embedding_dim=1, constraint=constraint,
-        init="random", device=device
+        data_matrix,
+        embedding_dim=1,
+        constraint=constraint,
+        init="random",
+        device=device,
     )
     testing.assert_allclose(
-        mde._X_init[anchors].cpu().numpy(), values.cpu().numpy())
+        mde._X_init[anchors].cpu().numpy(), values.cpu().numpy()
+    )
 
     mde = recipes.preserve_neighbors(
-        data_matrix, embedding_dim=1, constraint=constraint,
-        init="quadratic", device=device
+        data_matrix,
+        embedding_dim=1,
+        constraint=constraint,
+        init="quadratic",
+        device=device,
     )
     testing.assert_allclose(
-        mde._X_init[anchors].cpu().numpy(), values.cpu().numpy())
+        mde._X_init[anchors].cpu().numpy(), values.cpu().numpy()
+    )
 
 
 @testing.cpu_and_cuda
@@ -92,13 +100,15 @@ def test_no_anchor_anchor_edges(device):
     )
     expected_edges = torch.tensor([[0, 2], [1, 2]], device=device)
     testing.assert_all_equal(
-        expected_edges.cpu().numpy(), mde.edges.cpu().numpy())
+        expected_edges.cpu().numpy(), mde.edges.cpu().numpy()
+    )
 
     mde = recipes.preserve_neighbors(
         data_matrix, embedding_dim=1, constraint=constraint, device=device
     )
     testing.assert_all_equal(
-        expected_edges.cpu().numpy(), mde.edges.cpu().numpy())
+        expected_edges.cpu().numpy(), mde.edges.cpu().numpy()
+    )
 
 
 @testing.cpu_and_cuda
@@ -135,7 +145,8 @@ def test_distances_reproducibility(device):
         for i in range(5):
             util.seed(0)
             mde = recipes.preserve_distances(
-                Y, max_distances=1e5, device=device)
+                Y, max_distances=1e5, device=device
+            )
             edges = mde.edges
             deviations = mde.distortion_function.deviations
             if prev_edges is not None:

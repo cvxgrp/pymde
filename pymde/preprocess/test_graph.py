@@ -213,9 +213,9 @@ def test_shortest_paths_retain_fraction(device):
     testing.assert_allclose(mean_n_edges, 9.0, atol=1.5)
     testing.assert_allclose(mean_nnz, 18.0, atol=1.5)
 
-    assert not (
-        shortest_path_graph.A != shortest_path_graph.A.T
-    ).todense().all()
+    assert (
+        not (shortest_path_graph.A != shortest_path_graph.A.T).todense().all()
+    )
 
 
 def test_graph_from_numpy():

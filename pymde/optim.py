@@ -26,6 +26,7 @@ class SolveStats(object):
     snapshot_every: int
         The number of iterations between snapshots.
     """
+
     def __init__(
         self,
         average_distortions,

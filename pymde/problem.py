@@ -59,6 +59,7 @@ class MDE(torch.nn.Module):
         Summary statistics about the embedding, populated after calling
         the ``embed`` method.
     """
+
     def __init__(
         self,
         n_items: int,

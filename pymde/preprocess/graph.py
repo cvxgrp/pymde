@@ -229,7 +229,7 @@ class Graph(object):
 
         if self.n_edges < self.n_all_edges:
             # copmute shortest paths, but no more than 1e7 of them ...
-            retain_fraction = min(1., 1e7 / self.n_all_edges)
+            retain_fraction = min(1.0, 1e7 / self.n_all_edges)
             distance_graph = shortest_paths(
                 self, retain_fraction=retain_fraction, verbose=verbose
             )
@@ -328,9 +328,7 @@ def _shortest_paths(shape, node, max_length, unweighted, sample_prob):
     indices = np.argwhere((distances != np.inf) * (distances > 0)).ravel()
     indices = indices[indices > node]
     if sample_prob < 1.0:
-        sample_mask = (
-            util.np_rng().uniform(size=indices.size) <= sample_prob
-        )
+        sample_mask = util.np_rng().uniform(size=indices.size) <= sample_prob
         indices = indices[sample_mask]
 
     distances = distances[indices]
