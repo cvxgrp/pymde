@@ -21,9 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install setuptools wheel
-          pip install flake8 pytest
-          pip install -r requirements.txt
+          pip install .
 
       - name: Install cibuildwheel
         run: |
@@ -54,9 +52,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install setuptools wheel
-          pip install flake8 pytest
-          pip install -r requirements.txt
+          pip install .
 
       - name: Build sdist
         run: python setup.py sdist
