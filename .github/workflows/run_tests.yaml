@@ -31,6 +31,15 @@ jobs:
 
     - if: matrix.os == 'windows-latest'
       run: pip install --find-links https://download.pytorch.org/whl/torch_stable.html torch==1.8.0+cpu torchvision==0.9.0+cpu
+
+    - if: matrix.python-version == '3.7'
+      run: pip install numpy==1.17.5
+
+    - if: matrix.python-version == '3.8'
+      run: pip install numpy==1.17.5
+
+    - if: matrix.python-version == '3.9'
+      run: pip install numpy==1.19
       
     - name: Lint with flake8
       run: |
