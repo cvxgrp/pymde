@@ -29,7 +29,7 @@ jobs:
       run: pip install numpy==1.17.5
 
     - if: matrix.python-version == '3.9'
-      run: pip install numpy==1.19.5
+      run: pip install numpy==1.21.0
 
       # install cpu versions of torch for CI
     - if: matrix.os == 'macos-latest'
