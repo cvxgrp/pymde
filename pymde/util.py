@@ -317,7 +317,7 @@ def align(source, target):
 def scale_delta(delta, d_nat):
     # scale delta so RMS(delta) == d_nat
     N = delta.nelement()
-    rms = torch.sqrt(1 / N * torch.sum(delta ** 2))
+    rms = torch.sqrt(1 / N * torch.sum(delta**2))
     return delta * d_nat / rms
 
 

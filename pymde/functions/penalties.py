@@ -156,7 +156,7 @@ class _ClippedQuadratic(Function):
 
     def forward(self, distances):
         return self.weights * torch.min(
-            distances ** 2, (self.threshold + 1) ** 2
+            distances**2, (self.threshold + 1) ** 2
         )
 
 
@@ -333,7 +333,7 @@ class Log(Function):
 
     def forward(self, distances):
         return self.weights * torch.log(
-            -torch.expm1(-(distances ** self.exponent))
+            -torch.expm1(-(distances**self.exponent))
         )
 
 
@@ -350,7 +350,7 @@ class InvPower(Function):
         self.exponent = exponent
 
     def forward(self, distances):
-        return self.weights.abs() * 1 / (distances ** self.exponent)
+        return self.weights.abs() * 1 / (distances**self.exponent)
 
 
 class LogRatio(Function):
@@ -365,7 +365,7 @@ class LogRatio(Function):
 
     def forward(self, distances):
         return self.weights * torch.log(
-            distances ** self.exponent / (1 + distances ** self.exponent)
+            distances**self.exponent / (1 + distances**self.exponent)
         )
 
 

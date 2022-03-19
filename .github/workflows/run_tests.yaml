@@ -22,6 +22,15 @@ jobs:
         python -m pip install --upgrade pip
         pip install setuptools wheel
         pip install flake8 pytest
+    - if: matrix.python-version == '3.7'
+      run: pip install numpy==1.17.5
+
+    - if: matrix.python-version == '3.8'
+      run: pip install numpy==1.17.5
+
+    - if: matrix.python-version == '3.9'
+      run: pip install numpy==1.21.0
+
       # install cpu versions of torch for CI
     - if: matrix.os == 'macos-latest'
       run: pip install torch==1.8.0 torchvision==0.9.0
