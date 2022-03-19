@@ -39,7 +39,7 @@ jobs:
       run: pip install numpy==1.17.5
 
     - if: matrix.python-version == '3.9'
-      run: pip install numpy==1.19
+      run: pip install numpy==1.19.5
       
     - name: Lint with flake8
       run: |
