@@ -294,8 +294,9 @@ def preserve_neighbors(
     init: str
         Initialization strategy; 'quadratic' or 'random'. If the quadratic
         initialization takes too much time, try a random initialization.
-        When `device=='cuda'` and `init=='quadratic'` a torch-implemented version will be
-        used, which is fully on device, but uses a CG based technique (versus Lanczos).
+        When `device=='cuda'` and `init=='quadratic'` a torch-implemented
+        version will be used, which is fully on device, but uses a CG-based
+        technique (versus Lanczos).
     device: str (optional)
         Device for the embedding (eg, 'cpu', 'cuda').
     verbose: bool

@@ -186,7 +186,7 @@ def spectral(
         A spectral embedding, projected onto the standardization constraint
     """
     # use torch sparse and linalg for lobpcg
-    use_scipy = cg == False or device == "cpu"
+    use_scipy = cg is False or device == "cpu"
     L = _laplacian(n_items, embedding_dim, edges, weights, use_scipy=use_scipy)
     emb = _spectral(L, embedding_dim, cg=cg, device=device, max_iter=max_iter)
     if use_scipy:
