@@ -44,10 +44,27 @@ def pca(Y, embedding_dim):
     return np.sqrt(float(n)) * U[:, :embedding_dim]
 
 
-def _laplacian(n, m, edges, weights):
-    A = util.adjacency_matrix(n, m, edges, weights)
+def _laplacian(n, m, edges, weights, use_scipy=True):
+    A = util.adjacency_matrix(n, m, edges, weights, use_scipy=use_scipy)
     L = -A
-    L.setdiag((np.array(A.sum(axis=1)).squeeze()))
+    if use_scipy:
+        L.setdiag(np.asarray(A.sum(axis=1)).squeeze())
+    else:
+        # diag is currently 0
+        diag_vals = torch.sparse.sum(A, dim=1).to_dense()
+        diag_inds = torch.tensor(
+            [[i, i] for i in range(len(A))], device=L.device, dtype=L.dtype
+        )
+        diag_inds = diag_inds.transpose(0, 1)
+        diag_matrix = torch.sparse_coo_tensor(
+            diag_inds,
+            diag_vals,
+            size=(n, n),
+            dtype=torch.float32,
+            device=L.device,
+        )
+        L = L + diag_matrix
+        L = L.coalesce()
     return L
 
 
@@ -62,8 +79,8 @@ def _spectral(
     device=None,
 ):
     n = L.shape[0]
+    k = m + 1
     if not cg:
-        k = m + 1
         num_lanczos_vectors = max(2 * k + 1, int(np.sqrt(L.shape[0])))
         eigenvalues, eigenvectors = scipy.sparse.linalg.eigsh(
             L,
@@ -74,33 +91,34 @@ def _spectral(
             v0=np.ones(L.shape[0]),
             maxiter=L.shape[0] * 5,
         )
-        order = np.argsort(eigenvalues)[1:k]
     else:
-        k = m
         if warm_start:
             mde = problem.MDE(
-                n, m, edges, f=penalties.Quadratic(weights), device=device
+                n,
+                k,
+                edges,
+                distortion_function=penalties.Quadratic(weights),
+                device=device,
             )
-            X_init = mde.fit(max_iter=40, use_line_search=False)
+            X_init = mde.embed(max_iter=40)
         else:
             X_init = util.proj_standardized(
-                torch.tensor(util.np_rng().randn(n, m), device=device),
+                torch.randn((n, k), device=device),
                 demean=True,
             )
-        eigenvalues, eigenvectors = scipy.sparse.linalg.lobpcg(
+        eigenvalues, eigenvectors = torch.lobpcg(
             A=L,
-            X=X_init.cpu().numpy(),
-            # Y: search in the orthogonal complement of the ones vector
-            Y=np.ones((L.shape[0], 1)),
+            X=X_init,
             tol=None,
             # largest: find the smallest eigenvalues
             largest=False,
-            maxiter=max_iter,
+            niter=max_iter,
         )
-        order = np.argsort(eigenvalues)[0:k]
+    order = np.argsort(eigenvalues)[1:k]
     return eigenvectors[:, order]
 
 
+# TODO(akshayka): Deprecate device argument, infer from edges/weights
 def spectral(
     n_items, embedding_dim, edges, weights, cg=False, max_iter=40, device="cpu"
 ):
@@ -115,8 +133,6 @@ def spectral(
         \\mbox{minimize} & \\sum_{(i, j) in \\text{edges}} w_{ij} d_{ij}^2 \\\\
         \\mbox{subject to} & (1/n) X^T X = I, \quad d_{ij} = |x_i - x_j|_2.
         \\end{array}
-
-    The weights may be negative.
 
     By default, the problem is solved using a Lanczos method. If cg=True,
     LOBPCG is used; LOBPCG is warm-started by running a projected quasi-newton
@@ -134,7 +150,7 @@ def spectral(
     edges: torch.Tensor(shape=(n_edges, 2))
         A list of edges (i, j), 0 <= i < j < n_items
     weights: torch.Tensor(shape=(n_edges,))
-        A list of weights associated with each edge
+        A list of nonnegative weights associated with each edge
     cg: bool
         If True, uses a preconditioned CG method to find the embedding,
         which requires that the Laplacian matrix plus the identity is
@@ -151,9 +167,13 @@ def spectral(
     torch.Tensor(shape=(n_items, embedding_dim))
         A spectral embedding, projected onto the standardization constraint
     """
-    L = _laplacian(n_items, embedding_dim, edges, weights)
+    # use torch sparse and linalg for lobpcg
+    use_scipy = not cg
+    L = _laplacian(n_items, embedding_dim, edges, weights, use_scipy=use_scipy)
     emb = _spectral(L, embedding_dim, cg=cg, device=device, max_iter=max_iter)
-    emb -= emb.mean(axis=0)
-    return util.proj_standardized(
-        torch.tensor(emb, dtype=weights.dtype, device=device)
-    )
+    if use_scipy:
+        emb -= emb.mean(axis=0)
+        emb = torch.tensor(emb, dtype=weights.dtype, device=device)
+    else:
+        emb -= emb.mean(dim=0)
+    return util.proj_standardized(emb)
