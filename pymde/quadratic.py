@@ -62,7 +62,7 @@ def _laplacian(n, m, edges, weights, use_scipy=True):
             diag_vals,
             size=(n, n),
             dtype=torch.float32,
-            device=edges.device,
+            device=L.device,
         )
         L = L + diag_matrix
         L = L.coalesce()
@@ -80,8 +80,8 @@ def _spectral(
     device=None,
 ):
     n = L.shape[0]
+    k = m + 1
     if not cg:
-        k = m + 1
         num_lanczos_vectors = max(2 * k + 1, int(np.sqrt(L.shape[0])))
         eigenvalues, eigenvectors = scipy.sparse.linalg.eigsh(
             L,
@@ -94,49 +94,36 @@ def _spectral(
         )
         order = np.argsort(eigenvalues)[1:k]
     else:
-        k = m
         if warm_start:
             mde = problem.MDE(
                 n,
                 m,
                 edges,
                 distortion_function=penalties.Quadratic(weights),
-                device=device,
+                device=L.device,
             )
             X_init = mde.embed(max_iter=40)
         else:
             X_init = util.proj_standardized(
-                torch.randn((n, m), device=device),
+                torch.randn((n, m), device=L.device),
                 demean=True,
             )
-        if device == "cuda":
-            eigenvalues, eigenvectors = torch.lobpcg(
-                A=L,
-                X=X_init,
-                tol=None,
-                # largest: find the smallest eigenvalues
-                largest=False,
-                niter=max_iter,
-            )
-            order = torch.argsort(eigenvalues)[0:k]
-        else:
-            eigenvalues, eigenvectors = scipy.sparse.linalg.lobpcg(
-                A=L,
-                X=X_init.cpu().numpy(),
-                # Y: search in the orthogonal complement of the ones vector
-                Y=np.ones((L.shape[0], 1)),
-                tol=None,
-                # largest: find the smallest eigenvalues
-                largest=False,
-                maxiter=max_iter,
-            )
-            order = np.argsort(eigenvalues)[0:k]
+        eigenvalues, eigenvectors = torch.lobpcg(
+            A=L,
+            X=X_init,
+            tol=None,
+            # largest: find the smallest eigenvalues
+            largest=False,
+            niter=max_iter,
+        )
+        order = torch.argsort(eigenvalues)[0:k]
+
 
     return eigenvectors[:, order]
 
 
 def spectral(
-    n_items, embedding_dim, edges, weights, cg=False, max_iter=40, device="cpu"
+    n_items, embedding_dim, edges, weights, cg=False, max_iter=40
 ):
     """Compute a spectral embedding
 
@@ -177,8 +164,6 @@ def spectral(
         edges is very large).
     max_iter: int
         max iteration count for the CG method
-    device: str (optional)
-        The device on which to allocate the embedding
 
     Returns
     -------
@@ -186,12 +171,12 @@ def spectral(
         A spectral embedding, projected onto the standardization constraint
     """
     # use torch sparse and linalg for lobpcg
-    use_scipy = cg is False or device == "cpu"
+    use_scipy = not cg
     L = _laplacian(n_items, embedding_dim, edges, weights, use_scipy=use_scipy)
-    emb = _spectral(L, embedding_dim, cg=cg, device=device, max_iter=max_iter)
+    emb = _spectral(L, embedding_dim, cg=cg, max_iter=max_iter)
     if use_scipy:
         emb -= emb.mean(axis=0)
-        emb = torch.tensor(emb, dtype=weights.dtype, device=device)
+        emb = torch.tensor(emb, dtype=weights.dtype, device=weights.device)
     else:
         emb -= emb.mean(dim=0)
     return util.proj_standardized(emb)
