@@ -48,8 +48,7 @@ def _laplacian(n, m, edges, weights, use_scipy=True):
     A = util.adjacency_matrix(n, m, edges, weights, use_scipy=use_scipy)
     L = -A
     if use_scipy:
-        diag = np.asarray(A.sum(axis=1)).squeeze()
-        L.setdiag(diag)
+        L.setdiag(np.asarray(A.sum(axis=1)).squeeze())
     else:
         # diag is currently 0
         diag_vals = torch.sparse.sum(A, dim=1).to_dense()
@@ -77,6 +76,7 @@ def _spectral(
     edges=None,
     weights=None,
     warm_start=False,
+    device=None,
 ):
     n = L.shape[0]
     k = m + 1
@@ -91,20 +91,19 @@ def _spectral(
             v0=np.ones(L.shape[0]),
             maxiter=L.shape[0] * 5,
         )
-        order = np.argsort(eigenvalues)[1:k]
     else:
         if warm_start:
             mde = problem.MDE(
                 n,
-                m,
+                k,
                 edges,
                 distortion_function=penalties.Quadratic(weights),
-                device=L.device,
+                device=device,
             )
             X_init = mde.embed(max_iter=40)
         else:
             X_init = util.proj_standardized(
-                torch.randn((n, m), device=L.device),
+                torch.randn((n, k), device=device),
                 demean=True,
             )
         eigenvalues, eigenvectors = torch.lobpcg(
@@ -115,14 +114,13 @@ def _spectral(
             largest=False,
             niter=max_iter,
         )
-        order = torch.argsort(eigenvalues)[0:k]
-
-
+    order = np.argsort(eigenvalues)[1:k]
     return eigenvectors[:, order]
 
 
+# TODO(akshayka): Deprecate device argument, infer from edges/weights
 def spectral(
-    n_items, embedding_dim, edges, weights, cg=False, max_iter=40
+    n_items, embedding_dim, edges, weights, cg=False, max_iter=40, device="cpu"
 ):
     """Compute a spectral embedding
 
@@ -135,8 +133,6 @@ def spectral(
         \\mbox{minimize} & \\sum_{(i, j) in \\text{edges}} w_{ij} d_{ij}^2 \\\\
         \\mbox{subject to} & (1/n) X^T X = I, \quad d_{ij} = |x_i - x_j|_2.
         \\end{array}
-
-    The weights may be negative.
 
     By default, the problem is solved using a Lanczos method. If cg=True,
     LOBPCG is used; LOBPCG is warm-started by running a projected quasi-newton
@@ -154,7 +150,7 @@ def spectral(
     edges: torch.Tensor(shape=(n_edges, 2))
         A list of edges (i, j), 0 <= i < j < n_items
     weights: torch.Tensor(shape=(n_edges,))
-        A list of weights associated with each edge
+        A list of nonnegative weights associated with each edge
     cg: bool
         If True, uses a preconditioned CG method to find the embedding,
         which requires that the Laplacian matrix plus the identity is
@@ -163,6 +159,8 @@ def spectral(
         edges is very large).
     max_iter: int
         max iteration count for the CG method
+    device: str (optional)
+        The device on which to allocate the embedding
 
     Returns
     -------
@@ -172,10 +170,10 @@ def spectral(
     # use torch sparse and linalg for lobpcg
     use_scipy = not cg
     L = _laplacian(n_items, embedding_dim, edges, weights, use_scipy=use_scipy)
-    emb = _spectral(L, embedding_dim, cg=cg, max_iter=max_iter)
+    emb = _spectral(L, embedding_dim, cg=cg, device=device, max_iter=max_iter)
     if use_scipy:
         emb -= emb.mean(axis=0)
-        emb = torch.tensor(emb, dtype=weights.dtype, device=weights.device)
+        emb = torch.tensor(emb, dtype=weights.dtype, device=device)
     else:
         emb -= emb.mean(dim=0)
     return util.proj_standardized(emb)

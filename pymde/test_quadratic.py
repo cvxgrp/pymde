@@ -66,7 +66,7 @@ def test_pca():
 
 def test_spectral():
     util.seed(0)
-    n = 10
+    n = 12
     m = 3
     L = -np.abs(np.random.randn(n, n).astype(np.float32))
     L += L.T
