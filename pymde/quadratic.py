@@ -77,7 +77,6 @@ def _spectral(
     edges=None,
     weights=None,
     warm_start=False,
-    device=None,
 ):
     n = L.shape[0]
     k = m + 1
