@@ -99,9 +99,8 @@ def test_spectral():
         )
 
     # test cg=True with torch
-    # doesn't actually move data to device
     X = quadratic.spectral(
-        n, m, torch.tensor(edges), torch.tensor(weights), cg=True, device="cuda"
+        n, m, torch.tensor(edges), torch.tensor(weights), cg=True
     )
     X *= 1.0 / np.sqrt(n)
     for col in range(m):
