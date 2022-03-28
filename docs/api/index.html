@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>API documentation &mdash; pymde 0.1.14 documentation</title>
+  <title>API documentation &mdash; pymde 0.1.15 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/autoclasstoc.css" type="text/css" />
@@ -34,7 +34,7 @@
             <a href="../index.html" class="icon icon-home"> pymde
           </a>
               <div class="version">
-                v0.1.14
+                v0.1.15
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -798,7 +798,11 @@ embedding will be. Defaults to <code class="docutils literal notranslate"><span 
 is ignored.)</p></li>
 <li><p><strong>max_distance</strong> (<em>float</em><em> (</em><em>optional</em><em>)</em>) – If not None, neighborhoods are restricted to have a radius
 no greater than <code class="docutils literal notranslate"><span class="pre">max_distance</span></code>.</p></li>
-<li><p><strong>init</strong> (<em>str</em>) – Initialization strategy; ‘quadratic’ or ‘random’.</p></li>
+<li><p><strong>init</strong> (<em>str</em>) – Initialization strategy; ‘quadratic’ or ‘random’. If the quadratic
+initialization takes too much time, try a random initialization.
+When <cite>device==’cuda’</cite> and <cite>init==’quadratic’</cite> a torch-implemented
+version will be used, which is fully on device, but uses a CG-based
+technique (versus Lanczos).</p></li>
 <li><p><strong>device</strong> (<em>str</em><em> (</em><em>optional</em><em>)</em>) – Device for the embedding (eg, ‘cpu’, ‘cuda’).</p></li>
 <li><p><strong>verbose</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, print verbose output.</p></li>
 </ul>
@@ -1537,7 +1541,6 @@ initialization takes too much time, try a random initialization.</p></li>
 \mbox{minimize} &amp; \sum_{(i, j) in \text{edges}} w_{ij} d_{ij}^2 \\
 \mbox{subject to} &amp; (1/n) X^T X = I, \quad d_{ij} = |x_i - x_j|_2.
 \end{array}\end{split}\]</div>
-<p>The weights may be negative.</p>
 <p>By default, the problem is solved using a Lanczos method. If cg=True,
 LOBPCG is used; LOBPCG is warm-started by running a projected quasi-newton
 method for a small number of iterations. Use cg=True when the number
@@ -1550,7 +1553,7 @@ be slower).</p>
 <li><p><strong>n_items</strong> (<em>int</em>) – The number of items</p></li>
 <li><p><strong>embedding_dim</strong> (<em>int</em>) – The embedding dimension</p></li>
 <li><p><strong>edges</strong> (<em>torch.Tensor</em><em>(</em><em>shape=</em><em>(</em><em>n_edges</em><em>, </em><em>2</em><em>)</em><em>)</em>) – A list of edges (i, j), 0 &lt;= i &lt; j &lt; n_items</p></li>
-<li><p><strong>weights</strong> (<em>torch.Tensor</em><em>(</em><em>shape=</em><em>(</em><em>n_edges</em><em>,</em><em>)</em><em>)</em>) – A list of weights associated with each edge</p></li>
+<li><p><strong>weights</strong> (<em>torch.Tensor</em><em>(</em><em>shape=</em><em>(</em><em>n_edges</em><em>,</em><em>)</em><em>)</em>) – A list of nonnegative weights associated with each edge</p></li>
 <li><p><strong>cg</strong> (<em>bool</em>) – If True, uses a preconditioned CG method to find the embedding,
 which requires that the Laplacian matrix plus the identity is
 positive definite; otherwise, a Lanczos method is used. Use True when
