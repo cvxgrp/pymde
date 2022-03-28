@@ -72,7 +72,7 @@ def _spectral(
     L,
     m,
     cg=False,
-    max_iter=40,
+    max_iter=400,
     edges=None,
     weights=None,
     warm_start=False,
@@ -91,6 +91,7 @@ def _spectral(
             v0=np.ones(L.shape[0]),
             maxiter=L.shape[0] * 5,
         )
+        order = np.argsort(eigenvalues)[1:k]
     else:
         if warm_start:
             mde = problem.MDE(
@@ -114,7 +115,7 @@ def _spectral(
             largest=False,
             niter=max_iter,
         )
-    order = np.argsort(eigenvalues)[1:k]
+        order = torch.argsort(eigenvalues)[1:k]
     return eigenvectors[:, order]
 
 

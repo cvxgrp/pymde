@@ -63,8 +63,8 @@ def _remove_anchor_anchor_edges(edges, data, anchors, opt=None, blk=1e8):
         estep = int(blk / na)
         assert estep > 0
 
-        msk0 = torch.zeros(ne, dtype=torch.bool, device=edges.get_device())
-        msk1 = torch.zeros(ne, dtype=torch.bool, device=edges.get_device())
+        msk0 = torch.zeros(ne, dtype=torch.bool, device=edges.device)
+        msk1 = torch.zeros(ne, dtype=torch.bool, device=edges.device)
         e = 0
         while e < ne:
             ehi = e + estep if e + estep < ne else ne
@@ -79,8 +79,8 @@ def _remove_anchor_anchor_edges(edges, data, anchors, opt=None, blk=1e8):
         assert astep > 0
         assert estep > 0
 
-        msk0 = torch.zeros(ne, dtype=torch.bool, device=edges.get_device())
-        msk1 = torch.zeros(ne, dtype=torch.bool, device=edges.get_device())
+        msk0 = torch.zeros(ne, dtype=torch.bool, device=edges.device)
+        msk1 = torch.zeros(ne, dtype=torch.bool, device=edges.device)
         e = 0
         while e < ne:
             ehi = e + estep if e + estep < ne else ne
@@ -365,7 +365,13 @@ def preserve_neighbors(
         # use cg + torch when using GPU
         cg = device == "cuda"
         X_init = quadratic.spectral(
-            n, embedding_dim, edges, weights, device=device, cg=cg
+            n,
+            embedding_dim,
+            edges,
+            weights,
+            max_iter=1000,
+            device=device,
+            cg=cg,
         )
         if not isinstance(
             constraint, (constraints._Centered, constraints._Standardized)
