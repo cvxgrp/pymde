@@ -147,9 +147,11 @@ def proj_standardized(X, demean=False, inplace=False):
     # proj *= torch.sqrt(n)
     if inplace:
         s = torch.zeros(m, device=X.device, dtype=X.dtype)
-        V = torch.zeros((m, m), device=X.device, dtype=X.dtype)
+        Vh = torch.zeros((m, m), device=X.device, dtype=X.dtype)
+        U = torch.zeros(X.shape, device=X.device, dtype=X.dtype)
         try:
-            U, _, V = torch.svd(X, out=(X, s, V))
+            U, _, Vh = torch.linalg.svd(X, full_matrices=False, out=(U, s, Vh))
+            V = Vh.transpose(-2, -1)
         except RuntimeError as e:
             X.requires_grad_(requires_grad)
             raise SolverError(str(e))
@@ -159,7 +161,8 @@ def proj_standardized(X, demean=False, inplace=False):
         return X
     else:
         try:
-            U, _, V = torch.svd(X)
+            U, _, Vh = torch.linalg.svd(X, full_matrices=False)
+            V = Vh.transpose(-2, -1)
         except RuntimeError as e:
             X.requires_grad_(requires_grad)
             raise SolverError(str(e))
@@ -197,7 +200,8 @@ def adjacency_matrix(n, m, edges, weights, use_scipy=True):
 @tensor_arguments
 def procrustes(X_source, X_target):
     """min |X_source Q - X_target|_F s.t. Q^TQ = I"""
-    U, _, V = torch.svd(X_target.T @ X_source)
+    U, _, Vh = torch.linalg.svd(X_target.T @ X_source, full_matrices=False)
+    V = Vh.transpose(-2, -1)
     return V @ U.T
 
 
