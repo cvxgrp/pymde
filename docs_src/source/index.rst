@@ -116,8 +116,7 @@ UMAP, and can scale to datasets with millions of items. With a GPU, it can be
 even faster. PyMDE scales well with the embedding dimension, meaning that you
 can easily embed into dimensions such as 50, 100, or 250.
 
-Finally, PyMDE can draw graphs in orders of magnitude less time than libraries
-like NetworkX.
+PyMDE draws graphs orders of magnitude faster than NetworkX.
 
 .. toctree::
 	:hidden:

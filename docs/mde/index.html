@@ -1,98 +1,165 @@
-<!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Preprocessing" href="../preprocess/index.html" /><link rel="prev" title="Getting started" href="../getting_started/index.html" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MDE &mdash; pymde 0.1.15 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/autoclasstoc.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 7.0.1 and Furo 2023.05.20 -->
+        <title>MDE - pymde 0.1.18 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=e6660623a769aa55fea372102b9bf3151b292993" />
+    <link rel="stylesheet" type="text/css" href="../_static/autoclasstoc.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script src="../_static/js/theme.js"></script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Preprocessing" href="../preprocess/index.html" />
-    <link rel="prev" title="Getting started" href="../getting_started/index.html" /> 
-</head>
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> pymde
-          </a>
-              <div class="version">
-                v0.1.15
-              </div>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">CONTENTS</span></p>
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">pymde 0.1.18 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">pymde 0.1.18 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">CONTENTS</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/index.html">Getting started</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">MDE</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#the-mde-framework">The MDE framework</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#embedding-matrix">Embedding matrix</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#distortion-functions">Distortion functions</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#distortion-functions-from-weights">Distortion functions from weights</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#distortion-functions-from-deviations">Distortion functions from deviations</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#average-distortion">Average distortion</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#constraints">Constraints</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#constructing-an-mde-problem">Constructing an MDE problem</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#items">Items</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#edges">Edges</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#distortion-function">Distortion function</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#constraint">Constraint</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#construction">Construction</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#embedding">Embedding</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#summary">Summary</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#id2">Distortion functions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#penalties">Penalties</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#losses">Losses</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#id3">Constraints</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#centered">Centered</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#standardized">Standardized</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#anchored">Anchored</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#custom-constraints">Custom constraints</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#computing-embeddings">Computing embeddings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#sanity-checking-embeddings">Sanity-checking embeddings</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#plotting-embeddings">Plotting embeddings</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#the-cdf-of-distortions">The CDF of distortions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#outliers">Outliers</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#comparing-embeddings">Comparing embeddings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#embedding-new-points">Embedding new points</a></li>
-</ul>
-</li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">MDE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../preprocess/index.html">Preprocessing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../datasets/index.html">Datasets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
@@ -100,36 +167,40 @@
 <li class="toctree-l1"><a class="reference internal" href="../citing/index.html">Citing</a></li>
 </ul>
 
-        </div>
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">pymde</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>MDE</li>
-    <li class="wy-breadcrumbs-aside">
-    <a href="https://github.com/cvxgrp/pymde">View source</a>
-    </li>
-    
-      <li class="wy-breadcrumbs-aside">
-      </li>
-
-  </ul>
-  <hr/>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
-  <section id="mde">
-<span id="id1"></span><h1>MDE<a class="headerlink" href="#mde" title="Permalink to this headline"></a></h1>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="mde">
+<span id="id1"></span><h1>MDE<a class="headerlink" href="#mde" title="Permalink to this heading">#</a></h1>
 <p>The central concept in PyMDE is the Minimum-Distortion Embedding (MDE) problem.
 An MDE problem is an optimization problem whose solution is an embedding.</p>
 <p>We can interpret an MDE problem as a declarative description of the properties
@@ -141,7 +212,7 @@ functions and constraints. We also describe some of the useful methods that
 the <a class="reference internal" href="../api/index.html#pymde.MDE" title="pymde.MDE"><code class="xref any py py-class docutils literal notranslate"><span class="pre">pymde.MDE</span></code></a> class provides, and how to sanity-check and compare
 embeddings.</p>
 <section id="the-mde-framework">
-<h2>The MDE framework<a class="headerlink" href="#the-mde-framework" title="Permalink to this headline"></a></h2>
+<h2>The MDE framework<a class="headerlink" href="#the-mde-framework" title="Permalink to this heading">#</a></h2>
 <p>In this section, we introduce the concept of an MDE problem, whose solution
 is an embedding. At a high-level, the objective of an MDE problem
 is to minimally distort known relationships between some pairs of items,
@@ -149,7 +220,7 @@ while possibly satisfying some constraints.</p>
 <p>We first explain this abstractly. In the next section, we show how to make MDE
 problems using PyMDE.</p>
 <section id="embedding-matrix">
-<h3>Embedding matrix<a class="headerlink" href="#embedding-matrix" title="Permalink to this headline"></a></h3>
+<h3>Embedding matrix<a class="headerlink" href="#embedding-matrix" title="Permalink to this heading">#</a></h3>
 <p>An MDE problem starts with a set <span class="math notranslate nohighlight">\(\mathcal{V}\)</span> of <span class="math notranslate nohighlight">\(n\)</span> items,
 <span class="math notranslate nohighlight">\(\mathcal{V} = \{0, 1, ..., n - 1\}\)</span>. An embedding of the set of items is
 a matrix <span class="math notranslate nohighlight">\(X \in \mathbf{R}^{n \times m}\)</span>,
@@ -157,16 +228,20 @@ where <span class="math notranslate nohighlight">\(m\)</span> is the <em>embeddi
 <span class="math notranslate nohighlight">\(x_0, x_1, \ldots, x_{n-1}\)</span>, with <span class="math notranslate nohighlight">\(x_i\)</span> being the <em>embedding vector</em>
 associated with item <span class="math notranslate nohighlight">\(i\)</span>. The quality of an embedding will depend only on
 the Euclidean distances between the embedding vectors,</p>
+<div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[d_{ij} = \|x_i - x_j\|_2, \quad i, j = 0, \ldots, n - 1.\]</div>
+</div>
 </section>
 <section id="distortion-functions">
-<h3>Distortion functions<a class="headerlink" href="#distortion-functions" title="Permalink to this headline"></a></h3>
+<h3>Distortion functions<a class="headerlink" href="#distortion-functions" title="Permalink to this heading">#</a></h3>
 <p>We make our preferences on the
 <span class="math notranslate nohighlight">\(d_{ij}\)</span> concrete with <em>distortion functions</em> associated with the
 edges. These have the form</p>
+<div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[f_{ij} : \mathbf{R}_{+} \to \mathbf{R}_+, \quad (i, j) \in \mathcal E\]</div>
+</div>
 <p>where <span class="math notranslate nohighlight">\(\mathcal E\)</span> is a set of edges <span class="math notranslate nohighlight">\((i , j)\)</span>, with
 <span class="math notranslate nohighlight">\(0 \leq i &lt; j &lt; n\)</span>. This set of edges may contain all pairs, or a subset
 of pairs, but it must be non-empty.</p>
@@ -181,18 +256,20 @@ original distances or deviations between some pairs of items. PyMDE
 provides a library of both types of distortion functions, in
 <a class="reference internal" href="../api/index.html#module-pymde.penalties" title="pymde.penalties"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">pymde.penalties</span></code></a> and <a class="reference internal" href="../api/index.html#module-pymde.losses" title="pymde.losses"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">pymde.losses</span></code></a>.</p>
 <section id="distortion-functions-from-weights">
-<h4>Distortion functions from weights<a class="headerlink" href="#distortion-functions-from-weights" title="Permalink to this headline"></a></h4>
+<h4>Distortion functions from weights<a class="headerlink" href="#distortion-functions-from-weights" title="Permalink to this heading">#</a></h4>
 <p>We start with nonzero weights <span class="math notranslate nohighlight">\(w_1, w_2, \ldots, w_p\)</span>, one for each edge.
 A positive weight means the items in the edge are similar, and a negative
 weight means they are disimilar. The larger the weight is, the more similar
 the items are; the more negative the weight, the more dissimilar.</p>
 <p>A vector distortion function  <span class="math notranslate nohighlight">\(f : \mathbf{R}^{p} \to \mathbf{R}^p\)</span>
 derived from weights has component functions</p>
+<div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[\begin{split}f_k(d) = \begin{cases}
     w_k p_{\text{attractive}}(d_k) &amp; w_k &gt; 0 \\
     w_k p_{\text{repulsive}}(d_k) &amp; w_k &lt; 0 \\
 \end{cases}.\end{split}\]</div>
+</div>
 <p>where <span class="math notranslate nohighlight">\(w_k\)</span> is a scalar weight and <span class="math notranslate nohighlight">\(p_{\text{attractive}}\)</span> and
 <span class="math notranslate nohighlight">\(p_{\text{repulsive}}\)</span> are penalty functions. Penalty functions are
 increasing functions: the attractive penalty encourages the distances to
@@ -205,46 +282,54 @@ repulsive penalties go to negative infinity as the input approaches 0, and
 to 0 as the input grows large.</p>
 </section>
 <section id="distortion-functions-from-deviations">
-<h4>Distortion functions from deviations<a class="headerlink" href="#distortion-functions-from-deviations" title="Permalink to this headline"></a></h4>
+<h4>Distortion functions from deviations<a class="headerlink" href="#distortion-functions-from-deviations" title="Permalink to this heading">#</a></h4>
 <p>A vector distortion function <span class="math notranslate nohighlight">\(f : \mathbf{R}^{p} \to \mathbf{R}^p\)</span>
 derived from original deviations has component functions</p>
+<div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[f_k(d_k) = \ell(d_k, \delta_k), \quad k=1, \ldots, p,\]</div>
+</div>
 <p>where
 <span class="math notranslate nohighlight">\(\ell\)</span> is a loss function,
 and <span class="math notranslate nohighlight">\(\delta_k\)</span> is a scalar deviation or dissimilarity score associated
 with the <span class="math notranslate nohighlight">\(k\)</span>-th edge.</p>
 <p>The deviations can be interpreted as targets for the embedding distances:
 the loss function is 0 when <span class="math notranslate nohighlight">\(d_k = \delta_k\)</span>, and positive otherwise.
-So a deviation <span class="math notranslate nohighlight">\(\delta_k\)</span> of 0 means that the items in the k-th edge
+So a deviation <span class="math notranslate nohighlight">\(\delta_k`\)</span> of 0 means that the items in the k-th edge
 are the same, and the larger the deviation, the more dissimilar the items are.</p>
 <p>The simplest example of a loss function is the squared loss</p>
+<div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[\ell(d, \delta) = (d - \delta)^2.\]</div>
+</div>
 </section>
 </section>
 <section id="average-distortion">
-<h3>Average distortion<a class="headerlink" href="#average-distortion" title="Permalink to this headline"></a></h3>
+<h3>Average distortion<a class="headerlink" href="#average-distortion" title="Permalink to this heading">#</a></h3>
 <p>The value <span class="math notranslate nohighlight">\(f_{ij}(d_{ij})\)</span> is the <em>distortion</em> associated for the
 pair <span class="math notranslate nohighlight">\((i, j) \in \mathcal E\)</span>. The smaller the distortion, the better
 the embedding captures the relationship between <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(j\)</span>.</p>
 <p>The goal is to minimize the <em>average distortion</em> of the embedding <cite>X</cite>, defined
 as</p>
+<div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[E(X) = \frac{1}{|\mathcal E|} \sum_{(i, j) \in \mathcal E} f_{ij} (d_{ij}),\]</div>
+</div>
 <p>possibly subject to the constraint that <span class="math notranslate nohighlight">\(X \in \mathcal X\)</span>, where
 <span class="math notranslate nohighlight">\(\mathcal X\)</span> is a set of permissible embeddings. This gives the
 optimization problem</p>
+<div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{array}{ll}
 \mbox{minimize} &amp; E(X) \\
 \mbox{subject to} &amp; X \in \mathcal X.
 \end{array}\end{split}\]</div>
+</div>
 <p>This optimization problem is called an <strong>MDE problem</strong>. Its solution
 is the embedding.</p>
 </section>
 <section id="constraints">
-<h3>Constraints<a class="headerlink" href="#constraints" title="Permalink to this headline"></a></h3>
+<h3>Constraints<a class="headerlink" href="#constraints" title="Permalink to this heading">#</a></h3>
 <p>We can optionally impose constraints on the embedding.</p>
 <p>For example, we can enforce the embedding vectors to be <strong>standardized</strong>,
 which means that they are centered and identity covariance, that is,
@@ -257,7 +342,7 @@ to include them anyway).</p>
 </section>
 </section>
 <section id="constructing-an-mde-problem">
-<h2>Constructing an MDE problem<a class="headerlink" href="#constructing-an-mde-problem" title="Permalink to this headline"></a></h2>
+<h2>Constructing an MDE problem<a class="headerlink" href="#constructing-an-mde-problem" title="Permalink to this heading">#</a></h2>
 <p>In PyMDE, instances of the <a class="reference internal" href="../api/index.html#pymde.MDE" title="pymde.MDE"><code class="xref any py py-class docutils literal notranslate"><span class="pre">pymde.MDE</span></code></a> class are MDE problems. The
 <a class="reference internal" href="../api/index.html#pymde.preserve_neighbors" title="pymde.preserve_neighbors"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.preserve_neighbors</span></code></a> and <a class="reference internal" href="../api/index.html#pymde.preserve_distances" title="pymde.preserve_distances"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.preserve_distances</span></code></a>
 functions we saw in the previous part of the tutorial both returned
@@ -272,13 +357,13 @@ functions we saw in the previous part of the tutorial both returned
 </ul>
 <p>Let’s walk through a very simple example.</p>
 <section id="items">
-<h3>Items<a class="headerlink" href="#items" title="Permalink to this headline"></a></h3>
+<h3>Items<a class="headerlink" href="#items" title="Permalink to this heading">#</a></h3>
 <p>Let’s say we have five items.
 In PyMDE, items are represented by consecutive integer labels, in our case
 0, 1, 2, 3, and 4.</p>
 </section>
 <section id="edges">
-<h3>Edges<a class="headerlink" href="#edges" title="Permalink to this headline"></a></h3>
+<h3>Edges<a class="headerlink" href="#edges" title="Permalink to this heading">#</a></h3>
 <p>Say we know that item 0 is similar to items 1 and 4, 1 is
 similar to 2, 2 is similar to 3, and 3 is similar to 4. We include these
 pairs in a list of edges</p>
@@ -287,7 +372,7 @@ pairs in a list of edges</p>
 </div>
 </section>
 <section id="distortion-function">
-<h3>Distortion function<a class="headerlink" href="#distortion-function" title="Permalink to this headline"></a></h3>
+<h3>Distortion function<a class="headerlink" href="#distortion-function" title="Permalink to this heading">#</a></h3>
 <p>Next, we need to encode the fact that each edge
 represents some degree of similarity between the items it contains. We’ll use a
 quadratic penalty <span class="math notranslate nohighlight">\(f_k(d_k) = w_k d_k^2\)</span> (other choices are possible).
@@ -301,7 +386,7 @@ similar to 4. We write this in PyMDE as</p>
 </div>
 </section>
 <section id="constraint">
-<h3>Constraint<a class="headerlink" href="#constraint" title="Permalink to this headline"></a></h3>
+<h3>Constraint<a class="headerlink" href="#constraint" title="Permalink to this heading">#</a></h3>
 <p>The last thing to specify is the constraint. Since we’re using a distortion
 function based on only positive weights, we’ll need a standardization
 constraint.</p>
@@ -310,7 +395,7 @@ constraint.</p>
 </div>
 </section>
 <section id="construction">
-<h3>Construction<a class="headerlink" href="#construction" title="Permalink to this headline"></a></h3>
+<h3>Construction<a class="headerlink" href="#construction" title="Permalink to this heading">#</a></h3>
 <p>We can now construct the MDE problem:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymde</span>
 
@@ -328,7 +413,7 @@ constraint. This object can be thought of describing the kind of embedding
 we would like.</p>
 </section>
 <section id="embedding">
-<h3>Embedding<a class="headerlink" href="#embedding" title="Permalink to this headline"></a></h3>
+<h3>Embedding<a class="headerlink" href="#embedding" title="Permalink to this heading">#</a></h3>
 <p>To obtain the embedding, we call the <a class="reference internal" href="../api/index.html#pymde.MDE.embed" title="pymde.MDE.embed"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">pymde.MDE.embed</span></code></a> method:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">embedding</span> <span class="o">=</span> <span class="n">mde</span><span class="o">.</span><span class="n">embed</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">embedding</span><span class="p">)</span>
@@ -360,7 +445,7 @@ we would like.</p>
 </div>
 </section>
 <section id="summary">
-<h3>Summary<a class="headerlink" href="#summary" title="Permalink to this headline"></a></h3>
+<h3>Summary<a class="headerlink" href="#summary" title="Permalink to this heading">#</a></h3>
 <p>This very simple example showed all the components required
 to construct an MDE problem. The full documentation for the MDE
 class is available in the <a class="reference internal" href="../api/index.html#api-mde"><span class="std std-ref">API documentation</span></a>.</p>
@@ -369,7 +454,7 @@ how to create them.</p>
 </section>
 </section>
 <section id="id2">
-<h2>Distortion functions<a class="headerlink" href="#id2" title="Permalink to this headline"></a></h2>
+<h2>Distortion functions<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
 <p>A distortion function is just a Python callable that maps the embedding
 distances to distortions, using PyTorch operations. Its call signature should
 be</p>
@@ -397,12 +482,14 @@ question is: Where do the weights or original deviations come from?
 We’ll see some recipes for creating edges and their weights / deviations in the
 next part of the tutorial, which covers <a class="reference internal" href="../preprocess/index.html#preprocess"><span class="std std-ref">preprocessing</span></a>.)</p>
 <section id="penalties">
-<h3>Penalties<a class="headerlink" href="#penalties" title="Permalink to this headline"></a></h3>
+<h3>Penalties<a class="headerlink" href="#penalties" title="Permalink to this heading">#</a></h3>
 <p>Penalties: distortion functions derived from weights.</p>
 <p>A vector distortion function  <span class="math notranslate nohighlight">\(f : \mathbf{R}^{p} \to \mathbf{R}^p\)</span>
 derived from weights has component functions</p>
+<div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[f_k(d_k) = w_kp(d_k), \quad k=1, \ldots, p,\]</div>
+</div>
 <p>where <span class="math notranslate nohighlight">\(w_k\)</span> is a scalar weight, <span class="math notranslate nohighlight">\(p\)</span> is a penalty function, and
 <span class="math notranslate nohighlight">\(d_k\)</span> is an embedding distance. The penalty encourages distances to be
 small when the weights are positive, and encourages them to be not small
@@ -446,11 +533,13 @@ penalties. Some examples inlcude:</p>
 The <code class="docutils literal notranslate"><span class="pre">PushAndPull</span></code> function can be used to combine two penalties, an attractive
 penalty for use with positive weights, and a repulsive penalty for use with
 negative weights. This leads to a distortion function of the form</p>
+<div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[\begin{split}f_k(d) = \begin{cases}
     w_k p_{\text{attractive}}(d_k) &amp; w_k &gt; 0 \\
     w_k p_{\text{repulsive}}(d_k) &amp; w_k &lt; 0 \\
 \end{cases}.\end{split}\]</div>
+</div>
 <p>For example:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">weights</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.</span><span class="p">])</span>
 <span class="n">attractive_penalty</span> <span class="o">=</span> <span class="n">pymde</span><span class="o">.</span><span class="n">penalties</span><span class="o">.</span><span class="n">Log1p</span>
@@ -483,12 +572,14 @@ weights, and returns a sequence of distortions, one for each distance.</p>
 </div>
 </section>
 <section id="losses">
-<h3>Losses<a class="headerlink" href="#losses" title="Permalink to this headline"></a></h3>
+<h3>Losses<a class="headerlink" href="#losses" title="Permalink to this heading">#</a></h3>
 <p>Losses: distortion functions derived from original deviations.</p>
 <p>A vector distortion function <span class="math notranslate nohighlight">\(f : \mathbf{R}^{p} \to \mathbf{R}^p\)</span>
 derived from original deviations has component functions</p>
+<div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[f_k(d_k) = \ell(d_k, \delta_k), \quad k=1, \ldots, p,\]</div>
+</div>
 <p>where
 <span class="math notranslate nohighlight">\(\ell\)</span> is a loss function, <span class="math notranslate nohighlight">\(\delta_k\)</span> is a nonnegative deviation
 or dissimilarity score, <span class="math notranslate nohighlight">\(d_k\)</span> is an embedding distance,</p>
@@ -498,7 +589,7 @@ be the original deviation associated with the k-th edge, and <span class="math n
 is the distortion associated with the edge.</p>
 <p>The deviations can be interpreted as targets for the embedding distances:
 the loss function is 0 when <span class="math notranslate nohighlight">\(d_k = \delta_k\)</span>, and positive otherwise.
-So a deviation <span class="math notranslate nohighlight">\(\delta_k\)</span> of 0 means that the items in the k-th edge
+So a deviation <span class="math notranslate nohighlight">\(\delta_k`\)</span> of 0 means that the items in the k-th edge
 are the same, and the larger the deviation, the more dissimilar the items are.</p>
 <p>Distortion functions are created in a vectorized or elementwise fashion. The
 constructor takes a sequence (torch.Tensor) of deviations (target distances),
@@ -528,7 +619,7 @@ distance.</p>
 </section>
 </section>
 <section id="id3">
-<h2>Constraints<a class="headerlink" href="#id3" title="Permalink to this headline"></a></h2>
+<h2>Constraints<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
 <p>PyMDE currently provides three constraint sets:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="../api/index.html#pymde.Centered" title="pymde.Centered"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.Centered</span></code></a>, which constrains the embedding vectors to have mean zero;</p></li>
@@ -536,7 +627,7 @@ distance.</p>
 <li><p><a class="reference internal" href="../api/index.html#pymde.Anchored" title="pymde.Anchored"><code class="xref any py py-class docutils literal notranslate"><span class="pre">pymde.Anchored</span></code></a>, which pins specific items (called anchors) to specific values (i.e., this is an equality constraint on a subset of the embedding vectors).</p></li>
 </ul>
 <section id="centered">
-<h3>Centered<a class="headerlink" href="#centered" title="Permalink to this headline"></a></h3>
+<h3>Centered<a class="headerlink" href="#centered" title="Permalink to this heading">#</a></h3>
 <p>If a constraint is not specified, the embedding will be centered, but no other
 restrictions will be placed on it. Centering is without loss of generality,
 since translating all the points does not affect the average distortion.</p>
@@ -546,10 +637,12 @@ since translating all the points does not affect the average distortion.</p>
 </div>
 </section>
 <section id="standardized">
-<h3>Standardized<a class="headerlink" href="#standardized" title="Permalink to this headline"></a></h3>
+<h3>Standardized<a class="headerlink" href="#standardized" title="Permalink to this heading">#</a></h3>
 <p>The standardization constraint is</p>
+<div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[(1/n) X^T X = I, \quad X^T \mathbf{1} = 0\]</div>
+</div>
 <p>where <span class="math notranslate nohighlight">\(n\)</span> is the number of items (i.e., the number of rows in <span class="math notranslate nohighlight">\(X\)</span>)
 and <span class="math notranslate nohighlight">\(\mathbf{1}\)</span> is the all-ones vector.</p>
 <p>A standardization constraint can be created with</p>
@@ -577,10 +670,12 @@ This can be done by rescaling the original deviations to have RMS equal
 to the natural length.</p>
 </section>
 <section id="anchored">
-<h3>Anchored<a class="headerlink" href="#anchored" title="Permalink to this headline"></a></h3>
+<h3>Anchored<a class="headerlink" href="#anchored" title="Permalink to this heading">#</a></h3>
 <p>The anchor constraint is</p>
+<div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[x_i = v_i, \quad i \in \text{anchors}\]</div>
+</div>
 <p>where <span class="math notranslate nohighlight">\(\text{anchors}\)</span> is a subset of the items and <span class="math notranslate nohighlight">\(v_i\)</span>
 is a concrete value to which <span class="math notranslate nohighlight">\(x_i\)</span> should be pinned.</p>
 <p>An anchor constraint can be created with</p>
@@ -603,13 +698,13 @@ in which the leaves have been anchored to lie on a circle with radius 20.</p>
 for the code to make this embedding (and GIF).</p>
 </section>
 <section id="custom-constraints">
-<h3>Custom constraints<a class="headerlink" href="#custom-constraints" title="Permalink to this headline"></a></h3>
+<h3>Custom constraints<a class="headerlink" href="#custom-constraints" title="Permalink to this heading">#</a></h3>
 <p>It is possible to specify a custom constraint set. To learn how to
 do so, consult the <a class="reference internal" href="../api/index.html#api-constraints"><span class="std std-ref">API documentation</span></a>.</p>
 </section>
 </section>
 <section id="computing-embeddings">
-<h2>Computing embeddings<a class="headerlink" href="#computing-embeddings" title="Permalink to this headline"></a></h2>
+<h2>Computing embeddings<a class="headerlink" href="#computing-embeddings" title="Permalink to this heading">#</a></h2>
 <p>After creating an MDE problem, you can compute an embedding by calling
 the its <a class="reference internal" href="../api/index.html#pymde.MDE.embed" title="pymde.MDE.embed"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">embed</span></code></a> method. The embed method takes
 a few optional hyper-parameters. Here is its documentation.</p>
@@ -623,7 +718,7 @@ process are stored in <code class="docutils literal notranslate"><span class="pr
 <p>All arguments have sensible default values, so in most cases,
 it suffices to just type <code class="docutils literal notranslate"><span class="pre">mde.embed()</span></code> or <code class="docutils literal notranslate"><span class="pre">mde.embed(verbose=True)</span></code></p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>X</strong> (<em>torch.Tensor</em><em>, </em><em>optional</em>) – Initial iterate, of shape <code class="docutils literal notranslate"><span class="pre">(n_items,</span> <span class="pre">embedding_dim)</span></code>. When None,
 the initial iterate is chosen randomly (and projected onto the
@@ -644,10 +739,10 @@ embedding, set <code class="docutils literal notranslate"><span class="pre">snap
 (like 1 or 5).</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The embedding, of shape <code class="docutils literal notranslate"><span class="pre">(n_items,</span> <span class="pre">embedding_dim)</span></code>.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>torch.Tensor</p>
 </dd>
 </dl>
@@ -657,10 +752,10 @@ embedding, set <code class="docutils literal notranslate"><span class="pre">snap
 <a class="reference internal" href="../api/index.html#pymde.optim.SolveStats" title="pymde.optim.SolveStats"><code class="xref any py py-class docutils literal notranslate"><span class="pre">solve_stats</span></code></a> attribute.</p>
 </section>
 <section id="sanity-checking-embeddings">
-<h2>Sanity-checking embeddings<a class="headerlink" href="#sanity-checking-embeddings" title="Permalink to this headline"></a></h2>
+<h2>Sanity-checking embeddings<a class="headerlink" href="#sanity-checking-embeddings" title="Permalink to this heading">#</a></h2>
 <p>The MDE framework gives you a few ways to sanity-check embeddings.</p>
 <section id="plotting-embeddings">
-<h3>Plotting embeddings<a class="headerlink" href="#plotting-embeddings" title="Permalink to this headline"></a></h3>
+<h3>Plotting embeddings<a class="headerlink" href="#plotting-embeddings" title="Permalink to this heading">#</a></h3>
 <p>If your embedding is in three or fewer dimensions, the first thing to do
 (after calling the <code class="docutils literal notranslate"><span class="pre">embed</span></code> method) is to simply plot it with <a class="reference internal" href="../api/index.html#pymde.plot" title="pymde.plot"><code class="xref any py py-func docutils literal notranslate"><span class="pre">pymde.plot</span></code></a>,
 and color it by some attributes that were not used in the embedding process.
@@ -670,7 +765,7 @@ more details.</p>
 <p>GIFs can be created with the <a class="reference internal" href="../api/index.html#pymde.MDE.play" title="pymde.MDE.play"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">pymde.MDE.play</span></code></a> method.</p>
 </section>
 <section id="the-cdf-of-distortions">
-<h3>The CDF of distortions<a class="headerlink" href="#the-cdf-of-distortions" title="Permalink to this headline"></a></h3>
+<h3>The CDF of distortions<a class="headerlink" href="#the-cdf-of-distortions" title="Permalink to this heading">#</a></h3>
 <p>Regardless of the embedding dimension, the next thing to do is to
 plot the cumulative distribution function (CDF) of distortions. You can
 do this by calling the <code class="docutils literal notranslate"><span class="pre">distortions_cdf</span></code> method on an MDE instance:</p>
@@ -684,7 +779,7 @@ roughly 10 percent of them are much larger. This means that embedding
 the items was “easy”, except for these 10 percent of edges.</p>
 </section>
 <section id="outliers">
-<h3>Outliers<a class="headerlink" href="#outliers" title="Permalink to this headline"></a></h3>
+<h3>Outliers<a class="headerlink" href="#outliers" title="Permalink to this heading">#</a></h3>
 <p>Next, you should manually inspect the items in, say, the 10 most highly
 distorted pairs; this is similar to debugging a supervised learning model by
 examining its mistakes. You can get the list of edges sorted from most
@@ -706,7 +801,7 @@ dataset, if they appear malformed.</p>
 </section>
 </section>
 <section id="comparing-embeddings">
-<h2>Comparing embeddings<a class="headerlink" href="#comparing-embeddings" title="Permalink to this headline"></a></h2>
+<h2>Comparing embeddings<a class="headerlink" href="#comparing-embeddings" title="Permalink to this heading">#</a></h2>
 <p>Suppose you want to compare two different embeddings, which have the same
 number of items and the same embedding dimension. If you have an MDE instance,
 you can evaluate the average distortion of each embedding by calling
@@ -726,7 +821,7 @@ will make sense if both embeddings are standardized, since that will put
 them on the same scale, but it will make less sense otherwise).</p>
 </section>
 <section id="embedding-new-points">
-<h2>Embedding new points<a class="headerlink" href="#embedding-new-points" title="Permalink to this headline"></a></h2>
+<h2>Embedding new points<a class="headerlink" href="#embedding-new-points" title="Permalink to this heading">#</a></h2>
 <p>Suppose we have embedded some number of items, and later we obtain additional
 items of the same type that we wish to embed. For example, we might
 have embedded the MNIST dataset, and later we obtain more images we’d like
@@ -762,38 +857,116 @@ with an anchor constraint.</p>
 </section>
 </section>
 
-
-           </div>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="../preprocess/index.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Preprocessing</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="../getting_started/index.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Getting started</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../getting_started/index.html" class="btn btn-neutral float-left" title="Getting started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../preprocess/index.html" class="btn btn-neutral float-right" title="Preprocessing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
     </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">MDE</a><ul>
+<li><a class="reference internal" href="#the-mde-framework">The MDE framework</a><ul>
+<li><a class="reference internal" href="#embedding-matrix">Embedding matrix</a></li>
+<li><a class="reference internal" href="#distortion-functions">Distortion functions</a><ul>
+<li><a class="reference internal" href="#distortion-functions-from-weights">Distortion functions from weights</a></li>
+<li><a class="reference internal" href="#distortion-functions-from-deviations">Distortion functions from deviations</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#average-distortion">Average distortion</a></li>
+<li><a class="reference internal" href="#constraints">Constraints</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#constructing-an-mde-problem">Constructing an MDE problem</a><ul>
+<li><a class="reference internal" href="#items">Items</a></li>
+<li><a class="reference internal" href="#edges">Edges</a></li>
+<li><a class="reference internal" href="#distortion-function">Distortion function</a></li>
+<li><a class="reference internal" href="#constraint">Constraint</a></li>
+<li><a class="reference internal" href="#construction">Construction</a></li>
+<li><a class="reference internal" href="#embedding">Embedding</a></li>
+<li><a class="reference internal" href="#summary">Summary</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id2">Distortion functions</a><ul>
+<li><a class="reference internal" href="#penalties">Penalties</a></li>
+<li><a class="reference internal" href="#losses">Losses</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id3">Constraints</a><ul>
+<li><a class="reference internal" href="#centered">Centered</a></li>
+<li><a class="reference internal" href="#standardized">Standardized</a></li>
+<li><a class="reference internal" href="#anchored">Anchored</a></li>
+<li><a class="reference internal" href="#custom-constraints">Custom constraints</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#computing-embeddings">Computing embeddings</a></li>
+<li><a class="reference internal" href="#sanity-checking-embeddings">Sanity-checking embeddings</a><ul>
+<li><a class="reference internal" href="#plotting-embeddings">Plotting embeddings</a></li>
+<li><a class="reference internal" href="#the-cdf-of-distortions">The CDF of distortions</a></li>
+<li><a class="reference internal" href="#outliers">Outliers</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#comparing-embeddings">Comparing embeddings</a></li>
+<li><a class="reference internal" href="#embedding-new-points">Embedding new points</a></li>
+</ul>
+</li>
+</ul>
 
-  <hr/>
-
-  <div role="contentinfo">
-By <a href="https://akshayagrawal.com">Akshay Agrawal</a>.
-
-    <p></p>
-
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
+          </div>
         </div>
       </div>
-    </section>
+      
+      
+    </aside>
   </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
-
-</body>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </body>
 </html>
