@@ -88,7 +88,7 @@ def distances(data, retain_fraction=1.0, verbose=False):
     return Graph.from_edges(edges, delta, n_items=n_items)
 
 
-def k_nearest_neighbors(data, k, max_distance=None, verbose=False):
+def k_nearest_neighbors(data, k, metric='euclidean', max_distance=None, verbose=False):
     """Compute k-nearest neighbors for each row in data matrix.
 
     Computes the k-nearest neighbor graph of data matrix, under
@@ -101,6 +101,8 @@ def k_nearest_neighbors(data, k, max_distance=None, verbose=False):
         The data matrix
     k: int
         The number of nearest neighbors per item
+    metric: str (optional)
+        Metric to be used to compute the KNN.
     max_distance: float (optional)
         If not None, neighborhoods are restricted to have a radius
         no greater than `max_distance`.
@@ -128,7 +130,9 @@ def k_nearest_neighbors(data, k, max_distance=None, verbose=False):
         if verbose:
             problem.LOGGER.info("Exact nearest neighbors by brute force ")
         nn = sklearn.neighbors.NearestNeighbors(
-            n_neighbors=k + 1, algorithm="brute"
+            n_neighbors=k + 1,
+            metric=metric,
+            algorithm="brute"
         )
         nn.fit(data)
         distances, neighbors = nn.kneighbors(data)
@@ -136,6 +140,7 @@ def k_nearest_neighbors(data, k, max_distance=None, verbose=False):
         # TODO default params (n_trees, max_candidates)
         index = pynndescent.NNDescent(
             data,
+            metric=metric,
             n_neighbors=k + 1,
             verbose=verbose,
             max_candidates=60,

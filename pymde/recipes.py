@@ -226,6 +226,7 @@ def preserve_neighbors(
     constraint=None,
     n_neighbors=None,
     repulsive_fraction=None,
+    metric="euclidean",
     max_distance=None,
     init="quadratic",
     device="cpu",
@@ -272,6 +273,9 @@ def preserve_neighbors(
         Callable that constructs a distortion function, given negative
         weights. (If ``None``, only positive weights are used.) For example,
         ``pymde.penalties.Log`` or ``pymde.penalties.InversePower``.
+    metric: str
+        Distance metric to be used to compute the KNN.
+        It is only used when the data is a data matrix.
     constraint: pymde.constraints.Constraint (optional)
         Embedding constraint, like ``pymde.Standardized()`` or
         ``pymde.Anchored(anchors, values)`` (or ``None``). Defaults to no
@@ -340,13 +344,15 @@ def preserve_neighbors(
 
     if verbose:
         problem.LOGGER.info(
-            f"Computing {n_neighbors}-nearest neighbors, with "
+            f"Computing {n_neighbors}-nearest neighbors, "
+            f"using {metric} metric with "
             f"max_distance={max_distance}"
         )
 
     knn_graph = preprocess.generic.k_nearest_neighbors(
         data,
         k=n_neighbors,
+        metric=metric,
         max_distance=max_distance,
         verbose=verbose,
     )
