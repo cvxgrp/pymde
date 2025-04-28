@@ -25,8 +25,8 @@ Requirements
 
 PyMDE has the following requirements:
 
-* Python >= 3.7
-* numpy >= 1.17.5
+* Python >= 3.9
+* numpy >= 2.0
 * pynndescent
 * requests
 * scipy
