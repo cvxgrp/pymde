@@ -308,7 +308,7 @@ class Hinge(Function):
 
 
 class Log1p(Function):
-    """:math:`p(d) = \log(1 + d^{\\text{exponent}})`"""
+    """:math:`p(d) = \\log(1 + d^{\\text{exponent}})`"""
 
     def __init__(self, weights, exponent=1.5):
         super(Log1p, self).__init__()
@@ -322,7 +322,7 @@ class Log1p(Function):
 
 
 class Log(Function):
-    """:math:`p(d) = \log(1 - \\exp(-d^\\text{exponent}))`"""
+    """:math:`p(d) = \\log(1 - \\exp(-d^\\text{exponent}))`"""
 
     def __init__(self, weights, exponent=1.0):
         super(Log, self).__init__()

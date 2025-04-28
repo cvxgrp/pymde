@@ -45,7 +45,7 @@ setup(
     setup_requires=["setuptools>=18.0", "cython"],
     install_requires=[
         "matplotlib",
-        "numpy >= 1.17.5",
+        "numpy >= 2.0",
         "pynndescent",
         "scipy",
         "torch >= 1.7.1",
