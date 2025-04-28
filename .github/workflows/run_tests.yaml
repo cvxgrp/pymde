@@ -9,37 +9,27 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: [3.7, 3.8, 3.9]
+        python-version: ["3.10", "3.11", "3.12"]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: '${{ matrix.python-version }}'
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install setuptools wheel
         pip install flake8 pytest
-    - if: matrix.python-version == '3.7'
-      run: pip install numpy==1.17.5
-
-    - if: matrix.python-version == '3.8'
-      run: pip install numpy==1.17.5
-
-    - if: matrix.python-version == '3.9'
-      run: pip install numpy==1.21.0
+        pip install numpy==2.2.5
 
       # install cpu versions of torch for CI
     - if: matrix.os == 'macos-latest'
-      run: pip install torch==1.8.0 torchvision==0.9.0
+      run: pip install torch==2.7.0 torchvision==0.22.0
 
     - if: matrix.os == 'ubuntu-latest'
-      run: pip install --find-links https://download.pytorch.org/whl/torch_stable.html torch==1.8.0+cpu torchvision==0.9.0+cpu
-
-    - if: matrix.os == 'windows-latest'
-      run: pip install --find-links https://download.pytorch.org/whl/torch_stable.html torch==1.8.0+cpu torchvision==0.9.0+cpu
+      run: pip install torch==2.7.0 torchvision==0.22.0 --index-url https://download.pytorch.org/whl/cpu
       
     - name: Lint with flake8
       run: |

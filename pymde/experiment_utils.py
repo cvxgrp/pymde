@@ -139,8 +139,8 @@ def _is_discrete(dtype):
             for other in (
                 np.integer,
                 np.bool_,
-                np.string_,
-                np.unicode_,
+                np.bytes_,
+                np.str_,
                 np.object_,
             )
         ]

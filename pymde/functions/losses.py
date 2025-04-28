@@ -5,7 +5,7 @@ derived from original deviations has component functions
 
 .. math::
 
-    f_k(d_k) = \\ell(d_k, \delta_k), \\quad k=1, \\ldots, p,
+    f_k(d_k) = \\ell(d_k, \\delta_k), \\quad k=1, \\ldots, p,
 
 where
 :math:`\\ell` is a loss function, :math:`\\delta_k` is a nonnegative deviation
@@ -102,7 +102,7 @@ class Huber(Function):
     """
     .. math::
 
-        \ell(d, \\delta) = \\begin{cases}
+        \\ell(d, \\delta) = \\begin{cases}
             \\cdot (d - \\delta)^2 & d < \\text{threshold} \\\\
             \\text{threshold}(2(d - \\delta) - \\cdot \\text{threshold})
             & d \\geq \\text{threshold}

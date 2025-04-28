@@ -88,7 +88,6 @@ def _spectral(
             which="SM",
             ncv=num_lanczos_vectors,
             tol=1e-4,
-            v0=np.ones(L.shape[0]),
             maxiter=L.shape[0] * 5,
         )
         order = np.argsort(eigenvalues)[1:k]
@@ -123,17 +122,17 @@ def _spectral(
 def spectral(
     n_items, embedding_dim, edges, weights, cg=False, max_iter=40, device="cpu"
 ):
-    """Compute a spectral embedding
+    r"""Compute a spectral embedding
 
 
     Solves the quadratic MDE problem
 
     .. math::
 
-        \\begin{array}{ll}
-        \\mbox{minimize} & \\sum_{(i, j) in \\text{edges}} w_{ij} d_{ij}^2 \\\\
-        \\mbox{subject to} & (1/n) X^T X = I, \quad d_{ij} = |x_i - x_j|_2.
-        \\end{array}
+        \begin{array}{ll}
+        \mbox{minimize} & \sum_{(i, j) in \text{edges}} w_{ij} d_{ij}^2 \\
+        \mbox{subject to} & (1/n) X^T X = I, \quad d_{ij} = |x_i - x_j|_2.
+        \end{array}
 
     By default, the problem is solved using a Lanczos method. If cg=True,
     LOBPCG is used; LOBPCG is warm-started by running a projected quasi-newton
