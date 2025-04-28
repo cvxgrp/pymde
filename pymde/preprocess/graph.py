@@ -336,7 +336,7 @@ def _shortest_paths(shape, node, max_length, unweighted, sample_prob):
 
 
 def __init_process(data, indptr, indices):
-    global __this_module
+    global __this_module  # noqa: F824
     __this_module.__data = data
     __this_module.__indptr = indptr
     __this_module.__indices = indices
@@ -395,7 +395,7 @@ def shortest_paths(
     if verbose:
         LOGGER.info(
             f"Computing shortest path distances (retaining "
-            f"{100*retain_fraction:.2f} percent with "
+            f"{100 * retain_fraction:.2f} percent with "
             f"max_distance={max_length}) ..."
         )
 
@@ -419,7 +419,7 @@ def shortest_paths(
         array = np.ctypeslib.as_ctypes(array)
         return sharedctypes.RawArray(array._type_, array)
 
-    global __this_module
+    global __this_module  # noqa: F824
     data = __this_module.__data = to_shared_memory(graph.A.data)
     indptr = __this_module.__indptr = to_shared_memory(graph.A.indptr)
     indices = __this_module.__indices = to_shared_memory(graph.A.indices)
