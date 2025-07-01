@@ -46,7 +46,11 @@ setup(
     install_requires=[
         "matplotlib",
         "numpy >= 2.0",
-        "pynndescent",
+        "pynndescent >= 0.51",
+        # numba is a transitive dependency of pynndescent; we only include it
+        # here in an attempt to appease uv:
+        # https://github.com/astral-sh/uv/issues/8863
+        "numba >= 0.59.0",
         "scipy",
         "torch >= 1.7.1",
         "torchvision >= 0.8.2",
