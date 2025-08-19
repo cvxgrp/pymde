@@ -57,7 +57,7 @@ def distances(data, retain_fraction=1.0, verbose=False):
         )
 
 
-def k_nearest_neighbors(data, k, max_distance=None, verbose=False):
+def k_nearest_neighbors(data, k, metric='euclidean', max_distance=None, verbose=False):
     """Compute k-nearest neighbors, given data matrix or graph.
 
     This function computes a k-nearest neighbor graph, given either
@@ -81,6 +81,9 @@ def k_nearest_neighbors(data, k, max_distance=None, verbose=False):
         A data matrix, shape ``(n_items, n_features)``, or a ``pymde.Graph``
     k: int
         The number of nearest neighbors per item
+    metric: str (optional)
+        Distance metric to be used to compute the KNN.
+        It is only used for data matrix data.
     max_distance: float (optional)
         If not ``None``, neighborhoods are restricted to have a radius
         no greater than `max_distance`.
@@ -96,7 +99,7 @@ def k_nearest_neighbors(data, k, max_distance=None, verbose=False):
 
     if _is_data_matrix(data):
         return data_matrix.k_nearest_neighbors(
-            data, k=k, max_distance=max_distance, verbose=verbose
+            data, k=k, metric=metric, max_distance=max_distance, verbose=verbose
         )
     else:
         return graph.k_nearest_neighbors(
