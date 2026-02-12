@@ -1,6 +1,6 @@
 # Examples
 
-These example notebooks show how to use PyMDE on a variety of datasets.
+These example [marimo](https://marimo.io) notebooks show how to use PyMDE on a variety of datasets.
 
 Click the links below to see rendered previews of the notebooks on [molab](https://molab.marimo.io/notebooks).
 
