@@ -9,11 +9,12 @@
 
 import marimo
 
-__generated_with = "0.19.10"
+__generated_with = "0.19.11"
 app = marimo.App()
 
 with app.setup:
     import marimo as mo
+    import matplotlib.pyplot as plt
     import pymde
     import torch
 
@@ -181,6 +182,7 @@ def _():
 @app.cell
 def _(mde):
     mde.distortions_cdf()
+    plt.gca()
     return
 
 

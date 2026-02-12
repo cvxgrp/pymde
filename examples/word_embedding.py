@@ -1,10 +1,18 @@
 # /// script
-# dependencies = ["plotly"]
+# requires-python = ">=3.14"
+# dependencies = [
+#     "marimo",
+#     "matplotlib==3.10.8",
+#     "numpy==2.3.0",
+#     "plotly",
+#     "pymde==0.2.3",
+#     "torch==2.10.0",
+# ]
 # ///
 
 import marimo
 
-__generated_with = "0.19.10"
+__generated_with = "0.19.11"
 app = marimo.App()
 
 with app.setup:
@@ -52,7 +60,7 @@ def _():
     dataset = pymde.datasets.google_scholar_interests()
 
     cooccurrence_graph = dataset.data
-    interests = dataset.attributes['interests']
+    interests = dataset.attributes["interests"]
     return cooccurrence_graph, interests
 
 
@@ -67,7 +75,7 @@ def _():
 @app.cell
 def _(cooccurrence_graph):
     plt.figure(figsize=(12, 12))
-    plt.spy(cooccurrence_graph.A, ms=0.01, color='k')
+    plt.spy(cooccurrence_graph.A, ms=0.01, color="k")
     plt.gca()
     return
 
@@ -101,7 +109,7 @@ def _(cooccurrence_graph, pca_embedding):
     A_sorted = cooccurrence_graph.A[sort_indices][:, sort_indices]
 
     plt.figure(figsize=(12, 12))
-    plt.spy(A_sorted, ms=1e-2, color='k')
+    plt.spy(A_sorted, ms=1e-2, color="k")
     plt.gca()
     return (sort_indices,)
 
@@ -133,14 +141,18 @@ def _():
 
 @app.cell
 def _(cooccurrence_graph):
-    dissimilarities = 1. / torch.log(cooccurrence_graph.weights)
-    dissimilarity_graph = pymde.Graph.from_edges(cooccurrence_graph.edges, dissimilarities)
+    dissimilarities = 1.0 / torch.log(cooccurrence_graph.weights)
+    dissimilarity_graph = pymde.Graph.from_edges(
+        cooccurrence_graph.edges, dissimilarities
+    )
     return (dissimilarity_graph,)
 
 
 @app.cell
 def _(dissimilarity_graph):
-    shortest_path_graph = pymde.preprocess.graph.shortest_paths(dissimilarity_graph, verbose=True, n_workers=6)
+    shortest_path_graph = pymde.preprocess.graph.shortest_paths(
+        dissimilarity_graph, verbose=True, n_workers=6
+    )
     return (shortest_path_graph,)
 
 
@@ -149,11 +161,15 @@ def _(interests):
     def interactive(X):
         if isinstance(X, torch.Tensor):
             X = X.cpu().numpy()
-        fig = go.Figure(data=go.Scatter(x=X[:, 0],
-                                        y=X[:, 1],
-                                        marker_size=2.,
-                                        mode='markers',
-                                        text=interests))
+        fig = go.Figure(
+            data=go.Scatter(
+                x=X[:, 0],
+                y=X[:, 1],
+                marker_size=2.0,
+                mode="markers",
+                text=interests,
+            )
+        )
         fig.show()
 
     return (interactive,)
@@ -181,7 +197,7 @@ def _(mde):
 
 @app.cell
 def _(mde):
-    mde.plot(colors=['black'])
+    mde.plot(colors=["black"])
     plt.gca()
     return
 

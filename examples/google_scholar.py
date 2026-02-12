@@ -4,14 +4,14 @@
 #     "marimo",
 #     "pymde",
 #     "matplotlib",
-#     "numpy",
+#     "pandas < 3.0",
 #     "torch",
 # ]
 # ///
 
 import marimo
 
-__generated_with = "0.19.10"
+__generated_with = "0.19.11"
 app = marimo.App()
 
 with app.setup:
@@ -101,6 +101,7 @@ def _(mde):
 @app.cell
 def _(mde):
     mde.distortions_cdf()
+    plt.gca()
     return
 
 

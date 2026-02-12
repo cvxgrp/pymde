@@ -10,7 +10,7 @@
 
 import marimo
 
-__generated_with = "0.19.10"
+__generated_with = "0.19.11"
 app = marimo.App()
 
 with app.setup:
@@ -152,11 +152,15 @@ def _():
 
 @app.cell
 def _(incremental_mde, mnist, n_train):
-    ax = pymde.plot(incremental_mde.X[n_train:], color_by=mnist.attributes['digits'][n_train:])
-    ax.set_title('New embedding vectors')
+    _ax = pymde.plot(incremental_mde.X[n_train:], color_by=mnist.attributes['digits'][n_train:])
+    _ax.set_title('New embedding vectors')
+    return
 
-    ax = pymde.plot(incremental_mde.X[:n_train], color_by=mnist.attributes['digits'][:n_train])
-    ax.set_title('Old embedding vectors')
+
+@app.cell
+def _(incremental_mde, mnist, n_train):
+    _ax = pymde.plot(incremental_mde.X[:n_train], color_by=mnist.attributes['digits'][:n_train])
+    _ax.set_title('Old embedding vectors')
     return
 
 

@@ -3,9 +3,7 @@
 # dependencies = [
 #     "marimo",
 #     "pymde",
-#     "numpy",
 #     "scipy",
-#     "torch",
 # ]
 # ///
 

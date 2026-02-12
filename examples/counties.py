@@ -2,6 +2,7 @@
 # requires-python = ">=3.10"
 # dependencies = [
 #     "marimo",
+#     "pandas",
 #     "pymde",
 # ]
 # ///
@@ -85,8 +86,13 @@ def _():
 @app.cell
 def _(dataset, embedding):
     # Rotate the embedding by some amount of degrees
-    rotated_embedding = pymde.rotate(embedding, -30.)
-    pymde.plot(rotated_embedding, color_by=dataset.attributes['democratic_fraction'], color_map="RdBu", marker_size=10)
+    rotated_embedding = pymde.rotate(embedding, -30.0)
+    pymde.plot(
+        rotated_embedding,
+        color_by=dataset.attributes["democratic_fraction"],
+        color_map="RdBu",
+        marker_size=10,
+    )
     return
 
 

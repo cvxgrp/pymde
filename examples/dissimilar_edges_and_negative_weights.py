@@ -4,8 +4,6 @@
 #     "marimo",
 #     "pymde",
 #     "matplotlib",
-#     "numpy",
-#     "torch",
 # ]
 # ///
 
