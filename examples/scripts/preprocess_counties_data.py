@@ -4,7 +4,7 @@
 #     "marimo",
 #     "pymde",
 #     "numpy",
-#     "pandas",
+#     "pandas < 3.0",
 #     "scikit-learn",
 # ]
 # ///
