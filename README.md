@@ -149,21 +149,7 @@ embedding.
 
 
 ## Example notebooks
-We have several example notebooks that show how to use PyMDE on real (and synthetic) datasets. You can open and run them directly in your browser via marimo:
-
-| Notebook | Description |
-| --- | --- |
-| [MNIST](https://marimo.app/gh/cvxgrp/pymde/main/examples/mnist.py) | Embedding and visualizing 70,000 handwritten digits |
-| [Fashion-MNIST](https://marimo.app/gh/cvxgrp/pymde/main/examples/fashion_mnist.py) | Embedding fashion article images |
-| [Google Scholar](https://marimo.app/gh/cvxgrp/pymde/main/examples/google_scholar.py) | Embedding an academic co-authorship network (44,682 authors) |
-| [Single-Cell Genomics](https://marimo.app/gh/cvxgrp/pymde/main/examples/single_cell_genomics.py) | Embedding single-cell RNA-seq data (COVID-19) |
-| [Counties](https://marimo.app/gh/cvxgrp/pymde/main/examples/counties.py) | Embedding US county demographic data |
-| [Population Genetics](https://marimo.app/gh/cvxgrp/pymde/main/examples/population_genetics.py) | Embedding genomic data from the 1000 Genomes Project |
-| [Word Embedding](https://marimo.app/gh/cvxgrp/pymde/main/examples/word_embedding.py) | Embedding academic interests from Google Scholar |
-| [Drawing Graphs](https://marimo.app/gh/cvxgrp/pymde/main/examples/drawing_graphs.py) | Laying out graphs using MDE problems |
-| [Anchor Constraints](https://marimo.app/gh/cvxgrp/pymde/main/examples/anchor_constraints.py) | Pinning embedding vectors with anchor constraints |
-| [Dissimilar Edges](https://marimo.app/gh/cvxgrp/pymde/main/examples/dissimilar_edges_and_negative_weights.py) | Effect of repulsive edges and negative weights |
-| [Updating Embeddings](https://marimo.app/gh/cvxgrp/pymde/main/examples/updating_an_existing_embedding.py) | Adding new points to an existing embedding |
+We have several [example notebooks](https://github.com/cvxgrp/pymde/tree/main/examples) that show how to use PyMDE on real (and synthetic) datasets.
 
 ## Citing
 To cite our work, please use the following BibTex entry.
