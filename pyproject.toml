@@ -30,7 +30,7 @@ classifiers = [
 ]
 dependencies = [
     "matplotlib",
-    "numpy >= 2.0",
+    "numpy >= 1.17.5",
     "pynndescent >= 0.5",
     # numba is a transitive dependency of pynndescent; included to appease uv:
     # https://github.com/astral-sh/uv/issues/8863
@@ -66,7 +66,9 @@ target-version = "py310"
 
 [tool.ruff.lint]
 extend-ignore = ["E731"]
-exclude = ["__init__.py"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401", "F403"]
 
 [tool.ruff.format]
 quote-style = "double"

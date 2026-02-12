@@ -104,18 +104,30 @@ git add "$VERSION_FILE"
 git commit -m "v$NEW_VERSION"
 
 # Push
+PUSHED=false
 if confirm "Push changes to remote?"; then
   git push origin main
   echo -e "${GREEN}Changes pushed${NC}"
+  PUSHED=true
 fi
 
 # Tag
+TAGGED=false
 if confirm "Create and push tag v$NEW_VERSION?"; then
   git tag -a "v$NEW_VERSION" -m "v$NEW_VERSION"
   git push origin "v$NEW_VERSION"
   echo -e "${GREEN}Tag pushed — release workflow will start${NC}"
+  TAGGED=true
 fi
 
-echo -e "\n${BOLD}${GREEN}Release v$NEW_VERSION complete!${NC}\n"
-echo "  Monitor: https://github.com/cvxgrp/pymde/actions"
-echo "  PyPI:    https://pypi.org/project/pymde/$NEW_VERSION/"
+if $TAGGED; then
+  echo -e "\n${BOLD}${GREEN}Release v$NEW_VERSION complete!${NC}\n"
+  echo "  Monitor: https://github.com/cvxgrp/pymde/actions"
+  echo "  PyPI:    https://pypi.org/project/pymde/$NEW_VERSION/"
+else
+  echo -e "\n${YELLOW}Version bumped to $NEW_VERSION locally but not released.${NC}"
+  if ! $PUSHED; then
+    echo "  Run: git push origin main"
+  fi
+  echo "  Run: git tag -a v$NEW_VERSION -m 'v$NEW_VERSION' && git push origin v$NEW_VERSION"
+fi
