@@ -1,6 +1,7 @@
 # /// script
 # requires-python = ">=3.10"
 # dependencies = [
+#     "ipython==9.10.0",
 #     "marimo",
 #     "pymde",
 #     "scipy",
@@ -9,7 +10,7 @@
 
 import marimo
 
-__generated_with = "0.19.10"
+__generated_with = "0.19.11"
 app = marimo.App()
 
 with app.setup:
@@ -104,7 +105,13 @@ def _():
 @app.cell
 def _(embedding_dim, n_items):
     _edges = pymde.all_edges(n_items)
-    mde = pymde.MDE(n_items, embedding_dim=embedding_dim, edges=_edges, distortion_function=pymde.penalties.Cubic(weights=1.0), constraint=pymde.Standardized())
+    mde = pymde.MDE(
+        n_items,
+        embedding_dim=embedding_dim,
+        edges=_edges,
+        distortion_function=pymde.penalties.Cubic(weights=1.0),
+        constraint=pymde.Standardized(),
+    )
     mde.embed()
     mde.plot(edges=_edges)
     return
@@ -120,9 +127,16 @@ def _():
 
 @app.cell
 def _(embedding_dim, n_items):
-    chain_graph = pymde.Graph.from_edges(torch.tensor([(i, i + 1) for i in range(n_items - 1)]))
+    chain_graph = pymde.Graph.from_edges(
+        torch.tensor([(i, i + 1) for i in range(n_items - 1)])
+    )
     _shortest_paths_graph = pymde.preprocess.graph.shortest_paths(chain_graph)
-    mde_1 = pymde.MDE(n_items, embedding_dim, _shortest_paths_graph.edges, pymde.losses.WeightedQuadratic(deviations=_shortest_paths_graph.distances))
+    mde_1 = pymde.MDE(
+        n_items,
+        embedding_dim,
+        _shortest_paths_graph.edges,
+        pymde.losses.WeightedQuadratic(deviations=_shortest_paths_graph.distances),
+    )
     mde_1.embed()
     mde_1.plot(edges=chain_graph.edges)
     return
@@ -138,9 +152,16 @@ def _():
 
 @app.cell
 def _(embedding_dim, n_items):
-    cycle_graph = pymde.Graph.from_edges(torch.tensor([(i, i + 1) for i in range(n_items - 1)] + [(n_items - 1, 0)]))
+    cycle_graph = pymde.Graph.from_edges(
+        torch.tensor([(i, i + 1) for i in range(n_items - 1)] + [(n_items - 1, 0)])
+    )
     _shortest_paths_graph = pymde.preprocess.graph.shortest_paths(cycle_graph)
-    mde_2 = pymde.MDE(n_items, embedding_dim, _shortest_paths_graph.edges, pymde.losses.WeightedQuadratic(_shortest_paths_graph.distances))
+    mde_2 = pymde.MDE(
+        n_items,
+        embedding_dim,
+        _shortest_paths_graph.edges,
+        pymde.losses.WeightedQuadratic(_shortest_paths_graph.distances),
+    )
     mde_2.embed()
     mde_2.plot(edges=cycle_graph.edges)
     return
@@ -156,9 +177,16 @@ def _():
 
 @app.cell
 def _(embedding_dim, n_items):
-    star_graph = pymde.Graph.from_edges(torch.tensor([(0, i) for i in range(1, n_items)]))
+    star_graph = pymde.Graph.from_edges(
+        torch.tensor([(0, i) for i in range(1, n_items)])
+    )
     _shortest_paths_graph = pymde.preprocess.graph.shortest_paths(star_graph)
-    mde_3 = pymde.MDE(n_items, embedding_dim, _shortest_paths_graph.edges, pymde.losses.WeightedQuadratic(_shortest_paths_graph.distances))
+    mde_3 = pymde.MDE(
+        n_items,
+        embedding_dim,
+        _shortest_paths_graph.edges,
+        pymde.losses.WeightedQuadratic(_shortest_paths_graph.distances),
+    )
     mde_3.embed()
     mde_3.plot(edges=star_graph.edges)
     return
@@ -188,7 +216,12 @@ def _(embedding_dim, n_items):
             stack.append(c2)
     tree = pymde.Graph.from_edges(torch.tensor(_edges))
     _shortest_paths_graph = pymde.preprocess.graph.shortest_paths(tree)
-    mde_4 = pymde.MDE(n_items, embedding_dim, _shortest_paths_graph.edges, pymde.losses.WeightedQuadratic(_shortest_paths_graph.distances))
+    mde_4 = pymde.MDE(
+        n_items,
+        embedding_dim,
+        _shortest_paths_graph.edges,
+        pymde.losses.WeightedQuadratic(_shortest_paths_graph.distances),
+    )
     mde_4.embed(snapshot_every=1, max_iter=20)
     mde_4.plot(edges=tree.edges)
     return mde_4, tree
@@ -204,7 +237,8 @@ def _():
 
 @app.cell
 def _(mde_4, tree):
-    mde_4.play(edges=tree.edges, fps=15.0)
+    mde_4.play(edges=tree.edges, fps=15.0, savepath="/tmp/graph.gif")
+    mo.image("/tmp/graph.gif")
     return
 
 

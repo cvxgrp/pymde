@@ -160,7 +160,8 @@ def _():
 
 @app.cell
 def _(edges, mde):
-    mde.play(edges=edges)
+    mde.play(edges=edges, savepath="/tmp/anchor.gif")
+    mo.image("/tmp/anchor.gif")
     return
 
 
