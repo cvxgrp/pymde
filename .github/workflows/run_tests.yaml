@@ -12,6 +12,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/ruff-action@v3
+        with:
+          src: pymde/
 
   test:
     name: Test (${{ matrix.os }}, Python ${{ matrix.python-version }})
