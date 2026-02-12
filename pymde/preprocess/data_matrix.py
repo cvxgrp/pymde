@@ -36,8 +36,7 @@ def distances(data, retain_fraction=1.0, verbose=False):
         data, (np.ndarray, torch.Tensor)
     ):
         raise ValueError(
-            "`data` must be a scipy.sparse matrix, NumPy array, "
-            "or torch tensor"
+            "`data` must be a scipy.sparse matrix, NumPy array, or torch tensor"
         )
 
     n_items = int(data.shape[0])

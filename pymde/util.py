@@ -1,4 +1,5 @@
 """Internal utilities."""
+
 import functools
 import numbers
 

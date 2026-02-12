@@ -4,7 +4,6 @@ L-BFGS, but with constraints.
 Based on the official PyTorch implementation.
 """
 
-
 import numpy as np
 import torch
 from functools import reduce
@@ -318,8 +317,7 @@ class LBFGS(torch.optim.Optimizer):
 
         if len(self.param_groups) != 1:
             raise ValueError(
-                "LBFGS doesn't support per-parameter options "
-                "(parameter groups)"
+                "LBFGS doesn't support per-parameter options (parameter groups)"
             )
 
         self._params = self.param_groups[0]["params"]

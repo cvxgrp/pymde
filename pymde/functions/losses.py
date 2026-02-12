@@ -53,6 +53,7 @@ prints
 
     torch.tensor([1., 9., 1.])
 """
+
 from pymde import util
 from pymde.functions.function import Function
 import torch

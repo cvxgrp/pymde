@@ -158,7 +158,7 @@ def _plot_3d(
     shadowcolor = "gainsboro"
 
     fig = plt.figure(figsize=figsize)
-    ax = fig.add_subplot(projection='3d')
+    ax = fig.add_subplot(projection="3d")
 
     x, y, z = X[:, 0], X[:, 1], X[:, 2]
 

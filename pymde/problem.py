@@ -3,7 +3,6 @@
 This module defines the MDE class, which represents an MDE problem.
 """
 
-
 import copy
 import glob
 import logging

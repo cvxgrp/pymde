@@ -104,6 +104,7 @@ prints
 
     torch.tensor([4., 2., 48.])
 """
+
 from pymde import util
 from pymde.functions.function import Function
 import torch
@@ -155,9 +156,7 @@ class _ClippedQuadratic(Function):
         self.threshold = threshold
 
     def forward(self, distances):
-        return self.weights * torch.min(
-            distances**2, (self.threshold + 1) ** 2
-        )
+        return self.weights * torch.min(distances**2, (self.threshold + 1) ** 2)
 
 
 class Cubic(Function):
