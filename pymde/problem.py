@@ -662,7 +662,7 @@ class MDE(torch.nn.Module):
         The ``embed`` method must be called sometime before calling this method,
         with a non-None value for the ``snapshot_every`` keyword argument.
 
-        If you want to save the GIF (instead of just viewing it in a Jupyter
+        If you want to save the GIF (instead of just viewing it in a marimo
         notebook), make sure to supply a path via the ``savepath`` keyword
         argument.
 
