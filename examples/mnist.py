@@ -49,21 +49,27 @@ def _():
 @app.cell
 def _(mnist):
     _embedding = pymde.preserve_neighbors(mnist.data).embed(verbose=True)
-    pymde.plot(_embedding, color_by=mnist.attributes['digits'])
+    pymde.plot(_embedding, color_by=mnist.attributes["digits"])
     return
 
 
 @app.cell
 def _(mnist):
-    _embedding = pymde.preserve_neighbors(mnist.data, constraint=pymde.Standardized()).embed(verbose=True)
-    pymde.plot(_embedding, color_by=mnist.attributes['digits'])
+    _embedding = pymde.preserve_neighbors(
+        mnist.data, constraint=pymde.Standardized()
+    ).embed(verbose=True)
+    pymde.plot(_embedding, color_by=mnist.attributes["digits"])
     return
 
 
 @app.cell
 def _(mnist):
-    _embedding = pymde.preserve_neighbors(mnist.data, attractive_penalty=pymde.penalties.Quadratic, repulsive_penalty=None).embed(verbose=True)
-    pymde.plot(_embedding, color_by=mnist.attributes['digits'])
+    _embedding = pymde.preserve_neighbors(
+        mnist.data,
+        attractive_penalty=pymde.penalties.Quadratic,
+        repulsive_penalty=None,
+    ).embed(verbose=True)
+    pymde.plot(_embedding, color_by=mnist.attributes["digits"])
     return
 
 
@@ -77,7 +83,9 @@ def _():
 
 @app.cell
 def _(mnist):
-    knn_graph = pymde.preprocess.k_nearest_neighbors(mnist.data, k=15, verbose=True)
+    knn_graph = pymde.preprocess.k_nearest_neighbors(
+        mnist.data, k=15, verbose=True
+    )
     return (knn_graph,)
 
 
@@ -106,7 +114,8 @@ def _(knn_graph, mnist):
         embedding_dim=2,
         edges=knn_graph.edges,
         distortion_function=pymde.penalties.Quadratic(knn_graph.weights),
-        constraint=pymde.Standardized())
+        constraint=pymde.Standardized(),
+    )
 
     quadratic_mde.embed(verbose=True)
     return (quadratic_mde,)
@@ -126,7 +135,7 @@ def _():
 
 @app.cell
 def _(mnist, quadratic_mde):
-    quadratic_mde.plot(color_by=mnist.attributes['digits'])
+    quadratic_mde.plot(color_by=mnist.attributes["digits"])
     return
 
 
@@ -145,10 +154,11 @@ def _(knn_graph, mnist):
         embedding_dim=3,
         edges=knn_graph.edges,
         distortion_function=pymde.penalties.Quadratic(knn_graph.weights),
-        constraint=pymde.Standardized())
+        constraint=pymde.Standardized(),
+    )
 
     quadratic_mde_3d.embed(verbose=True)
-    quadratic_mde_3d.plot(color_by=mnist.attributes['digits'])
+    quadratic_mde_3d.plot(color_by=mnist.attributes["digits"])
     return
 
 
@@ -191,8 +201,9 @@ def _(mnist, quadratic_mde):
     pairs, distortions = quadratic_mde.high_distortion_pairs()
     outliers = pairs[:10]
 
+
     def plot_pairs(pairs):
-        fig, axs = plt.subplots(2, pairs.shape[0], figsize=(15.0, 3.))
+        fig, axs = plt.subplots(2, pairs.shape[0], figsize=(15.0, 3.0))
         for pair_index in range(pairs.shape[0]):
             i = pairs[pair_index][0]
             j = pairs[pair_index][1]
@@ -205,6 +216,7 @@ def _(mnist, quadratic_mde):
             axs[1][pair_index].set_xticks([])
             axs[1][pair_index].set_yticks([])
         plt.tight_layout()
+
 
     plot_pairs(outliers)
     return pairs, plot_pairs
@@ -252,10 +264,15 @@ def _(knn_graph, mnist):
     similar_edges = knn_graph.edges
 
     dissimilar_edges = pymde.preprocess.dissimilar_edges(
-        n_items=mnist.data.shape[0], num_edges=similar_edges.shape[0], similar_edges=similar_edges)
+        n_items=mnist.data.shape[0],
+        num_edges=similar_edges.shape[0],
+        similar_edges=similar_edges,
+    )
 
     edges = torch.cat([similar_edges, dissimilar_edges])
-    weights = torch.cat([knn_graph.weights, -1.*torch.ones(dissimilar_edges.shape[0])])
+    weights = torch.cat(
+        [knn_graph.weights, -1.0 * torch.ones(dissimilar_edges.shape[0])]
+    )
 
     plt.hist(weights.numpy())
     plt.gca()
@@ -298,7 +315,7 @@ def _(edges, f, mnist, quadratic_mde):
         constraint=pymde.Standardized(),
     )
     std_mde.embed(X=quadratic_mde.X, max_iter=400, verbose=True)
-    std_mde.plot(color_by=mnist.attributes['digits'])
+    std_mde.plot(color_by=mnist.attributes["digits"])
     return
 
 
@@ -319,7 +336,7 @@ def _(edges, f, mnist, quadratic_mde):
         distortion_function=f,
     )
     unconstrained_mde.embed(X=quadratic_mde.X, verbose=True)
-    unconstrained_mde.plot(color_by=mnist.attributes['digits'])
+    unconstrained_mde.plot(color_by=mnist.attributes["digits"])
     return
 
 
