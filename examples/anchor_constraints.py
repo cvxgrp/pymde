@@ -43,14 +43,14 @@ def _():
 @app.cell
 def _():
     depth = 9
-    n_items = 2**(depth + 1) - 1
+    n_items = 2 ** (depth + 1) - 1
 
     edges = []
     stack = [0]
     while stack:
         root = stack.pop()
-        first_child = root*2 + 1
-        second_child = root*2 + 2
+        first_child = root * 2 + 1
+        second_child = root * 2 + 2
         if first_child < n_items:
             edges.append((root, first_child))
             stack.append(first_child)
@@ -106,7 +106,7 @@ def _(leaves):
     radius = 20
 
     # pin the root to be at (0, 0), and the leaves to be spaced uniformly on a circle
-    angles = torch.linspace(0, 2*math.pi, leaves.numel() + 1)[1:]
+    angles = torch.linspace(0, 2 * math.pi, leaves.numel() + 1)[1:]
     positions = radius * torch.stack([torch.sin(angles), torch.cos(angles)], dim=1)
     positions
     return (positions,)
@@ -140,7 +140,9 @@ def _(anchor_constraint, edges, n_items, shortest_paths_graph):
         n_items,
         embedding_dim=2,
         edges=shortest_paths_graph.edges,
-        distortion_function=pymde.losses.WeightedQuadratic(shortest_paths_graph.distances),
+        distortion_function=pymde.losses.WeightedQuadratic(
+            shortest_paths_graph.distances
+        ),
         constraint=anchor_constraint,
     )
     mde.embed(snapshot_every=1, verbose=True)
