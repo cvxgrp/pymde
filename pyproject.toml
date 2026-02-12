@@ -1,19 +1,75 @@
 [build-system]
 requires = [
-  # NumPy dependencies copied from SciPy:
-  # https://github.com/scipy/scipy/blob/55cae814e23208354bf16b84be47b5070b4c1c89/pyproject.toml#L25-L31
-  # numpy requirement for wheel builds for distribution on PyPI - building
-  # against 2.x yields wheels that are also compatible with numpy 1.x at
-  # runtime.
-  # Note that building against numpy 1.x works fine too - users and
-  # redistributors can do this by installing the numpy version they like and
-  # disabling build isolation.
-  "numpy>=2.0.0",
-  "scipy >= 1.6",
-  "setuptools",
-  "wheel",
-  "cython",
+    "setuptools >= 68.0",
+    "wheel",
+    "cython >= 3.0",
+    # Building against numpy 2.x yields wheels also compatible with 1.x at runtime
+    "numpy >= 2.0.0",
+    "scipy >= 1.6",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pymde"
+dynamic = ["version"]
+description = "Minimum-Distortion Embedding"
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.10"
+authors = [
+    { name = "Akshay Agrawal", email = "akshayka@cs.stanford.edu" },
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering",
+]
+dependencies = [
+    "matplotlib",
+    "numpy >= 2.0",
+    "pynndescent >= 0.5",
+    # numba is a transitive dependency of pynndescent; included to appease uv:
+    # https://github.com/astral-sh/uv/issues/8863
+    "numba >= 0.59.0",
+    "scipy",
+    "torch >= 1.7.1",
+    "torchvision >= 0.8.2",
+    # torchvision requires requests but does not list it as a dependency
+    "requests",
 ]
 
-[tool.black]
+[project.urls]
+Homepage = "https://pymde.org"
+Repository = "https://github.com/cvxgrp/pymde"
+Issues = "https://github.com/cvxgrp/pymde/issues"
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "ruff",
+    "cython >= 3.0",
+]
+
+[tool.setuptools]
+packages = { find = {} }
+
+[tool.setuptools.dynamic]
+version = { attr = "pymde.__version__" }
+
+[tool.ruff]
 line-length = 80
+target-version = "py310"
+
+[tool.ruff.lint]
+extend-ignore = ["E731"]
+exclude = ["__init__.py"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.pytest.ini_options]
+testpaths = ["pymde"]

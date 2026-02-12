@@ -90,6 +90,12 @@ ENV/
 env.bak/
 venv.bak/
 
+# Ruff
+.ruff_cache/
+
+# Cython generated
+pymde/preprocess/_graph.c
+
 # editors
 *.swp
 
