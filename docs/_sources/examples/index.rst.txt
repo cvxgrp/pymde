@@ -11,17 +11,20 @@ datasets. You can read these notebooks, or better yet, execute them and
 experiment by modifying the cells' contents and seeing what happens.
 
 You can run the notebooks by either downloading them locally and starting a
-Jupyter server, or by opening them in Google Colab.
+marimo server, or by opening them in `molab <https://molab.marimo.io/notebooks>`_.
 
 .. _example_mnist:
 
 MNIST
 -----
 We recommend starting with our MNIST notebook, which highlights many of the
-things you can do in PyMDE, using the MNIST dataset as a case study. 
+things you can do in PyMDE, using the MNIST dataset as a case study.
 
-- `MNIST notebook <https://github.com/cvxgrp/pymde/blob/main/examples/mnist.ipynb>`_
+- `MNIST notebook <https://github.com/cvxgrp/pymde/blob/main/examples/mnist.py>`_
 
+.. image:: https://marimo.io/molab-shield.svg
+   :target: https://molab.marimo.io/github/cvxgrp/pymde/blob/main/examples/mnist.py
+   :alt: Open in molab
 
 In this notebook, you'll see how to use the ``pymde.preserve_neighbors``
 function to embed vector data, how to create MDE problems for preserving
@@ -36,7 +39,11 @@ Fashion MNIST
 The Fashion MNIST notebook is analogous to the MNIST notebook, except
 it uses the Fashion MNIST dataset.
 
-- `Fashion MNIST notebook <https://github.com/cvxgrp/pymde/blob/main/examples/fashion_mnist.ipynb>`_
+- `Fashion MNIST notebook <https://github.com/cvxgrp/pymde/blob/main/examples/fashion_mnist.py>`_
+
+.. image:: https://marimo.io/molab-shield.svg
+   :target: https://molab.marimo.io/github/cvxgrp/pymde/blob/main/examples/fashion_mnist.py
+   :alt: Open in molab
 
 .. _example_scrna:
 
@@ -48,7 +55,11 @@ cells taken from human patients with severe COVID-19 infections (and also from
 healthy controls). We'll see that similar cells are placed near each other in
 the embedding, and cells from healthy and sick are also somewhat separated.
 
-- `Single-cell genomics notebook <https://github.com/cvxgrp/pymde/blob/main/examples/single_cell_genomics.ipynb>`_
+- `Single-cell genomics notebook <https://github.com/cvxgrp/pymde/blob/main/examples/single_cell_genomics.py>`_
+
+.. image:: https://marimo.io/molab-shield.svg
+   :target: https://molab.marimo.io/github/cvxgrp/pymde/blob/main/examples/single_cell_genomics.py
+   :alt: Open in molab
 
 .. _example_google_scholar:
 
@@ -63,14 +74,22 @@ This example embeds a graph with roughly 40,000 nodes and (after preprocessing)
 80 million edges. If you have a GPU, computing the embedding shouldn't take
 much longer than a minute, but it will take longer to compute on a CPU.
 
-- `Google Scholar notebook <https://github.com/cvxgrp/pymde/blob/main/examples/google_scholar.ipynb>`_ 
+- `Google Scholar notebook <https://github.com/cvxgrp/pymde/blob/main/examples/google_scholar.py>`_
+
+.. image:: https://marimo.io/molab-shield.svg
+   :target: https://molab.marimo.io/github/cvxgrp/pymde/blob/main/examples/google_scholar.py
+   :alt: Open in molab
 
 Word Embedding
 --------------
 This notebook shows how to make basic word embeddings. The words being embedded
 are the 5000 most popular academic interests on Google Scholar.
 
-- `Word embedding notebook <https://github.com/cvxgrp/pymde/blob/main/examples/word_embedding.ipynb>`_ 
+- `Word embedding notebook <https://github.com/cvxgrp/pymde/blob/main/examples/word_embedding.py>`_
+
+.. image:: https://marimo.io/molab-shield.svg
+   :target: https://molab.marimo.io/github/cvxgrp/pymde/blob/main/examples/word_embedding.py
+   :alt: Open in molab
 
 
 Population Genetics
@@ -78,7 +97,11 @@ Population Genetics
 The population genetics notebook embeds genomic data of individuals thought
 to be of European ancestry, and recovers what appears to be a map of Europe.
 
-- `Population genetics notebook <https://github.com/cvxgrp/pymde/blob/main/examples/population_genetics.ipynb>`_
+- `Population genetics notebook <https://github.com/cvxgrp/pymde/blob/main/examples/population_genetics.py>`_
+
+.. image:: https://marimo.io/molab-shield.svg
+   :target: https://molab.marimo.io/github/cvxgrp/pymde/blob/main/examples/population_genetics.py
+   :alt: Open in molab
 
 US Counties
 -----------
@@ -89,7 +112,11 @@ election (voting data was not used in computing the embedding). Moreover,
 the resulting embedding vaguely resembles a map of the US (though no geographic
 data was used in computing the embedding).
 
-- `US counties notebook <https://github.com/cvxgrp/pymde/blob/main/examples/counties.ipynb>`_
+- `US counties notebook <https://github.com/cvxgrp/pymde/blob/main/examples/counties.py>`_
+
+.. image:: https://marimo.io/molab-shield.svg
+   :target: https://molab.marimo.io/github/cvxgrp/pymde/blob/main/examples/counties.py
+   :alt: Open in molab
 
 Anchor Constraints
 ------------------
@@ -102,7 +129,11 @@ some nodes pinned in place).
 This notebook gives an example of how to use an anchor constraint, using
 graph drawing as an example.
 
-- `Anchor constraint notebook <https://github.com/cvxgrp/pymde/blob/main/examples/anchor_constraints.ipynb>`_
+- `Anchor constraint notebook <https://github.com/cvxgrp/pymde/blob/main/examples/anchor_constraints.py>`_
+
+.. image:: https://marimo.io/molab-shield.svg
+   :target: https://molab.marimo.io/github/cvxgrp/pymde/blob/main/examples/anchor_constraints.py
+   :alt: Open in molab
 
 Updating Embeddings
 -------------------
@@ -113,7 +144,11 @@ This notebook gives an example of how to do this, using MNIST as an example.
 We first embed half the images in the MNIST dataset. Then we augment
 the embedding with vectors for the remaining images.
 
-- `Updating embedding notebook <https://github.com/cvxgrp/pymde/blob/main/examples/updating_an_existing_embedding.ipynb>`_
+- `Updating embedding notebook <https://github.com/cvxgrp/pymde/blob/main/examples/updating_an_existing_embedding.py>`_
+
+.. image:: https://marimo.io/molab-shield.svg
+   :target: https://molab.marimo.io/github/cvxgrp/pymde/blob/main/examples/updating_an_existing_embedding.py
+   :alt: Open in molab
 
 Drawing Graphs
 --------------
@@ -125,7 +160,11 @@ choosing your own distortion functions and constraints.
 This notebook shows various ways of drawing graphs with PyMDE. It also
 introduces the ``pymde.Graph`` class.
 
-- `Drawing graphs notebook <https://github.com/cvxgrp/pymde/blob/main/examples/drawing_graphs.ipynb>`_
+- `Drawing graphs notebook <https://github.com/cvxgrp/pymde/blob/main/examples/drawing_graphs.py>`_
+
+.. image:: https://marimo.io/molab-shield.svg
+   :target: https://molab.marimo.io/github/cvxgrp/pymde/blob/main/examples/drawing_graphs.py
+   :alt: Open in molab
 
 Dissimilar Edges and Negative Weights
 -------------------------------------
@@ -137,7 +176,10 @@ choices do lead to different embeddings.
 
 This notebook explores the effect these hyper-parameters have on the embedding.
 
-- `Dissimilar edges and negative weights notebook <https://github.com/cvxgrp/pymde/blob/main/examples/dissimilar_edges_and_negative_weights.ipynb>`_
+- `Dissimilar edges and negative weights notebook <https://github.com/cvxgrp/pymde/blob/main/examples/dissimilar_edges_and_negative_weights.py>`_
+
+.. image:: https://marimo.io/molab-shield.svg
+   :target: https://molab.marimo.io/github/cvxgrp/pymde/blob/main/examples/dissimilar_edges_and_negative_weights.py
+   :alt: Open in molab
 
 .. _example_graphs:
-
