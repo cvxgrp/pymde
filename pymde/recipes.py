@@ -1,5 +1,5 @@
-"""Recipes for constructing MDE problems.
-"""
+"""Recipes for constructing MDE problems."""
+
 import numpy as np
 import scipy.sparse
 import torch

@@ -1,5 +1,5 @@
-"""Miscellenous preprocessing utilities.
-"""
+"""Miscellenous preprocessing utilities."""
+
 import numpy as np
 import scipy.sparse as sp
 import torch

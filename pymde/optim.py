@@ -148,7 +148,7 @@ def lbfgs(
 
         norm_grad = grad_norms[-1]
         if verbose and (
-            ((iteration % print_every == 0)) or (iteration == max_iter - 1)
+            (iteration % print_every == 0) or (iteration == max_iter - 1)
         ):
             logger.info(
                 "iteration %0*d | distortion %6f | residual norm %g | "

@@ -2,6 +2,7 @@
 
 `Function` is just a torch.nn.Module that has a device property.
 """
+
 from pymde import util
 import torch
 
