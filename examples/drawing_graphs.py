@@ -3,8 +3,10 @@
 # dependencies = [
 #     "ipython==9.10.0",
 #     "marimo",
-#     "pymde",
-#     "scipy",
+#     "numpy==2.3.5",
+#     "pymde==0.2.3",
+#     "scipy==1.17.0",
+#     "torch==2.10.0",
 # ]
 # ///
 
@@ -113,7 +115,7 @@ def _(embedding_dim, n_items):
         constraint=pymde.Standardized(),
     )
     mde.embed()
-    mde.plot(edges=_edges)
+    mde.plot(edges=_edges, background_color='white')
     return
 
 
@@ -138,7 +140,7 @@ def _(embedding_dim, n_items):
         pymde.losses.WeightedQuadratic(deviations=_shortest_paths_graph.distances),
     )
     mde_1.embed()
-    mde_1.plot(edges=chain_graph.edges)
+    mde_1.plot(edges=chain_graph.edges, background_color="white")
     return
 
 
@@ -163,7 +165,7 @@ def _(embedding_dim, n_items):
         pymde.losses.WeightedQuadratic(_shortest_paths_graph.distances),
     )
     mde_2.embed()
-    mde_2.plot(edges=cycle_graph.edges)
+    mde_2.plot(edges=cycle_graph.edges, background_color="white")
     return
 
 
@@ -188,7 +190,7 @@ def _(embedding_dim, n_items):
         pymde.losses.WeightedQuadratic(_shortest_paths_graph.distances),
     )
     mde_3.embed()
-    mde_3.plot(edges=star_graph.edges)
+    mde_3.plot(edges=star_graph.edges, background_color="white")
     return
 
 
@@ -223,7 +225,7 @@ def _(embedding_dim, n_items):
         pymde.losses.WeightedQuadratic(_shortest_paths_graph.distances),
     )
     mde_4.embed(snapshot_every=1, max_iter=20)
-    mde_4.plot(edges=tree.edges)
+    mde_4.plot(edges=tree.edges, background_color='white')
     return mde_4, tree
 
 

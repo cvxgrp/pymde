@@ -1,23 +1,65 @@
 # /// script
-# requires-python = ">=3.10"
+# requires-python = ">=3.12"
 # dependencies = [
+#     "altair==6.0.0",
 #     "marimo",
-#     "pymde",
-#     "matplotlib",
-#     "torch",
+#     "matplotlib==3.10.8",
+#     "pandas==3.0.0",
+#     "pymde==0.2.3",
+#     "torch==2.10.0",
+#     "wigglystuff==0.2.27",
 # ]
 # ///
 
 import marimo
 
-__generated_with = "0.19.10"
-app = marimo.App()
+__generated_with = "0.19.11"
+app = marimo.App(
+    width="medium",
+    css_file="/usr/local/_marimo/custom.css",
+    auto_download=["html"],
+)
 
 with app.setup:
     import matplotlib.pyplot as plt
-    import marimo as mo
+    import pandas as pd
     import pymde
     import torch
+    from wigglystuff import ChartSelect
+
+    import marimo as mo
+
+    mnist = pymde.datasets.MNIST()
+
+
+@app.function
+def compute_embedding(embedding_dim, constraint, algorithm):
+    mo.output.append(
+        mo.md("Your embedding is being computed ... hang tight!").callout(kind="warn")
+    )
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    if algorithm == "log1p":
+        X = pymde.preserve_neighbors(
+            mnist.data,
+            embedding_dim=embedding_dim,
+            constraint=constraint,
+            device=device,
+            verbose=True,
+        ).embed(verbose=True)
+    elif algorithm == "umap":
+        X = pymde.preserve_neighbors(
+            mnist.data,
+            embedding_dim=embedding_dim,
+            constraint=pymde.Centered(),
+            device=device,
+            verbose=True,
+        ).embed(verbose=True)
+    elif algorithm == "pca":
+        X = pymde.pca(mnist.data, 2)
+    else:
+        X = pymde.laplacian_embedding(mnist.data, embedding_dim=2).embed(verbose=True)
+    mo.output.clear()
+    return X
 
 
 @app.cell(hide_code=True)
@@ -34,8 +76,120 @@ def _():
 
 @app.cell
 def _():
-    mnist = pymde.datasets.MNIST()
-    return (mnist,)
+    algorithm = mo.ui.dropdown(["log1p", "pca", "laplacian", "umap"], value="log1p")
+    algorithm
+    return (algorithm,)
+
+
+@app.cell
+def _(algorithm, constraint, embedding_dimension):
+    with mo.persistent_cache("embedding"):
+        embedding = compute_embedding(embedding_dimension, constraint, algorithm.value)
+
+    embedding = pymde.rotate(embedding, 40) * torch.tensor([-1, -1])
+    return (embedding,)
+
+
+@app.cell(hide_code=True)
+def _():
+    mo.md("""
+    Here's an **embedding of MNIST**: each point represents a digit,
+    with similar digits close to each other.
+
+    **Try making a selection with your mouse!**
+    """)
+    return
+
+
+@app.cell
+def _(embedding):
+    ax = pymde.plot(embedding, color_by=mnist.attributes["digits"])
+    plt.tight_layout()
+    fig = mo.ui.anywidget(ChartSelect(ax.figure))
+    fig
+    return (fig,)
+
+
+@app.cell
+def _(embedding, fig):
+    selected_indices = fig.get_indices(embedding[:, 0], embedding[:, 1])
+    return (selected_indices,)
+
+
+@app.cell(hide_code=True)
+def _(selected_indices, table):
+    # mo.stop() prevents this cell from running if the chart has
+    # no selection
+    mo.stop(not selected_indices.size)
+
+    # show 10 images: either the first 10 from the selection, or the first ten
+    # selected in the table
+    selected_images = (
+        show_images(list(selected_indices))
+        if not len(table.value)
+        else show_images(list(table.value["index"]))
+    )
+
+    mo.md(
+        f"""
+        **Here's a preview of the images you've selected**:
+
+        {mo.as_html(selected_images)}
+
+        Here's all the data you've selected.
+
+        {table}
+        """
+    )
+    return
+
+
+@app.cell
+def _(df, selected_indices):
+    table = mo.ui.table(df.iloc[selected_indices])
+    return (table,)
+
+
+@app.cell
+def _():
+    embedding_dimension = 2
+    constraint = pymde.Standardized()
+    return constraint, embedding_dimension
+
+
+@app.cell
+def _(embedding):
+    indices = torch.randperm(mnist.data.shape[0]).numpy()
+    embedding_sampled = embedding.numpy()[indices]
+
+    df = pd.DataFrame(
+        {
+            "index": indices,
+            "x": embedding_sampled[:, 0],
+            "y": embedding_sampled[:, 1],
+            "digit": mnist.attributes["digits"][indices],
+        }
+    )
+    return (df,)
+
+
+@app.function
+def show_images(indices, max_images=10):
+    indices = indices[:max_images]
+    images = mnist.data.reshape((-1, 28, 28))[indices]
+    fig, axes = plt.subplots(1, len(indices))
+    fig.set_size_inches(12.5, 1.5)
+    if len(indices) > 1:
+        for im, ax in zip(images, axes.flat):
+            ax.imshow(im, cmap="gray")
+            ax.set_yticks([])
+            ax.set_xticks([])
+    else:
+        axes.imshow(images[0], cmap="gray")
+        axes.set_yticks([])
+        axes.set_xticks([])
+    plt.tight_layout()
+    return fig
 
 
 @app.cell(hide_code=True)
@@ -47,14 +201,14 @@ def _():
 
 
 @app.cell
-def _(mnist):
+def _():
     _embedding = pymde.preserve_neighbors(mnist.data).embed(verbose=True)
     pymde.plot(_embedding, color_by=mnist.attributes["digits"])
     return
 
 
 @app.cell
-def _(mnist):
+def _():
     _embedding = pymde.preserve_neighbors(
         mnist.data, constraint=pymde.Standardized()
     ).embed(verbose=True)
@@ -63,7 +217,7 @@ def _(mnist):
 
 
 @app.cell
-def _(mnist):
+def _():
     _embedding = pymde.preserve_neighbors(
         mnist.data,
         attractive_penalty=pymde.penalties.Quadratic,
@@ -82,7 +236,7 @@ def _():
 
 
 @app.cell
-def _(mnist):
+def _():
     knn_graph = pymde.preprocess.k_nearest_neighbors(
         mnist.data, k=15, verbose=True
     )
@@ -108,7 +262,7 @@ def _():
 
 
 @app.cell
-def _(knn_graph, mnist):
+def _(knn_graph):
     quadratic_mde = pymde.MDE(
         n_items=mnist.data.shape[0],
         embedding_dim=2,
@@ -134,7 +288,7 @@ def _():
 
 
 @app.cell
-def _(mnist, quadratic_mde):
+def _(quadratic_mde):
     quadratic_mde.plot(color_by=mnist.attributes["digits"])
     return
 
@@ -148,7 +302,7 @@ def _():
 
 
 @app.cell
-def _(knn_graph, mnist):
+def _(knn_graph):
     quadratic_mde_3d = pymde.MDE(
         n_items=mnist.data.shape[0],
         embedding_dim=3,
@@ -197,7 +351,7 @@ def _():
 
 
 @app.cell
-def _(mnist, quadratic_mde):
+def _(quadratic_mde):
     pairs, distortions = quadratic_mde.high_distortion_pairs()
     outliers = pairs[:10]
 
@@ -260,7 +414,7 @@ def _():
 
 
 @app.cell
-def _(knn_graph, mnist):
+def _(knn_graph):
     similar_edges = knn_graph.edges
 
     dissimilar_edges = pymde.preprocess.dissimilar_edges(
@@ -306,7 +460,7 @@ def _():
 
 
 @app.cell
-def _(edges, f, mnist, quadratic_mde):
+def _(edges, f, quadratic_mde):
     std_mde = pymde.MDE(
         n_items=mnist.data.shape[0],
         embedding_dim=2,
@@ -328,7 +482,7 @@ def _():
 
 
 @app.cell
-def _(edges, f, mnist, quadratic_mde):
+def _(edges, f, quadratic_mde):
     unconstrained_mde = pymde.MDE(
         n_items=mnist.data.shape[0],
         embedding_dim=2,
