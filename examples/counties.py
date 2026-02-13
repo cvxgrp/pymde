@@ -2,19 +2,28 @@
 # requires-python = ">=3.10"
 # dependencies = [
 #     "marimo",
+#     "matplotlib==3.10.8",
 #     "pandas",
-#     "pymde",
+#     "pymde==0.2.3",
+#     "torch==2.10.0",
+#     "wigglystuff==0.2.27",
 # ]
 # ///
 
 import marimo
 
-__generated_with = "0.19.10"
-app = marimo.App()
+__generated_with = "0.19.11"
+app = marimo.App(width="medium")
 
 with app.setup:
-    import marimo as mo
+    import matplotlib.pyplot as plt
     import pymde
+    import torch
+    from wigglystuff import ChartSelect
+
+    import marimo as mo
+
+    pymde.seed(0)
 
 
 @app.cell(hide_code=True)
@@ -63,13 +72,9 @@ def _():
 
 @app.cell
 def _(dataset):
-    mde = pymde.preserve_neighbors(data=dataset.data, verbose=True)
-    return (mde,)
-
-
-@app.cell
-def _(mde):
-    embedding = mde.embed()
+    with mo.persistent_cache("counties"):
+        mde = pymde.preserve_neighbors(data=dataset.data, verbose=True)
+        embedding = mde.embed()
     return (embedding,)
 
 
@@ -86,12 +91,40 @@ def _():
 @app.cell
 def _(dataset, embedding):
     # Rotate the embedding by some amount of degrees
-    rotated_embedding = pymde.rotate(embedding, -30.0)
-    pymde.plot(
+    rotated_embedding = pymde.rotate(embedding, 150)
+    ax = pymde.plot(
         rotated_embedding,
         color_by=dataset.attributes["democratic_fraction"],
         color_map="RdBu",
         marker_size=10,
+    )
+    plt.tight_layout()
+    chart = mo.ui.anywidget(ChartSelect(ax.figure))
+    chart
+    return chart, rotated_embedding
+
+
+@app.cell
+def _(chart, rotated_embedding):
+    selected_indices = chart.get_indices(rotated_embedding[:, 0], rotated_embedding[:, 1])
+    return (selected_indices,)
+
+
+@app.cell(hide_code=True)
+def _(dataset, selected_indices):
+    mo.stop(not selected_indices.size)
+
+    selected_counties = dataset.county_dataframe.iloc[selected_indices]
+    table = mo.ui.table(selected_counties)
+
+    mo.output.replace(
+        mo.md(
+            f"""
+        **You've selected {len(selected_indices)} counties.**
+
+        {table}
+        """
+        )
     )
     return
 

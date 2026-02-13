@@ -2,14 +2,14 @@
 # requires-python = ">=3.10"
 # dependencies = [
 #     "marimo",
-#     "pymde",
-#     "torch",
+#     "pymde==0.2.3",
+#     "torch==2.10.0",
 # ]
 # ///
 
 import marimo
 
-__generated_with = "0.19.10"
+__generated_with = "0.19.11"
 app = marimo.App()
 
 with app.setup:
@@ -135,17 +135,36 @@ def _():
 
 
 @app.cell
-def _(anchor_constraint, edges, n_items, shortest_paths_graph):
+def _():
+    distortion_function = mo.ui.dropdown(
+        {
+            "WeightedQuadratic": pymde.losses.WeightedQuadratic,
+            "Quadratic": pymde.losses.Quadratic,
+            "Cubic": pymde.losses.Cubic,
+        }, value="WeightedQuadratic"
+    )
+    distortion_function
+    return (distortion_function,)
+
+
+@app.cell
+def _(
+    anchor_constraint,
+    distortion_function,
+    edges,
+    n_items,
+    shortest_paths_graph,
+):
     mde = pymde.MDE(
         n_items,
         embedding_dim=2,
         edges=shortest_paths_graph.edges,
-        distortion_function=pymde.losses.WeightedQuadratic(
+        distortion_function=distortion_function.value(
             shortest_paths_graph.distances
         ),
         constraint=anchor_constraint,
     )
-    mde.embed(snapshot_every=1, verbose=True)
+    mde.embed(snapshot_every=1, verbose=True, max_iter=15)
     mde.plot(edges=edges)
     return (mde,)
 
