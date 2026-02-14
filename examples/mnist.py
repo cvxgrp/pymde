@@ -159,14 +159,13 @@ def _():
 
 @app.cell
 def _(embedding):
-    indices = torch.randperm(mnist.data.shape[0]).numpy()
-    embedding_sampled = embedding.numpy()[indices]
+    indices = torch.arange(mnist.data.shape[0]).numpy()
 
     df = pd.DataFrame(
         {
             "index": indices,
-            "x": embedding_sampled[:, 0],
-            "y": embedding_sampled[:, 1],
+            "x": embedding[:, 0],
+            "y": embedding[:, 1],
             "digit": mnist.attributes["digits"][indices],
         }
     )
