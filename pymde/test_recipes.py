@@ -132,6 +132,7 @@ def test_neighbor_reproducibility(device):
 
     _run_test(36)
     _run_test(1001)
+    _run_test(11000)
 
 
 @testing.cpu_and_cuda

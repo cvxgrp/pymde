@@ -96,6 +96,9 @@ venv.bak/
 # Cython generated
 pymde/preprocess/_graph.c
 
+# Rust build artifacts
+pymde/_nndescent/target/
+
 # editors
 *.swp
 

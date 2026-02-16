@@ -32,8 +32,10 @@ jobs:
 
       - uses: astral-sh/setup-uv@v5
 
+      - uses: dtolnay/rust-toolchain@stable
+
       - name: Install build dependencies
-        run: uv pip install --system setuptools wheel "cython>=3.0" "numpy>=2.0"
+        run: uv pip install --system setuptools "setuptools-rust>=1.10.2" wheel "cython>=3.0" "numpy>=2.0"
 
       - name: Install CPU PyTorch (macOS)
         if: matrix.os == 'macos-latest'

@@ -403,8 +403,6 @@ def seed(seed: int):
     preprocessing methods.
     """
     torch.manual_seed(seed)
-    # pynndescent relies on numpy's legacy (global) random state
-    np.random.seed(seed)
     global _NP_RNG
     _NP_RNG = np.random.default_rng(seed)
 

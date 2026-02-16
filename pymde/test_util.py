@@ -74,12 +74,10 @@ def test_proj_standardized(device):
 def test_rng():
     util.seed(0)
     tensor = torch.randn((10, 5))
-    from_random_state = np.random.randn(10, 5)
     from_rng = util.np_rng().standard_normal((10, 5))
 
     util.seed(0)
     testing.assert_all_equal(tensor, torch.randn((10, 5)))
-    testing.assert_all_equal(from_random_state, np.random.randn(10, 5))
     testing.assert_all_equal(from_rng, util.np_rng().standard_normal((10, 5)))
 
 

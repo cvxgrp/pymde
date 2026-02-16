@@ -1,6 +1,7 @@
 """Minimal setup.py for Cython ext_modules (all metadata is in pyproject.toml)."""
 
 from setuptools import setup, Extension
+from setuptools_rust import RustExtension, Binding
 import numpy as np
 
 setup(
@@ -12,5 +13,14 @@ setup(
             extra_compile_args=["-O3"],
             include_dirs=[np.get_include()],
         )
-    ]
+    ],
+    rust_extensions=[
+        RustExtension(
+            "pymde._nndescent",
+            path="pymde/_nndescent/Cargo.toml",
+            binding=Binding.PyO3,
+            debug=False,
+        )
+    ],
+    zip_safe=False,
 )

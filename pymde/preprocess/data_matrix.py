@@ -111,9 +111,6 @@ def k_nearest_neighbors(data, k, max_distance=None, verbose=False):
     pymde.Graph
         a neighborhood graph
     """
-    # lazy import, because importing pynndescent takes some time
-    import pynndescent
-
     if isinstance(data, torch.Tensor):
         device = data.device
         data = data.cpu().numpy()
@@ -132,14 +129,17 @@ def k_nearest_neighbors(data, k, max_distance=None, verbose=False):
         nn.fit(data)
         distances, neighbors = nn.kneighbors(data)
     else:
-        # TODO default params (n_trees, max_candidates)
-        index = pynndescent.NNDescent(
-            data,
+        from pymde._nndescent import nn_descent
+
+        data_f32 = np.ascontiguousarray(data, dtype=np.float32)
+        seed = int(util.np_rng().integers(0, 2**63))
+        neighbors, distances = nn_descent(
+            data_f32,
             n_neighbors=k + 1,
-            verbose=verbose,
             max_candidates=60,
+            seed=seed,
+            verbose=verbose,
         )
-        neighbors, distances = index.neighbor_graph
     neighbors = neighbors[:, 1:]
     distances = distances[:, 1:]
 
