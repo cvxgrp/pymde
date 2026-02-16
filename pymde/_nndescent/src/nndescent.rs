@@ -1,8 +1,7 @@
-use rayon::prelude::*;
-
 use crate::distance::squared_euclidean;
 use crate::heap::NeighborHeap;
 use crate::rng::NnRng;
+use rayon::prelude::*;
 
 const DELTA: f64 = 0.001;
 
@@ -25,17 +24,27 @@ pub fn nn_descent(
     let mut rng = NnRng::new(seed);
     let mut heap = NeighborHeap::new(n, k);
 
-    // Phase 1: Random partition tree initialization
+    // Phase 1: RP-tree initialization (small fixed number of trees)
     rp_tree_init(data, n, dim, k, &mut heap, &mut rng);
 
     // Phase 2: NN-Descent iterations
+    // Pre-allocate candidate lists (reused across iterations)
+    let mut new_candidates: Vec<Vec<i32>> = (0..n).map(|_| Vec::with_capacity(max_candidates)).collect();
+    let mut old_candidates: Vec<Vec<i32>> = (0..n).map(|_| Vec::with_capacity(max_candidates)).collect();
+
     for iter in 0..max_iters {
-        let (new_candidates, old_candidates) =
-            build_candidates(n, max_candidates, &heap, &mut rng);
+        build_candidates(
+            n,
+            max_candidates,
+            &heap,
+            &mut rng,
+            &mut new_candidates,
+            &mut old_candidates,
+        );
 
         heap.mark_all_old();
 
-        let updates = local_join(data, dim, n, &new_candidates, &old_candidates, &mut heap);
+        let updates = local_join(data, dim, n, &new_candidates, &old_candidates, &mut heap, verbose);
 
         if verbose {
             eprintln!("NNDescent: iteration {}, updates = {}", iter, updates);
@@ -53,7 +62,10 @@ pub fn nn_descent(
 }
 
 /// Initialize neighbor graph using random partition trees.
-/// Builds multiple RP trees and considers all points in the same leaf as candidate neighbors.
+/// For each tree: build tree (sequential, uses RNG), compute leaf pairwise
+/// distances in parallel (rayon), apply updates to heap. Processing one tree
+/// at a time allows the heap to tighten after each tree, so subsequent trees
+/// benefit from early rejection (most pairs are filtered out).
 fn rp_tree_init(
     data: &[f32],
     n: usize,
@@ -62,22 +74,65 @@ fn rp_tree_init(
     heap: &mut NeighborHeap,
     rng: &mut NnRng,
 ) {
-    let leaf_size = std::cmp::max(k * 2, 30);
-    // Build enough trees to get good coverage
-    // Scale trees with both n and dim for better coverage in high-dimensional spaces
-    let base_trees = (n as f64).log2() as usize;
-    let dim_factor = std::cmp::max(1, (dim + 4) / 5);
-    let n_trees = std::cmp::max(8, base_trees * dim_factor);
+    // Match pynndescent: leaf_size = clamp(60, 256, 5 * n_neighbors)
+    let n_neighbors = k + 1;
+    let leaf_size = std::cmp::max(60, std::cmp::min(256, 5 * n_neighbors));
+    // Match pynndescent: n_trees = clamp(3, 12, round(2 * log10(n)))
+    let n_trees = std::cmp::max(3, std::cmp::min(12, (2.0 * (n as f64).log10()).round() as usize));
 
     for _ in 0..n_trees {
+        // Build tree structure, collect leaf index arrays (sequential — uses RNG)
         let mut indices: Vec<usize> = (0..n).collect();
-        rp_tree_split(data, dim, leaf_size, &mut indices, heap, rng);
+        let mut leaves: Vec<Vec<usize>> = Vec::new();
+        rp_tree_collect_leaves(data, dim, leaf_size, &mut indices, &mut leaves, rng);
+
+        // Compute pairwise distances within leaves in parallel, pre-filtering
+        // against the current heap's farthest distances.
+        let heap_ref: &NeighborHeap = &*heap;
+        let updates: Vec<(usize, i32, f32)> = leaves
+            .par_iter()
+            .fold(
+                Vec::new,
+                |mut acc, leaf| {
+                    for i in 0..leaf.len() {
+                        let a = leaf[i];
+                        for j in (i + 1)..leaf.len() {
+                            let b = leaf[j];
+                            let dist = squared_euclidean(
+                                &data[a * dim..(a + 1) * dim],
+                                &data[b * dim..(b + 1) * dim],
+                            );
+                            if dist < heap_ref.largest_distance(a) {
+                                acc.push((a, b as i32, dist));
+                            }
+                            if dist < heap_ref.largest_distance(b) {
+                                acc.push((b, a as i32, dist));
+                            }
+                        }
+                    }
+                    acc
+                },
+            )
+            .reduce(Vec::new, |mut a, b| {
+                a.extend(b);
+                a
+            });
+
+        // Apply this tree's updates to the heap
+        for &(point, neighbor, dist) in &updates {
+            heap.push(point, neighbor, dist);
+        }
     }
 
     // Ensure all points have at least k neighbors with a random fallback
     for i in 0..n {
-        let (existing, _) = heap.get_sorted_neighbors(i);
-        let filled = existing.len();
+        let base = i * k;
+        let mut filled = 0;
+        for s in 0..k {
+            if heap.indices[base + s] >= 0 {
+                filled += 1;
+            }
+        }
         if filled < k {
             let needed = k - filled;
             let max_attempts = needed * 5 + 10;
@@ -97,34 +152,21 @@ fn rp_tree_init(
 }
 
 /// Recursively split indices using random projection until leaf_size is reached.
-/// At each leaf, insert all pairwise distances into the heap.
-fn rp_tree_split(
+/// Collects leaf index arrays into `leaves` instead of computing distances inline.
+fn rp_tree_collect_leaves(
     data: &[f32],
     dim: usize,
     leaf_size: usize,
     indices: &mut [usize],
-    heap: &mut NeighborHeap,
+    leaves: &mut Vec<Vec<usize>>,
     rng: &mut NnRng,
 ) {
     let n = indices.len();
     if n <= leaf_size {
-        // Leaf node: insert all pairs
-        for i in 0..n {
-            for j in (i + 1)..n {
-                let a = indices[i];
-                let b = indices[j];
-                let dist = squared_euclidean(
-                    &data[a * dim..(a + 1) * dim],
-                    &data[b * dim..(b + 1) * dim],
-                );
-                heap.push(a, b as i32, dist);
-                heap.push(b, a as i32, dist);
-            }
-        }
+        leaves.push(indices.to_vec());
         return;
     }
 
-    // Pick two random points and split by which is closer
     let a_idx = rng.rand_int(n);
     let mut b_idx = rng.rand_int(n);
     while b_idx == a_idx {
@@ -133,13 +175,10 @@ fn rp_tree_split(
     let a = indices[a_idx];
     let b = indices[b_idx];
 
-    // Partition: compute dot product with (b - a) for each point
-    // Points closer to a go left, points closer to b go right
     let mut left = 0;
     let mut right = n - 1;
     while left < right {
         let p = indices[left];
-        // Project onto (b - a): if sum((p - midpoint) * (b - a)) > 0, point is closer to b
         let mut proj = 0.0f32;
         for d in 0..dim {
             let mid = (data[a * dim + d] + data[b * dim + d]) * 0.5;
@@ -153,7 +192,6 @@ fn rp_tree_split(
         }
     }
 
-    // Ensure neither side is empty (force at least one element on each side)
     if left == 0 {
         left = 1;
     }
@@ -162,31 +200,47 @@ fn rp_tree_split(
     }
 
     let (left_slice, right_slice) = indices.split_at_mut(left);
-    rp_tree_split(data, dim, leaf_size, left_slice, heap, rng);
-    rp_tree_split(data, dim, leaf_size, right_slice, heap, rng);
+    rp_tree_collect_leaves(data, dim, leaf_size, left_slice, leaves, rng);
+    rp_tree_collect_leaves(data, dim, leaf_size, right_slice, leaves, rng);
 }
 
-/// Build new and old candidate lists for each point.
+/// Build new and old candidate lists for each point by iterating the heap
+/// flat arrays directly (no per-point Vec allocations from get_new/get_old).
 fn build_candidates(
     n: usize,
     max_candidates: usize,
     heap: &NeighborHeap,
     rng: &mut NnRng,
-) -> (Vec<Vec<i32>>, Vec<Vec<i32>>) {
-    let mut new_candidates: Vec<Vec<i32>> = vec![Vec::new(); n];
-    let mut old_candidates: Vec<Vec<i32>> = vec![Vec::new(); n];
+    new_candidates: &mut [Vec<i32>],
+    old_candidates: &mut [Vec<i32>],
+) {
+    let k = heap.k;
 
+    // Clear previous iteration's candidates
     for i in 0..n {
-        for &nb in &heap.get_new(i) {
-            new_candidates[i].push(nb);
-            new_candidates[nb as usize].push(i as i32);
-        }
-        for &nb in &heap.get_old(i) {
-            old_candidates[i].push(nb);
-            old_candidates[nb as usize].push(i as i32);
+        new_candidates[i].clear();
+        old_candidates[i].clear();
+    }
+
+    // Collect forward and reverse neighbors directly from heap arrays
+    for i in 0..n {
+        let base = i * k;
+        for s in 0..k {
+            let nb = heap.indices[base + s];
+            if nb < 0 {
+                continue;
+            }
+            if heap.is_new[base + s] {
+                new_candidates[i].push(nb);
+                new_candidates[nb as usize].push(i as i32);
+            } else {
+                old_candidates[i].push(nb);
+                old_candidates[nb as usize].push(i as i32);
+            }
         }
     }
 
+    // Subsample to max_candidates via partial Fisher-Yates shuffle
     for i in 0..n {
         let nc = &mut new_candidates[i];
         let len = nc.len();
@@ -208,12 +262,20 @@ fn build_candidates(
             oc.truncate(max_candidates);
         }
     }
-
-    (new_candidates, old_candidates)
 }
 
-/// Local join: collect candidate pairs, compute distances in parallel,
-/// then apply updates to the heap sequentially.
+/// Parallel local join: compute distances in parallel across points, then
+/// apply updates sequentially. The heap is read-only during the parallel phase
+/// (for `largest_distance` early-reject checks) so the filter is conservative
+/// (stale thresholds may admit a few extra candidates, but never miss valid ones).
+/// The sequential apply phase ensures the final heap state is identical to any
+/// serial insertion order since the max-heap keeps the k closest neighbors.
+#[inline(never)]
+/// Parallel local join: compute distances across all points in parallel,
+/// then apply updates sequentially. The heap is read-only during the parallel
+/// phase (stale `largest_distance` checks are conservative — they admit a few
+/// extra candidates but never miss valid ones).
+#[inline(never)]
 fn local_join(
     data: &[f32],
     dim: usize,
@@ -221,51 +283,72 @@ fn local_join(
     new_candidates: &[Vec<i32>],
     old_candidates: &[Vec<i32>],
     heap: &mut NeighborHeap,
+    _verbose: bool,
 ) -> usize {
-    let mut pairs: Vec<(usize, usize)> = Vec::new();
-    for i in 0..n {
-        let new_i = &new_candidates[i];
-        let old_i = &old_candidates[i];
+    let heap_ref: &NeighborHeap = &*heap;
 
-        for ni in 0..new_i.len() {
-            let v1 = new_i[ni] as usize;
-            for nj in (ni + 1)..new_i.len() {
-                let v2 = new_i[nj] as usize;
-                if v1 != v2 {
-                    pairs.push((v1, v2));
+    let updates: Vec<(usize, i32, f32)> = (0..n)
+        .into_par_iter()
+        .fold(
+            Vec::new,
+            |mut acc, i| {
+                let new_i = &new_candidates[i];
+                let old_i = &old_candidates[i];
+
+                // new-new pairs
+                for ni in 0..new_i.len() {
+                    let v1 = new_i[ni] as usize;
+                    for nj in (ni + 1)..new_i.len() {
+                        let v2 = new_i[nj] as usize;
+                        if v1 == v2 {
+                            continue;
+                        }
+                        let dist = squared_euclidean(
+                            &data[v1 * dim..(v1 + 1) * dim],
+                            &data[v2 * dim..(v2 + 1) * dim],
+                        );
+                        if dist < heap_ref.largest_distance(v1) {
+                            acc.push((v1, v2 as i32, dist));
+                        }
+                        if dist < heap_ref.largest_distance(v2) {
+                            acc.push((v2, v1 as i32, dist));
+                        }
+                    }
                 }
-            }
-        }
 
-        for &v1 in new_i.iter() {
-            let v1 = v1 as usize;
-            for &v2 in old_i.iter() {
-                let v2 = v2 as usize;
-                if v1 != v2 {
-                    pairs.push((v1, v2));
+                // new-old pairs
+                for &v1_raw in new_i.iter() {
+                    let v1 = v1_raw as usize;
+                    for &v2_raw in old_i.iter() {
+                        let v2 = v2_raw as usize;
+                        if v1 == v2 {
+                            continue;
+                        }
+                        let dist = squared_euclidean(
+                            &data[v1 * dim..(v1 + 1) * dim],
+                            &data[v2 * dim..(v2 + 1) * dim],
+                        );
+                        if dist < heap_ref.largest_distance(v1) {
+                            acc.push((v1, v2 as i32, dist));
+                        }
+                        if dist < heap_ref.largest_distance(v2) {
+                            acc.push((v2, v1 as i32, dist));
+                        }
+                    }
                 }
-            }
-        }
-    }
 
-    // Compute distances in parallel
-    let distances: Vec<(usize, usize, f32)> = pairs
-        .par_iter()
-        .map(|&(v1, v2)| {
-            let dist = squared_euclidean(
-                &data[v1 * dim..(v1 + 1) * dim],
-                &data[v2 * dim..(v2 + 1) * dim],
-            );
-            (v1, v2, dist)
-        })
-        .collect();
+                acc
+            },
+        )
+        .reduce(Vec::new, |mut a, b| {
+            a.extend(b);
+            a
+        });
 
-    let mut update_count = 0;
-    for (v1, v2, dist) in distances {
-        if heap.push(v1, v2 as i32, dist) {
-            update_count += 1;
-        }
-        if heap.push(v2, v1 as i32, dist) {
+    // Sequential phase: apply all collected updates to the heap.
+    let mut update_count = 0usize;
+    for &(point, neighbor, dist) in &updates {
+        if heap.push(point, neighbor, dist) {
             update_count += 1;
         }
     }
