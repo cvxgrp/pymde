@@ -13,7 +13,7 @@ pub struct NeighborHeap {
     pub indices: Vec<i32>,
     /// Whether this neighbor is "new" (inserted since last iteration).
     pub is_new: Vec<bool>,
-    /// Per-point spinlocks for concurrent push.
+    /// Per-point locks for concurrent push.
     locks: Vec<AtomicBool>,
 }
 
@@ -91,12 +91,10 @@ impl NeighborHeap {
             return false;
         }
 
-        // Acquire per-point spinlock
-        while self.locks[point]
-            .compare_exchange_weak(false, true, Ordering::Acquire, Ordering::Relaxed)
-            .is_err()
-        {
-            std::hint::spin_loop();
+        // Try-lock: skip on contention (safe for NN-descent — pair will be
+        // rediscovered from the other direction or in a later iteration)
+        if self.locks[point].swap(true, Ordering::Acquire) {
+            return false;
         }
 
         // SAFETY: We hold the spinlock for `point`, so no other thread is
@@ -135,12 +133,46 @@ impl NeighborHeap {
             }
         };
 
-        // Release spinlock
+        // Release lock
         self.locks[point].store(false, Ordering::Release);
         result
     }
 
-    /// Sift-down using raw pointers. Used by push_concurrent.
+    /// Push without locking. Same logic as push_concurrent but without the
+    /// lock acquire/release overhead.
+    ///
+    /// SAFETY: The caller must ensure exclusive access to `point`'s heap block
+    /// [point*k .. (point+1)*k]. This is guaranteed when each point is
+    /// processed by exactly one thread (e.g., in RP-tree init where each
+    /// point belongs to exactly one leaf per tree).
+    #[inline]
+    pub unsafe fn push_unlocked(&self, point: usize, neighbor: i32, dist: f32) -> bool {
+        let base = point * self.k;
+        let distances = self.distances.as_ptr() as *mut f32;
+        let indices = self.indices.as_ptr() as *mut i32;
+        let is_new = self.is_new.as_ptr() as *mut bool;
+
+        if dist >= *distances.add(base) {
+            return false;
+        }
+        if neighbor == point as i32 {
+            return false;
+        }
+        // Reject duplicates
+        for s in 0..self.k {
+            if *indices.add(base + s) == neighbor {
+                return false;
+            }
+        }
+        // Replace root (farthest) with new neighbor
+        *distances.add(base) = dist;
+        *indices.add(base) = neighbor;
+        *is_new.add(base) = true;
+        Self::sift_down_raw(distances, indices, is_new, self.k, base, 0);
+        true
+    }
+
+    /// Sift-down using raw pointers. Used by push_concurrent and push_unlocked.
     ///
     /// SAFETY: Caller must ensure exclusive access to the block
     /// [base .. base + k] across all three arrays.

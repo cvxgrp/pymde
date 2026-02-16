@@ -19,6 +19,12 @@ impl NnRng {
     pub fn rand_int(&mut self, upper_exclusive: usize) -> usize {
         self.inner.gen_range(0..upper_exclusive)
     }
+
+    /// Raw u64 for deriving child seeds.
+    #[inline]
+    pub fn next_u64(&mut self) -> u64 {
+        self.inner.gen()
+    }
 }
 
 #[cfg(test)]
