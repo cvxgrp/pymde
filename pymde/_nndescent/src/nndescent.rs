@@ -144,9 +144,8 @@ fn rp_tree_init(
     // Match pynndescent: leaf_size = clamp(60, 256, 5 * n_neighbors)
     let n_neighbors = k + 1;
     let leaf_size = std::cmp::max(60, std::cmp::min(256, 5 * n_neighbors));
-    // n_trees: balance between init cost and iteration savings.
-    // More trees = better initialization but higher init cost.
-    let n_trees = std::cmp::max(3, std::cmp::min(12, (2.0 * (n as f64).log10()).round() as usize));
+    // Match pynndescent: n_trees = min(64, 5 + round(sqrt(n) / 20))
+    let n_trees = std::cmp::min(64, 5 + ((n as f64).sqrt() / 20.0).round() as usize);
 
     // Phase 1: Build all RP trees in parallel (each tree gets its own RNG,
     // indices array, and reusable buffers). Tree construction is the

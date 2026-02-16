@@ -136,7 +136,6 @@ def k_nearest_neighbors(data, k, max_distance=None, verbose=False):
         neighbors, distances = nn_descent(
             data_f32,
             n_neighbors=k + 1,
-            max_candidates=60,
             seed=seed,
             verbose=verbose,
         )

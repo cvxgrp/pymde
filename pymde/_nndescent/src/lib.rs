@@ -29,18 +29,21 @@ use pyo3::prelude::*;
 ///     distances: shape (n, n_neighbors), dtype float32
 ///     Row i, column 0 is always (i, 0.0) — the point itself.
 #[pyfunction]
-#[pyo3(signature = (data, n_neighbors, max_candidates=60, seed=42, verbose=false))]
+#[pyo3(signature = (data, n_neighbors, max_candidates=None, seed=42, verbose=false))]
 fn nn_descent<'py>(
     py: Python<'py>,
     data: PyReadonlyArray2<'py, f32>,
     n_neighbors: usize,
-    max_candidates: usize,
+    max_candidates: Option<usize>,
     seed: u64,
     verbose: bool,
 ) -> PyResult<(Bound<'py, PyArray2<i32>>, Bound<'py, PyArray2<f32>>)> {
     let array = data.as_array();
     let n = array.shape()[0];
     let dim = array.shape()[1];
+
+    // Match pynndescent: default max_candidates = min(60, n_neighbors)
+    let max_candidates = max_candidates.unwrap_or_else(|| std::cmp::min(60, n_neighbors));
 
     // Get a contiguous slice of the data
     let data_slice = array

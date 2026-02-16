@@ -91,10 +91,13 @@ impl NeighborHeap {
             return false;
         }
 
-        // Try-lock: skip on contention (safe for NN-descent — pair will be
-        // rediscovered from the other direction or in a later iteration)
-        if self.locks[point].swap(true, Ordering::Acquire) {
-            return false;
+        // Spin-lock: wait until we acquire the lock. Guarantees all valid
+        // updates are applied (critical for small max_candidates).
+        while self.locks[point].swap(true, Ordering::Acquire) {
+            // Spin with relaxed loads to reduce cache-line bouncing
+            while self.locks[point].load(Ordering::Relaxed) {
+                std::hint::spin_loop();
+            }
         }
 
         // SAFETY: We hold the spinlock for `point`, so no other thread is

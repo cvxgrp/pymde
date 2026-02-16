@@ -58,7 +58,7 @@ def bench_rust(data, k, n_runs):
     for i in range(n_runs):
         start = time.perf_counter()
         indices, distances = nn_descent(
-            data_f32, n_neighbors=k + 1, max_candidates=60, seed=42
+            data_f32, n_neighbors=k + 1, seed=42
         )
         elapsed = time.perf_counter() - start
         times.append(elapsed)
