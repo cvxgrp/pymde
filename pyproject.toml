@@ -30,10 +30,7 @@ classifiers = [
 dependencies = [
     "matplotlib",
     "numpy >= 1.17.5",
-    "pynndescent >= 0.5",
-    # numba is a transitive dependency of pynndescent; included to appease uv:
-    # https://github.com/astral-sh/uv/issues/8863
-    "numba >= 0.59.0",
+    "faiss-cpu >= 1.7.0",
     "scipy",
     "torch >= 1.7.1",
     "torchvision >= 0.8.2",

@@ -111,8 +111,7 @@ def k_nearest_neighbors(data, k, max_distance=None, verbose=False):
     pymde.Graph
         a neighborhood graph
     """
-    # lazy import, because importing pynndescent takes some time
-    import pynndescent
+    import faiss
 
     if isinstance(data, torch.Tensor):
         device = data.device
@@ -120,30 +119,25 @@ def k_nearest_neighbors(data, k, max_distance=None, verbose=False):
     else:
         device = "cpu"
 
-    n = data.shape[0]
-    if n < 10000:
-        import sklearn.neighbors
+    if sp.issparse(data):
+        data = np.asarray(data.todense())
 
-        if verbose:
-            problem.LOGGER.info("Exact nearest neighbors by brute force ")
-        nn = sklearn.neighbors.NearestNeighbors(
-            n_neighbors=k + 1, algorithm="brute"
+    data = np.ascontiguousarray(data, dtype=np.float32)
+
+    n, d = data.shape
+    if verbose:
+        problem.LOGGER.info(
+            f"Computing {k}-nearest neighbors with faiss (n={n}, d={d})"
         )
-        nn.fit(data)
-        distances, neighbors = nn.kneighbors(data)
-    else:
-        # TODO default params (n_trees, max_candidates)
-        index = pynndescent.NNDescent(
-            data,
-            n_neighbors=k + 1,
-            verbose=verbose,
-            max_candidates=60,
-        )
-        neighbors, distances = index.neighbor_graph
+
+    index = faiss.IndexFlatL2(d)
+    index.add(data)
+    sq_distances, neighbors = index.search(data, k + 1)
+    distances = np.sqrt(np.maximum(sq_distances, 0.0))
+
     neighbors = neighbors[:, 1:]
     distances = distances[:, 1:]
 
-    n = data.shape[0]
     items = np.arange(n)
     items = np.repeat(items, k)
     edges = np.stack([items, neighbors.flatten()], axis=1)
