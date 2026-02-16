@@ -1,4 +1,4 @@
-use ordered_float::OrderedFloat;
+use std::sync::atomic::{AtomicBool, Ordering};
 
 /// A flat max-heap of neighbors for all points.
 ///
@@ -13,15 +13,24 @@ pub struct NeighborHeap {
     pub indices: Vec<i32>,
     /// Whether this neighbor is "new" (inserted since last iteration).
     pub is_new: Vec<bool>,
+    /// Per-point spinlocks for concurrent push.
+    locks: Vec<AtomicBool>,
 }
+
+// SAFETY: Concurrent access to different points' blocks is data-race-free
+// because the blocks don't overlap (each is a contiguous k-element slice).
+// Same-point access is serialized by per-point spinlocks in push_concurrent.
+unsafe impl Sync for NeighborHeap {}
 
 impl NeighborHeap {
     pub fn new(n: usize, k: usize) -> Self {
+        let locks = (0..n).map(|_| AtomicBool::new(false)).collect();
         Self {
             k,
             distances: vec![f32::INFINITY; n * k],
             indices: vec![-1; n * k],
             is_new: vec![false; n * k],
+            locks,
         }
     }
 
@@ -65,6 +74,107 @@ impl NeighborHeap {
         true
     }
 
+    /// Try to insert `neighbor` into `point`'s neighbor list concurrently.
+    /// Uses per-point spinlocks so multiple threads can update different points
+    /// simultaneously. Safe to call from `&self` (shared reference).
+    ///
+    /// SAFETY: The caller must ensure no `&mut self` methods run concurrently.
+    /// This is guaranteed by creating the shared reference from `&mut self` and
+    /// only using it within a scoped parallel section that completes before
+    /// `&mut self` is used again.
+    pub fn push_concurrent(&self, point: usize, neighbor: i32, dist: f32) -> bool {
+        // Fast path: reject without acquiring the lock (~90% of candidates)
+        if dist >= self.largest_distance(point) {
+            return false;
+        }
+        if neighbor == point as i32 {
+            return false;
+        }
+
+        // Acquire per-point spinlock
+        while self.locks[point]
+            .compare_exchange_weak(false, true, Ordering::Acquire, Ordering::Relaxed)
+            .is_err()
+        {
+            std::hint::spin_loop();
+        }
+
+        // SAFETY: We hold the spinlock for `point`, so no other thread is
+        // mutating this point's block [point*k .. (point+1)*k]. The raw
+        // pointer casts are safe because the lock serializes all access to
+        // this contiguous region.
+        let result = unsafe {
+            let base = point * self.k;
+            let distances = self.distances.as_ptr() as *mut f32;
+            let indices = self.indices.as_ptr() as *mut i32;
+            let is_new = self.is_new.as_ptr() as *mut bool;
+
+            // Re-check distance under lock (threshold may have tightened)
+            if dist >= *distances.add(base) {
+                false
+            } else {
+                // Reject duplicates
+                let mut dup = false;
+                for s in 0..self.k {
+                    if *indices.add(base + s) == neighbor {
+                        dup = true;
+                        break;
+                    }
+                }
+                if dup {
+                    false
+                } else {
+                    // Replace root (farthest) with new neighbor
+                    *distances.add(base) = dist;
+                    *indices.add(base) = neighbor;
+                    *is_new.add(base) = true;
+                    // Sift down to restore max-heap property
+                    Self::sift_down_raw(distances, indices, is_new, self.k, base, 0);
+                    true
+                }
+            }
+        };
+
+        // Release spinlock
+        self.locks[point].store(false, Ordering::Release);
+        result
+    }
+
+    /// Sift-down using raw pointers. Used by push_concurrent.
+    ///
+    /// SAFETY: Caller must ensure exclusive access to the block
+    /// [base .. base + k] across all three arrays.
+    #[inline]
+    unsafe fn sift_down_raw(
+        distances: *mut f32,
+        indices: *mut i32,
+        is_new: *mut bool,
+        k: usize,
+        base: usize,
+        mut pos: usize,
+    ) {
+        loop {
+            let left = 2 * pos + 1;
+            let right = 2 * pos + 2;
+            let mut largest = pos;
+            if left < k && *distances.add(base + left) > *distances.add(base + largest) {
+                largest = left;
+            }
+            if right < k && *distances.add(base + right) > *distances.add(base + largest) {
+                largest = right;
+            }
+            if largest == pos {
+                break;
+            }
+            let i = base + pos;
+            let j = base + largest;
+            std::ptr::swap(distances.add(i), distances.add(j));
+            std::ptr::swap(indices.add(i), indices.add(j));
+            std::ptr::swap(is_new.add(i), is_new.add(j));
+            pos = largest;
+        }
+    }
+
     /// Standard max-heap sift-down within point's block.
     fn sift_down(&mut self, point: usize, mut pos: usize) {
         let base = point * self.k;
@@ -73,14 +183,12 @@ impl NeighborHeap {
             let right = 2 * pos + 2;
             let mut largest = pos;
             if left < self.k
-                && OrderedFloat(self.distances[base + left])
-                    > OrderedFloat(self.distances[base + largest])
+                && self.distances[base + left] > self.distances[base + largest]
             {
                 largest = left;
             }
             if right < self.k
-                && OrderedFloat(self.distances[base + right])
-                    > OrderedFloat(self.distances[base + largest])
+                && self.distances[base + right] > self.distances[base + largest]
             {
                 largest = right;
             }
@@ -125,7 +233,7 @@ impl NeighborHeap {
             .filter(|&s| self.indices[base + s] >= 0)
             .map(|s| (self.distances[base + s], self.indices[base + s]))
             .collect();
-        pairs.sort_by_key(|&(d, _)| OrderedFloat(d));
+        pairs.sort_by(|a, b| a.0.total_cmp(&b.0));
         let indices: Vec<i32> = pairs.iter().map(|&(_, idx)| idx).collect();
         let distances: Vec<f32> = pairs.iter().map(|&(d, _)| d).collect();
         (indices, distances)

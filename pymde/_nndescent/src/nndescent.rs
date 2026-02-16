@@ -1,3 +1,5 @@
+use std::sync::atomic::{AtomicUsize, Ordering};
+
 use crate::distance::squared_euclidean;
 use crate::heap::NeighborHeap;
 use crate::rng::NnRng;
@@ -86,42 +88,24 @@ fn rp_tree_init(
         let mut leaves: Vec<Vec<usize>> = Vec::new();
         rp_tree_collect_leaves(data, dim, leaf_size, &mut indices, &mut leaves, rng);
 
-        // Compute pairwise distances within leaves in parallel, pre-filtering
-        // against the current heap's farthest distances.
+        // Compute pairwise distances within leaves in parallel and push
+        // directly into the heap using per-point spinlocks. The heap
+        // tightens in real time, so later pairs benefit from early rejection.
         let heap_ref: &NeighborHeap = &*heap;
-        let updates: Vec<(usize, i32, f32)> = leaves
-            .par_iter()
-            .fold(
-                Vec::new,
-                |mut acc, leaf| {
-                    for i in 0..leaf.len() {
-                        let a = leaf[i];
-                        for j in (i + 1)..leaf.len() {
-                            let b = leaf[j];
-                            let dist = squared_euclidean(
-                                &data[a * dim..(a + 1) * dim],
-                                &data[b * dim..(b + 1) * dim],
-                            );
-                            if dist < heap_ref.largest_distance(a) {
-                                acc.push((a, b as i32, dist));
-                            }
-                            if dist < heap_ref.largest_distance(b) {
-                                acc.push((b, a as i32, dist));
-                            }
-                        }
-                    }
-                    acc
-                },
-            )
-            .reduce(Vec::new, |mut a, b| {
-                a.extend(b);
-                a
-            });
-
-        // Apply this tree's updates to the heap
-        for &(point, neighbor, dist) in &updates {
-            heap.push(point, neighbor, dist);
-        }
+        leaves.par_iter().for_each(|leaf| {
+            for i in 0..leaf.len() {
+                let a = leaf[i];
+                for j in (i + 1)..leaf.len() {
+                    let b = leaf[j];
+                    let dist = squared_euclidean(
+                        &data[a * dim..(a + 1) * dim],
+                        &data[b * dim..(b + 1) * dim],
+                    );
+                    heap_ref.push_concurrent(a, b as i32, dist);
+                    heap_ref.push_concurrent(b, a as i32, dist);
+                }
+            }
+        });
     }
 
     // Ensure all points have at least k neighbors with a random fallback
@@ -264,17 +248,10 @@ fn build_candidates(
     }
 }
 
-/// Parallel local join: compute distances in parallel across points, then
-/// apply updates sequentially. The heap is read-only during the parallel phase
-/// (for `largest_distance` early-reject checks) so the filter is conservative
-/// (stale thresholds may admit a few extra candidates, but never miss valid ones).
-/// The sequential apply phase ensures the final heap state is identical to any
-/// serial insertion order since the max-heap keeps the k closest neighbors.
-#[inline(never)]
-/// Parallel local join: compute distances across all points in parallel,
-/// then apply updates sequentially. The heap is read-only during the parallel
-/// phase (stale `largest_distance` checks are conservative — they admit a few
-/// extra candidates but never miss valid ones).
+/// Single-phase parallel local join: compute distances and apply heap updates
+/// in-place using per-point spinlocks. The heap tightens in real time as
+/// threads push updates, giving much better early-rejection than the old
+/// two-phase (collect + sequential apply) approach.
 #[inline(never)]
 fn local_join(
     data: &[f32],
@@ -285,75 +262,57 @@ fn local_join(
     heap: &mut NeighborHeap,
     _verbose: bool,
 ) -> usize {
+    let update_count = AtomicUsize::new(0);
     let heap_ref: &NeighborHeap = &*heap;
 
-    let updates: Vec<(usize, i32, f32)> = (0..n)
-        .into_par_iter()
-        .fold(
-            Vec::new,
-            |mut acc, i| {
-                let new_i = &new_candidates[i];
-                let old_i = &old_candidates[i];
+    (0..n).into_par_iter().for_each(|i| {
+        let new_i = &new_candidates[i];
+        let old_i = &old_candidates[i];
 
-                // new-new pairs
-                for ni in 0..new_i.len() {
-                    let v1 = new_i[ni] as usize;
-                    for nj in (ni + 1)..new_i.len() {
-                        let v2 = new_i[nj] as usize;
-                        if v1 == v2 {
-                            continue;
-                        }
-                        let dist = squared_euclidean(
-                            &data[v1 * dim..(v1 + 1) * dim],
-                            &data[v2 * dim..(v2 + 1) * dim],
-                        );
-                        if dist < heap_ref.largest_distance(v1) {
-                            acc.push((v1, v2 as i32, dist));
-                        }
-                        if dist < heap_ref.largest_distance(v2) {
-                            acc.push((v2, v1 as i32, dist));
-                        }
-                    }
+        // new-new pairs
+        for ni in 0..new_i.len() {
+            let v1 = new_i[ni] as usize;
+            for nj in (ni + 1)..new_i.len() {
+                let v2 = new_i[nj] as usize;
+                if v1 == v2 {
+                    continue;
                 }
-
-                // new-old pairs
-                for &v1_raw in new_i.iter() {
-                    let v1 = v1_raw as usize;
-                    for &v2_raw in old_i.iter() {
-                        let v2 = v2_raw as usize;
-                        if v1 == v2 {
-                            continue;
-                        }
-                        let dist = squared_euclidean(
-                            &data[v1 * dim..(v1 + 1) * dim],
-                            &data[v2 * dim..(v2 + 1) * dim],
-                        );
-                        if dist < heap_ref.largest_distance(v1) {
-                            acc.push((v1, v2 as i32, dist));
-                        }
-                        if dist < heap_ref.largest_distance(v2) {
-                            acc.push((v2, v1 as i32, dist));
-                        }
-                    }
+                let dist = squared_euclidean(
+                    &data[v1 * dim..(v1 + 1) * dim],
+                    &data[v2 * dim..(v2 + 1) * dim],
+                );
+                if heap_ref.push_concurrent(v1, v2 as i32, dist) {
+                    update_count.fetch_add(1, Ordering::Relaxed);
                 }
-
-                acc
-            },
-        )
-        .reduce(Vec::new, |mut a, b| {
-            a.extend(b);
-            a
-        });
-
-    // Sequential phase: apply all collected updates to the heap.
-    let mut update_count = 0usize;
-    for &(point, neighbor, dist) in &updates {
-        if heap.push(point, neighbor, dist) {
-            update_count += 1;
+                if heap_ref.push_concurrent(v2, v1 as i32, dist) {
+                    update_count.fetch_add(1, Ordering::Relaxed);
+                }
+            }
         }
-    }
 
-    update_count
+        // new-old pairs
+        for &v1_raw in new_i.iter() {
+            let v1 = v1_raw as usize;
+            for &v2_raw in old_i.iter() {
+                let v2 = v2_raw as usize;
+                if v1 == v2 {
+                    continue;
+                }
+                let dist = squared_euclidean(
+                    &data[v1 * dim..(v1 + 1) * dim],
+                    &data[v2 * dim..(v2 + 1) * dim],
+                );
+                if heap_ref.push_concurrent(v1, v2 as i32, dist) {
+                    update_count.fetch_add(1, Ordering::Relaxed);
+                }
+                if heap_ref.push_concurrent(v2, v1 as i32, dist) {
+                    update_count.fetch_add(1, Ordering::Relaxed);
+                }
+            }
+        }
+    });
+
+    update_count.load(Ordering::Relaxed)
 }
 
 /// Sort neighbors, convert squared distances to Euclidean, prepend self.
@@ -471,17 +430,24 @@ mod tests {
     }
 
     #[test]
-    fn test_determinism() {
+    fn test_high_recall() {
+        // With concurrent heap updates, results are not bit-exact deterministic
+        // (thread scheduling affects tie-breaking). Verify both runs achieve
+        // high recall instead.
         let n = 100;
         let dim = 10;
         let n_neighbors = 6;
+        let k = n_neighbors - 1;
         let mut rng = NnRng::new(77);
         let data: Vec<f32> = (0..n * dim).map(|_| (rng.rand_int(1000) as f32) / 100.0).collect();
 
-        let (idx1, dist1) = nn_descent(&data, n, dim, n_neighbors, 60, 42, false);
-        let (idx2, dist2) = nn_descent(&data, n, dim, n_neighbors, 60, 42, false);
-        assert_eq!(idx1, idx2);
-        assert_eq!(dist1, dist2);
+        let true_nn = brute_force_knn(&data, n, dim, k);
+        let (idx1, _) = nn_descent(&data, n, dim, n_neighbors, 60, 42, false);
+        let (idx2, _) = nn_descent(&data, n, dim, n_neighbors, 60, 42, false);
+        let r1 = recall(&idx1, &true_nn, n, n_neighbors);
+        let r2 = recall(&idx2, &true_nn, n, n_neighbors);
+        assert!(r1 >= 0.95, "Run 1 recall {r1} too low");
+        assert!(r2 >= 0.95, "Run 2 recall {r2} too low");
     }
 
     #[test]
