@@ -1,3 +1,4 @@
+import faiss
 import numpy as np
 import scipy.sparse as sp
 import torch
@@ -111,8 +112,6 @@ def k_nearest_neighbors(data, k, max_distance=None, verbose=False):
     pymde.Graph
         a neighborhood graph
     """
-    import faiss
-
     if isinstance(data, torch.Tensor):
         device = data.device
         data = data.cpu().numpy()
