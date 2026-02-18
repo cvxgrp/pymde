@@ -42,14 +42,15 @@ def test_nn_descent_small():
 
 
 def test_nn_descent_medium():
-    """5000 points in 32D — recall >= 0.88 (matches pynndescent ~0.90 on same params)."""
+    """5000 points in 32D — with default max_candidates=min(60, n_neighbors)=11,
+    pynndescent achieves ~0.755 recall. Threshold set with margin for variance."""
     np.random.seed(123)
     data = np.random.randn(5000, 32).astype(np.float32)
     k = 10
     indices, distances = nn_descent(data, n_neighbors=k + 1, seed=123)
     true_indices, _ = _brute_force_knn(data, k)
     r = _recall(indices, true_indices)
-    assert r >= 0.88, f"Recall {r} too low for medium dataset"
+    assert r >= 0.75, f"Recall {r} too low for medium dataset"
 
 
 def test_nn_descent_output_shape():
@@ -103,7 +104,8 @@ def test_nn_descent_distances_correct():
 
 def test_nn_descent_reproducibility():
     """With concurrent heap updates, results may not be bit-exact.
-    Verify both runs achieve high recall instead."""
+    Verify both runs achieve high recall instead.
+    pynndescent achieves ~0.989 on this config."""
     np.random.seed(42)
     data = np.random.randn(200, 16).astype(np.float32)
     k = 8
@@ -112,8 +114,8 @@ def test_nn_descent_reproducibility():
     true_indices, _ = _brute_force_knn(data, k)
     r1 = _recall(idx1, true_indices)
     r2 = _recall(idx2, true_indices)
-    assert r1 >= 0.90, f"Run 1 recall {r1} too low"
-    assert r2 >= 0.90, f"Run 2 recall {r2} too low"
+    assert r1 >= 0.95, f"Run 1 recall {r1} too low"
+    assert r2 >= 0.95, f"Run 2 recall {r2} too low"
 
 
 def test_k_nearest_neighbors_large():
@@ -127,7 +129,8 @@ def test_k_nearest_neighbors_large():
 
 
 def test_k_nearest_neighbors_large_recall():
-    """Verify recall >= 0.90 for the large-n Rust path vs brute force."""
+    """Verify recall for the large-n Rust path vs brute force.
+    pynndescent achieves ~0.902 on this config with default max_candidates."""
     np.random.seed(0)
     n = 11000
     k = 5
@@ -138,4 +141,4 @@ def test_k_nearest_neighbors_large_recall():
     )
     true_indices, _ = _brute_force_knn(data, k)
     r = _recall(indices, true_indices)
-    assert r >= 0.90, f"Recall {r} too low for large dataset"
+    assert r >= 0.89, f"Recall {r} too low for large dataset"

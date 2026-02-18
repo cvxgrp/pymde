@@ -78,7 +78,7 @@ data = np.load(sys.argv[1])
 k = {k}
 start = time.perf_counter()
 import pynndescent
-index = pynndescent.NNDescent(data, n_neighbors=k+1, verbose=False, max_candidates=60)
+index = pynndescent.NNDescent(data, n_neighbors=k+1, verbose=False)
 neighbors, distances = index.neighbor_graph
 elapsed = time.perf_counter() - start
 np.save(sys.argv[2], neighbors)
@@ -119,7 +119,7 @@ def bench_pynndescent_warm(data, k, n_runs):
     for _ in range(n_runs):
         start = time.perf_counter()
         index = pynndescent.NNDescent(
-            data, n_neighbors=k + 1, verbose=False, max_candidates=60
+            data, n_neighbors=k + 1, verbose=False
         )
         neighbors, distances = index.neighbor_graph
         elapsed = time.perf_counter() - start

@@ -20,6 +20,12 @@ impl NnRng {
         self.inner.gen_range(0..upper_exclusive)
     }
 
+    /// Random float in [0, 1).
+    #[inline]
+    pub fn rand_float(&mut self) -> f32 {
+        self.inner.gen::<f32>()
+    }
+
     /// Raw u64 for deriving child seeds.
     #[inline]
     pub fn next_u64(&mut self) -> u64 {

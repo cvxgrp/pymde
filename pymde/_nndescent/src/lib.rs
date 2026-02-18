@@ -42,8 +42,7 @@ fn nn_descent<'py>(
     let n = array.shape()[0];
     let dim = array.shape()[1];
 
-    // Match pynndescent: default max_candidates = min(60, n_neighbors)
-    let max_candidates = max_candidates.unwrap_or_else(|| std::cmp::min(60, n_neighbors));
+    let max_candidates = max_candidates.unwrap_or(60);
 
     // Get a contiguous slice of the data
     let data_slice = array

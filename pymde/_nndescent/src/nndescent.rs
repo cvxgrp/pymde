@@ -7,57 +7,104 @@ use rayon::prelude::*;
 
 const DELTA: f64 = 0.001;
 
-/// Flat contiguous candidate list: `n` points, each with up to `width` candidates.
-/// Avoids Vec<Vec<i32>> pointer chasing for better cache locality in local_join.
-struct FlatCandidates {
-    data: Vec<i32>,
+/// Max-heap candidate buffer for reservoir sampling, matching pynndescent's
+/// `checked_heap_push`. Each point has a max-heap of `max_candidates` slots
+/// keyed on random priority. Lower-priority candidates survive, giving every
+/// candidate an equal chance regardless of insertion order.
+struct CandidateHeap {
+    priorities: Vec<f32>,
+    indices: Vec<i32>,
     counts: Vec<u32>,
-    width: usize,
+    max_candidates: usize,
+    n: usize,
 }
 
-impl FlatCandidates {
-    fn new(n: usize, width: usize) -> Self {
+impl CandidateHeap {
+    fn new(n: usize, max_candidates: usize) -> Self {
         Self {
-            data: vec![-1; n * width],
+            priorities: vec![f32::INFINITY; n * max_candidates],
+            indices: vec![-1; n * max_candidates],
             counts: vec![0; n],
-            width,
+            max_candidates,
+            n,
         }
     }
 
     #[inline]
     fn clear(&mut self) {
+        self.priorities.fill(f32::INFINITY);
+        self.indices.fill(-1);
         self.counts.fill(0);
     }
 
-    /// Push a candidate. Skips if full (first-arrival, matches pynndescent).
+    /// Push a candidate with random priority into point's max-heap.
+    /// Rejects if priority >= root, rejects duplicates, replaces root
+    /// and sifts down.
     #[inline]
-    fn push(&mut self, point: usize, neighbor: i32) {
-        let count = self.counts[point] as usize;
-        if count < self.width {
-            self.data[point * self.width + count] = neighbor;
-            self.counts[point] = (count + 1) as u32;
+    fn push(&mut self, point: usize, neighbor: i32, priority: f32) {
+        let base = point * self.max_candidates;
+        if priority >= self.priorities[base] {
+            return;
+        }
+        // Reject duplicates
+        for s in 0..self.max_candidates {
+            if self.indices[base + s] == neighbor {
+                return;
+            }
+        }
+        // Replace root and sift down
+        self.priorities[base] = priority;
+        self.indices[base] = neighbor;
+        self.sift_down(base, 0);
+    }
+
+    fn sift_down(&mut self, base: usize, mut pos: usize) {
+        loop {
+            let left = 2 * pos + 1;
+            let right = 2 * pos + 2;
+            let mut largest = pos;
+            if left < self.max_candidates
+                && self.priorities[base + left] > self.priorities[base + largest]
+            {
+                largest = left;
+            }
+            if right < self.max_candidates
+                && self.priorities[base + right] > self.priorities[base + largest]
+            {
+                largest = right;
+            }
+            if largest == pos {
+                break;
+            }
+            self.priorities.swap(base + pos, base + largest);
+            self.indices.swap(base + pos, base + largest);
+            pos = largest;
+        }
+    }
+
+    /// Compact valid entries (indices != -1) to the front for all points.
+    /// Must be called after all pushes and before get().
+    fn compact_all(&mut self) {
+        for point in 0..self.n {
+            let base = point * self.max_candidates;
+            let mut write = 0;
+            for read in 0..self.max_candidates {
+                if self.indices[base + read] >= 0 {
+                    if write != read {
+                        self.indices[base + write] = self.indices[base + read];
+                    }
+                    write += 1;
+                }
+            }
+            self.counts[point] = write as u32;
         }
     }
 
     #[inline]
     fn get(&self, point: usize) -> &[i32] {
-        let base = point * self.width;
+        let base = point * self.max_candidates;
         let count = self.counts[point] as usize;
-        &self.data[base..base + count]
-    }
-
-    /// Subsample to `max` entries using partial Fisher-Yates shuffle.
-    fn subsample(&mut self, point: usize, max: usize, rng: &mut NnRng) {
-        let count = self.counts[point] as usize;
-        if count <= max {
-            return;
-        }
-        let base = point * self.width;
-        for j in 0..max {
-            let swap_idx = j + rng.rand_int(count - j);
-            self.data.swap(base + j, base + swap_idx);
-        }
-        self.counts[point] = max as u32;
+        &self.indices[base..base + count]
     }
 }
 
@@ -88,25 +135,20 @@ pub fn nn_descent(
     }
 
     // Phase 2: NN-Descent iterations
-    // Flat candidate arrays. Width = max_candidates: excess reverse neighbors
-    // are dropped (first-arrival, matches pynndescent's checked_heap_push).
-    let cand_width = max_candidates;
-    let mut new_candidates = FlatCandidates::new(n, cand_width);
-    let mut old_candidates = FlatCandidates::new(n, cand_width);
+    let mut new_candidates = CandidateHeap::new(n, max_candidates);
+    let mut old_candidates = CandidateHeap::new(n, max_candidates);
 
     for iter in 0..max_iters {
         let t1 = std::time::Instant::now();
         build_candidates(
             n,
             max_candidates,
-            &heap,
+            &mut heap,
             &mut rng,
             &mut new_candidates,
             &mut old_candidates,
         );
         let bc_ms = t1.elapsed().as_secs_f64() * 1000.0;
-
-        heap.mark_all_old();
 
         let t2 = std::time::Instant::now();
         let updates = local_join(data, dim, n, &new_candidates, &old_candidates, &mut heap);
@@ -294,6 +336,18 @@ fn rp_tree_split(
         proj[i] = dot_product(p_data, diff_ref);
     }
 
+    // Random assignment for on-hyperplane points (matching pynndescent)
+    const EPS: f32 = 1e-8;
+    for i in 0..n {
+        if (proj[i] - hp_offset).abs() < EPS {
+            if rng.rand_int(2) == 0 {
+                proj[i] = hp_offset - 1.0;
+            } else {
+                proj[i] = hp_offset + 1.0;
+            }
+        }
+    }
+
     // Partition based on precomputed projections (no dim-loop, fast)
     let mut left = 0;
     let mut right = n - 1;
@@ -307,11 +361,21 @@ fn rp_tree_split(
         }
     }
 
-    if left == 0 {
-        left = 1;
-    }
-    if left == n {
-        left = n - 1;
+    // Degenerate split: randomly assign all points (matching pynndescent)
+    if left == 0 || left == n {
+        left = 0;
+        for i in 0..n {
+            if rng.rand_int(2) == 0 {
+                indices.swap(left, i);
+                left += 1;
+            }
+        }
+        if left == 0 {
+            left = 1;
+        }
+        if left == n {
+            left = n - 1;
+        }
     }
 
     let (left_idx, right_idx) = indices.split_at_mut(left);
@@ -320,21 +384,21 @@ fn rp_tree_split(
     rp_tree_split(data, dim, leaf_size, right_idx, offset + left, leaf_ranges, diff, right_proj, rng);
 }
 
-/// Build new and old candidate lists for each point by iterating the heap
-/// flat arrays directly. Uses FlatCandidates for contiguous memory layout.
+/// Build new and old candidate lists using reservoir sampling with random
+/// priorities (matching pynndescent's checked_heap_push).
 fn build_candidates(
     n: usize,
-    max_candidates: usize,
-    heap: &NeighborHeap,
+    _max_candidates: usize,
+    heap: &mut NeighborHeap,
     rng: &mut NnRng,
-    new_candidates: &mut FlatCandidates,
-    old_candidates: &mut FlatCandidates,
+    new_candidates: &mut CandidateHeap,
+    old_candidates: &mut CandidateHeap,
 ) {
     let k = heap.k;
     new_candidates.clear();
     old_candidates.clear();
 
-    // Collect forward and reverse neighbors directly from heap arrays
+    // Collect forward and reverse neighbors with random priorities
     for i in 0..n {
         let base = i * k;
         for s in 0..k {
@@ -342,20 +406,38 @@ fn build_candidates(
             if nb < 0 {
                 continue;
             }
+            let priority = rng.rand_float();
             if heap.is_new[base + s] {
-                new_candidates.push(i, nb);
-                new_candidates.push(nb as usize, i as i32);
+                new_candidates.push(i, nb, priority);
+                new_candidates.push(nb as usize, i as i32, priority);
             } else {
-                old_candidates.push(i, nb);
-                old_candidates.push(nb as usize, i as i32);
+                old_candidates.push(i, nb, priority);
+                old_candidates.push(nb as usize, i as i32, priority);
             }
         }
     }
 
-    // Subsample to max_candidates via partial Fisher-Yates shuffle
+    // Compact for efficient iteration in local_join
+    new_candidates.compact_all();
+    old_candidates.compact_all();
+
+    // Targeted flag clearing (matching pynndescent utils.py:311-318):
+    // only clear flags for neighbors that were sampled into new_candidates.
     for i in 0..n {
-        new_candidates.subsample(i, max_candidates, rng);
-        old_candidates.subsample(i, max_candidates, rng);
+        let base = i * k;
+        let new_cands = new_candidates.get(i);
+        for s in 0..k {
+            if !heap.is_new[base + s] {
+                continue;
+            }
+            let nb = heap.indices[base + s];
+            if nb < 0 {
+                continue;
+            }
+            if new_cands.contains(&nb) {
+                heap.is_new[base + s] = false;
+            }
+        }
     }
 }
 
@@ -368,8 +450,8 @@ fn local_join(
     data: &[f32],
     dim: usize,
     n: usize,
-    new_candidates: &FlatCandidates,
-    old_candidates: &FlatCandidates,
+    new_candidates: &CandidateHeap,
+    old_candidates: &CandidateHeap,
     heap: &mut NeighborHeap,
 ) -> usize {
     let update_count = AtomicUsize::new(0);
