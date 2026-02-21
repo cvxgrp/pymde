@@ -40,6 +40,18 @@ files are recompiled.
 
 ## Testing
 
+### Rust unit tests
+
+```sh
+cd rust && cargo test
+```
+
+This runs the native Rust tests (for `insert_topk`, `sgemm_nn_t`, and
+`knn_blas_tiled`) without needing Python. No extra setup beyond the Rust
+toolchain is required.
+
+### Python integration tests
+
 ```sh
 pytest pymde/test_knn.py -v
 ```

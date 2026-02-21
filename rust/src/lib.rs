@@ -34,28 +34,7 @@ extern "C" {
     );
 }
 
-#[cfg(all(not(target_os = "macos"), not(target_os = "windows")))]
-#[link(name = "openblas")]
-extern "C" {
-    fn cblas_sgemm(
-        order: c_int,
-        transa: c_int,
-        transb: c_int,
-        m: c_int,
-        n: c_int,
-        k: c_int,
-        alpha: f32,
-        a: *const f32,
-        lda: c_int,
-        b: *const f32,
-        ldb: c_int,
-        beta: f32,
-        c: *mut f32,
-        ldc: c_int,
-    );
-}
-
-#[cfg(target_os = "windows")]
+#[cfg(not(target_os = "macos"))]
 #[link(name = "openblas")]
 extern "C" {
     fn cblas_sgemm(
@@ -148,9 +127,17 @@ fn knn_l2<'py>(
         )));
     }
 
+    if n > c_int::MAX as usize || d > c_int::MAX as usize {
+        return Err(PyValueError::new_err(format!(
+            "dimensions exceed c_int::MAX ({}): n={n}, d={d}",
+            c_int::MAX
+        )));
+    }
+
     let cols = k + 1;
 
-    // Flatten data to contiguous f32 slice
+    // Copy into a contiguous Vec so the data is owned and can cross into
+    // py.detach() (which releases the GIL — no NumPy references allowed).
     let flat: Vec<f32> = if let Some(s) = data.as_slice() {
         s.to_vec()
     } else {
@@ -249,7 +236,7 @@ fn knn_blas_tiled(flat: &[f32], n: usize, d: usize, k: usize) -> (Vec<i64>, Vec<
                         } else {
                             (norm_qi + norms[dj] + ip_row[bj]).max(0.0)
                         };
-                        if dist < threshold {
+                        if dist <= threshold {
                             insert_topk(row, dist, dj as i64);
                             threshold = row[cols - 1].0;
                         }
@@ -273,4 +260,250 @@ fn knn_blas_tiled(flat: &[f32], n: usize, d: usize, k: usize) -> (Vec<i64>, Vec<
 mod _knn {
     #[pymodule_export]
     use super::knn_l2;
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // -----------------------------------------------------------------------
+    // insert_topk
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn insert_topk_better_candidate_replaces_worst() {
+        let mut row = vec![(1.0, 0i64), (2.0, 1), (f32::INFINITY, i64::MAX)];
+        insert_topk(&mut row, 3.0, 2);
+        assert_eq!(row, [(1.0, 0), (2.0, 1), (3.0, 2)]);
+    }
+
+    #[test]
+    fn insert_topk_inserts_at_front() {
+        let mut row = vec![(2.0, 1i64), (3.0, 2), (4.0, 3)];
+        insert_topk(&mut row, 1.0, 0);
+        assert_eq!(row, [(1.0, 0), (2.0, 1), (3.0, 2)]);
+    }
+
+    #[test]
+    fn insert_topk_inserts_in_middle() {
+        let mut row = vec![(1.0, 0i64), (3.0, 2), (4.0, 3)];
+        insert_topk(&mut row, 2.0, 1);
+        assert_eq!(row, [(1.0, 0), (2.0, 1), (3.0, 2)]);
+    }
+
+    #[test]
+    fn insert_topk_rejects_worse_candidate() {
+        let mut row = vec![(1.0, 0i64), (2.0, 1), (3.0, 2)];
+        insert_topk(&mut row, 5.0, 99);
+        assert_eq!(row, [(1.0, 0), (2.0, 1), (3.0, 2)]);
+    }
+
+    #[test]
+    fn insert_topk_rejects_equal_dist_worse_idx() {
+        let mut row = vec![(1.0, 0i64), (2.0, 1), (3.0, 2)];
+        // Same distance as worst, but index >= worst index → rejected
+        insert_topk(&mut row, 3.0, 2);
+        assert_eq!(row, [(1.0, 0), (2.0, 1), (3.0, 2)]);
+        insert_topk(&mut row, 3.0, 5);
+        assert_eq!(row, [(1.0, 0), (2.0, 1), (3.0, 2)]);
+    }
+
+    #[test]
+    fn insert_topk_tiebreak_by_lower_idx() {
+        let mut row = vec![(1.0, 5i64), (2.0, 10), (3.0, 15)];
+        // Same distance as worst, but lower index → accepted
+        insert_topk(&mut row, 3.0, 7);
+        assert_eq!(row, [(1.0, 5), (2.0, 10), (3.0, 7)]);
+    }
+
+    #[test]
+    fn insert_topk_single_element() {
+        let mut row = vec![(5.0, 10i64)];
+        insert_topk(&mut row, 3.0, 2);
+        assert_eq!(row, [(3.0, 2)]);
+        // Worse → no change
+        insert_topk(&mut row, 4.0, 1);
+        assert_eq!(row, [(3.0, 2)]);
+    }
+
+    #[test]
+    fn insert_topk_multiple_inserts_maintain_order() {
+        let mut row = vec![(f32::INFINITY, i64::MAX); 4];
+        insert_topk(&mut row, 5.0, 50);
+        insert_topk(&mut row, 1.0, 10);
+        insert_topk(&mut row, 3.0, 30);
+        insert_topk(&mut row, 2.0, 20);
+        assert_eq!(row, [(1.0, 10), (2.0, 20), (3.0, 30), (5.0, 50)]);
+        // Inserting something worse than all 4 does nothing
+        insert_topk(&mut row, 6.0, 60);
+        assert_eq!(row, [(1.0, 10), (2.0, 20), (3.0, 30), (5.0, 50)]);
+        // Inserting something that displaces the worst
+        insert_topk(&mut row, 4.0, 40);
+        assert_eq!(row, [(1.0, 10), (2.0, 20), (3.0, 30), (4.0, 40)]);
+    }
+
+    // -----------------------------------------------------------------------
+    // sgemm_nn_t
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn sgemm_nn_t_identity() {
+        // A = [[1,0],[0,1]], B = [[1,0],[0,1]]
+        // C = -2 * A @ B^T = -2 * I
+        let a = [1.0f32, 0.0, 0.0, 1.0];
+        let b = [1.0f32, 0.0, 0.0, 1.0];
+        let mut c = [0.0f32; 4];
+        unsafe { sgemm_nn_t(2, 2, 2, -2.0, a.as_ptr(), b.as_ptr(), 0.0, c.as_mut_ptr()) };
+        assert_eq!(c, [-2.0, 0.0, 0.0, -2.0]);
+    }
+
+    #[test]
+    fn sgemm_nn_t_simple() {
+        // A = [[1,2,3]], B = [[4,5,6],[7,8,9]]
+        // A @ B^T = [1*4+2*5+3*6, 1*7+2*8+3*9] = [32, 50]
+        let a = [1.0f32, 2.0, 3.0];
+        let b = [4.0f32, 5.0, 6.0, 7.0, 8.0, 9.0];
+        let mut c = [0.0f32; 2];
+        unsafe { sgemm_nn_t(1, 2, 3, 1.0, a.as_ptr(), b.as_ptr(), 0.0, c.as_mut_ptr()) };
+        assert_eq!(c, [32.0, 50.0]);
+    }
+
+    #[test]
+    fn sgemm_nn_t_beta_accumulate() {
+        // Check that beta * C is accumulated
+        let a = [1.0f32, 0.0, 0.0, 1.0];
+        let b = [1.0f32, 0.0, 0.0, 1.0];
+        let mut c = [10.0f32, 20.0, 30.0, 40.0];
+        // C = 1.0 * A @ B^T + 0.5 * C = I + [5,10,15,20]
+        unsafe { sgemm_nn_t(2, 2, 2, 1.0, a.as_ptr(), b.as_ptr(), 0.5, c.as_mut_ptr()) };
+        assert_eq!(c, [6.0, 10.0, 15.0, 21.0]);
+    }
+
+    // -----------------------------------------------------------------------
+    // knn_blas_tiled  (end-to-end on small data)
+    // -----------------------------------------------------------------------
+
+    /// Helper: compute squared L2 distance between two d-dimensional vectors.
+    fn sq_l2(a: &[f32], b: &[f32]) -> f32 {
+        a.iter().zip(b).map(|(x, y)| (x - y) * (x - y)).sum()
+    }
+
+    #[test]
+    fn knn_blas_tiled_basic() {
+        // 4 points in 2D, k=2 → output has 3 columns (self + 2 neighbors)
+        //   p0=(0,0)  p1=(1,0)  p2=(3,0)  p3=(10,0)
+        // Distances:
+        //   d(0,1)=1  d(0,2)=9  d(0,3)=100
+        //   d(1,2)=4  d(1,3)=81
+        //   d(2,3)=49
+        let flat: Vec<f32> = vec![0.0, 0.0, 1.0, 0.0, 3.0, 0.0, 10.0, 0.0];
+        let (neighbors, sq_dists) = knn_blas_tiled(&flat, 4, 2, 2);
+
+        // Each row: [self, nn1, nn2]
+        let cols = 3;
+        for i in 0..4 {
+            // Column 0 is self
+            assert_eq!(neighbors[i * cols], i as i64);
+            assert_eq!(sq_dists[i * cols], 0.0);
+        }
+        // p0's neighbors: p1 (d=1), p2 (d=9)
+        assert_eq!(neighbors[0 * cols + 1], 1);
+        assert_eq!(neighbors[0 * cols + 2], 2);
+        assert!((sq_dists[0 * cols + 1] - 1.0).abs() < 1e-5);
+        assert!((sq_dists[0 * cols + 2] - 9.0).abs() < 1e-5);
+
+        // p1's neighbors: p0 (d=1), p2 (d=4)
+        assert_eq!(neighbors[1 * cols + 1], 0);
+        assert_eq!(neighbors[1 * cols + 2], 2);
+
+        // p3's neighbors: p2 (d=49), p1 (d=81)
+        assert_eq!(neighbors[3 * cols + 1], 2);
+        assert_eq!(neighbors[3 * cols + 2], 1);
+    }
+
+    #[test]
+    fn knn_blas_tiled_k1() {
+        // k=1: each point should find its nearest neighbor
+        // Triangle: (0,0), (1,0), (0.5, 0.866)
+        let flat: Vec<f32> = vec![0.0, 0.0, 1.0, 0.0, 0.5, 0.866];
+        let (neighbors, sq_dists) = knn_blas_tiled(&flat, 3, 2, 1);
+        let cols = 2; // self + 1 neighbor
+
+        // All self-distances are 0
+        for i in 0..3 {
+            assert_eq!(neighbors[i * cols], i as i64);
+            assert_eq!(sq_dists[i * cols], 0.0);
+        }
+
+        // Brute-force check the nearest neighbor for each point
+        let points = [[0.0f32, 0.0], [1.0, 0.0], [0.5, 0.866]];
+        for i in 0..3 {
+            let nn = neighbors[i * cols + 1] as usize;
+            let nn_dist = sq_dists[i * cols + 1];
+            // Verify this is indeed the closest
+            for j in 0..3 {
+                if j == i {
+                    continue;
+                }
+                let d = sq_l2(&points[i], &points[j]);
+                assert!(
+                    nn_dist <= d + 1e-4,
+                    "point {i}: reported nn={nn} dist={nn_dist}, but d({i},{j})={d}"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn knn_blas_tiled_distances_correct() {
+        // Verify reported squared distances match brute-force computation
+        let flat: Vec<f32> = vec![
+            1.0, 2.0, 3.0, // p0
+            4.0, 5.0, 6.0, // p1
+            7.0, 8.0, 9.0, // p2
+            1.5, 2.5, 3.5, // p3
+            10.0, 0.0, 0.0, // p4
+        ];
+        let n = 5;
+        let d = 3;
+        let k = 3;
+        let (neighbors, sq_dists) = knn_blas_tiled(&flat, n, d, k);
+        let cols = k + 1;
+
+        for i in 0..n {
+            for c in 1..cols {
+                let j = neighbors[i * cols + c] as usize;
+                let reported = sq_dists[i * cols + c];
+                let expected = sq_l2(&flat[i * d..(i + 1) * d], &flat[j * d..(j + 1) * d]);
+                assert!(
+                    (reported - expected).abs() < 1e-3,
+                    "row {i} col {c}: neighbor {j}, reported={reported}, expected={expected}"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn knn_blas_tiled_sorted_ascending() {
+        // Verify each row's distances are in non-decreasing order
+        let flat: Vec<f32> = vec![
+            0.0, 0.0, 3.0, 4.0, 1.0, 1.0, 6.0, 0.0, 2.0, 3.0,
+        ];
+        let n = 5;
+        let d = 2;
+        let k = 4;
+        let (_, sq_dists) = knn_blas_tiled(&flat, n, d, k);
+        let cols = k + 1;
+
+        for i in 0..n {
+            for c in 1..cols {
+                assert!(
+                    sq_dists[i * cols + c - 1] <= sq_dists[i * cols + c],
+                    "row {i}: distances not sorted at columns {}-{}",
+                    c - 1,
+                    c
+                );
+            }
+        }
+    }
 }
