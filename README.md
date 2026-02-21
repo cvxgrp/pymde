@@ -14,9 +14,10 @@ simple but general framework for embedding, called _Minimum-Distortion
 Embedding_ (MDE). With MDE, it is easy to recreate well-known embeddings and to
 create new ones, tailored to your particular application.
 
-PyMDE is competitive
-in runtime with more specialized embedding methods. With a GPU, it can be
-even faster.
+PyMDE is competitive in runtime with more specialized embedding methods. With a
+GPU, embedding computation can be even faster. For neighbor-preserving
+embeddings, it uses a custom exact k-nearest neighbor algorithm implemented in
+Rust, accelerated with Rayon and BLAS.
 
 ## Overview
 PyMDE can be enjoyed by beginners and experts alike. It can be used to:
@@ -32,7 +33,7 @@ PyMDE is very young software, under active development. If you run into issues,
 or have any feedback, please reach out by [filing a Github
 issue](https://github.com/cvxgrp/pymde/issues).
 
-This README gives a very brief overview of PyMDE. Make sure to read the 
+This README gives a very brief overview of PyMDE. Make sure to read the
 official documentation at www.pymde.org, which has in-depth tutorials
 and API documentation.
 
@@ -63,12 +64,14 @@ PyMDE has the following requirements:
 * scipy
 * torch >= 1.7.1
 * torchvision >= 0.8.2
-* faiss-cpu
 * requests
 
 ### Optional dependencies
 
-* **pynndescent** -- For efficient k-nearest neighbor computation on sparse matrices. Without it, sparse data is converted to a dense matrix before using faiss. For moderately sized matrices this can still be efficient, but for very large matrices the conversion can be memory-intensive. Install with `pip install pynndescent`.
+* **pynndescent** -- For efficient k-nearest neighbor computation on sparse
+matrices. Without it, sparse data is converted to a dense matrix before
+computing neighbors. For very large sparse matrices the conversion can be
+memory-intensive. Install with `pip install pynndescent`.
 
 ## Getting started
 Getting started with PyMDE is easy. For embeddings that work out-of-the box, we provide two main functions:
@@ -77,7 +80,7 @@ Getting started with PyMDE is easy. For embeddings that work out-of-the box, we 
 pymde.preserve_neighbors
 ```
 
-which preserves the local structure of original data, and 
+which preserves the local structure of original data, and
 
 ```python3
 pymde.preserve_distances
@@ -97,7 +100,7 @@ method on this object returns an embedding, which is a matrix
 original input is a data matrix of shape `(n_items, n_features)`, then the
 embedding matrix has shape `(n_items, embeddimg_dim)`.
 
-We give examples of using these functions below. 
+We give examples of using these functions below.
 
 ### Preserving neighbors
 The following code produces an embedding of the MNIST dataset (images of
@@ -131,7 +134,7 @@ and have uncorrelated features.
 
 ### Preserving distances
 The function `pymde.preserve_distances` is useful when you're more interested
-in preserving the gross global structure instead of local structure. 
+in preserving the gross global structure instead of local structure.
 
 Here's an example that produces an embedding of an academic coauthorship
 network, from Google Scholar. The original data is a sparse graph on roughly

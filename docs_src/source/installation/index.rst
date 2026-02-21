@@ -27,7 +27,6 @@ PyMDE has the following requirements:
 
 * Python >= 3.9
 * numpy >= 2.0
-* faiss-cpu
 * requests
 * scipy
 * torch >= 1.7.1
@@ -38,8 +37,8 @@ Optional dependencies
 
 * **pynndescent**: For efficient k-nearest neighbor computation on sparse
   matrices. Without it, sparse data is converted to a dense matrix before
-  using faiss. For moderately sized matrices this can still be efficient, but
-  for very large matrices the conversion can be memory-intensive.
+  computing neighbors. For very large sparse matrices the conversion can be
+  memory-intensive.
 
 .. code::
 
