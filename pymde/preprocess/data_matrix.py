@@ -88,6 +88,43 @@ def distances(data, retain_fraction=1.0, verbose=False):
     return Graph.from_edges(edges, delta, n_items=n_items)
 
 
+def _has_pynndescent():
+    try:
+        import pynndescent  # noqa: F401
+
+        return True
+    except ImportError:
+        return False
+
+
+def _knn_pynndescent(data, k, verbose):
+    import pynndescent
+
+    if verbose:
+        problem.LOGGER.info(f"Computing {k}-nearest neighbors with pynndescent")
+    index = pynndescent.NNDescent(
+        data,
+        n_neighbors=k + 1,
+        verbose=verbose,
+        max_candidates=60,
+    )
+    return index.neighbor_graph
+
+
+def _knn_faiss(data, k, verbose):
+    data = np.ascontiguousarray(data, dtype=np.float32)
+    n, d = data.shape
+    if verbose:
+        problem.LOGGER.info(
+            f"Computing {k}-nearest neighbors with faiss (n={n}, d={d})"
+        )
+    index = faiss.IndexFlatL2(d)
+    index.add(data)
+    sq_distances, neighbors = index.search(data, k + 1)
+    distances = np.sqrt(np.maximum(sq_distances, 0.0))
+    return neighbors, distances
+
+
 def k_nearest_neighbors(data, k, max_distance=None, verbose=False):
     """Compute k-nearest neighbors for each row in data matrix.
 
@@ -118,25 +155,22 @@ def k_nearest_neighbors(data, k, max_distance=None, verbose=False):
     else:
         device = "cpu"
 
-    if sp.issparse(data):
-        data = np.asarray(data.todense())
-
-    data = np.ascontiguousarray(data, dtype=np.float32)
-
-    n, d = data.shape
-    if verbose:
-        problem.LOGGER.info(
-            f"Computing {k}-nearest neighbors with faiss (n={n}, d={d})"
-        )
-
-    index = faiss.IndexFlatL2(d)
-    index.add(data)
-    sq_distances, neighbors = index.search(data, k + 1)
-    distances = np.sqrt(np.maximum(sq_distances, 0.0))
+    if sp.issparse(data) and _has_pynndescent():
+        neighbors, distances = _knn_pynndescent(data, k, verbose)
+    else:
+        if sp.issparse(data):
+            problem.LOGGER.warning(
+                "Converting sparse data to dense for faiss. "
+                "Install pynndescent for better performance with "
+                "sparse matrices: pip install pynndescent"
+            )
+            data = np.asarray(data.todense())
+        neighbors, distances = _knn_faiss(data, k, verbose)
 
     neighbors = neighbors[:, 1:]
     distances = distances[:, 1:]
 
+    n = data.shape[0]
     items = np.arange(n)
     items = np.repeat(items, k)
     edges = np.stack([items, neighbors.flatten()], axis=1)

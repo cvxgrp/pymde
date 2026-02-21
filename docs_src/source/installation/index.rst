@@ -33,6 +33,18 @@ PyMDE has the following requirements:
 * torch >= 1.7.1
 * torchvision >= 0.8.2
 
+Optional dependencies
+---------------------
+
+* **pynndescent**: For efficient k-nearest neighbor computation on sparse
+  matrices. Without it, sparse data is converted to a dense matrix before
+  using faiss. For moderately sized matrices this can still be efficient, but
+  for very large matrices the conversion can be memory-intensive.
+
+.. code::
+
+    pip install pynndescent
+
 GPU acceleration
 ----------------
 If you have a CUDA-enabled GPU, PyMDE can use it to speed up embedding

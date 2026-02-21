@@ -84,6 +84,14 @@ in :any:`pymde.penalties`. A common preprocessing step is to compute the
 Preprocessing based on neighbors can be thought of as a "sparsifying"
 operation: they take data and return a sparse graph (the ``knn_graph``).
 
+**Sparse data.** When the data matrix is a ``scipy.sparse`` matrix,
+``k_nearest_neighbors`` will use `pynndescent <https://github.com/lmcinnes/pynndescent>`_
+for neighbor computation if it is installed, avoiding conversion to a dense matrix.
+If ``pynndescent`` is not installed, the sparse data will be converted to dense
+and processed with faiss. For moderately sized matrices this can still be
+efficient, but for very large matrices the conversion can be memory-intensive. Install it with
+``pip install pynndescent``.
+
 .. autofunction:: pymde.preprocess.k_nearest_neighbors
     :noindex:
 

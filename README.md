@@ -66,6 +66,10 @@ PyMDE has the following requirements:
 * faiss-cpu
 * requests
 
+### Optional dependencies
+
+* **pynndescent** -- For efficient k-nearest neighbor computation on sparse matrices. Without it, sparse data is converted to a dense matrix before using faiss. For moderately sized matrices this can still be efficient, but for very large matrices the conversion can be memory-intensive. Install with `pip install pynndescent`.
+
 ## Getting started
 Getting started with PyMDE is easy. For embeddings that work out-of-the box, we provide two main functions:
 
