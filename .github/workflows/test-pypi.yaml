@@ -1,0 +1,57 @@
+name: Publish to Test PyPI
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compute_version:
+    name: Compute dev version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compute dev version
+        id: get_version
+        run: |
+          # Current version from pymde/__init__.py
+          current=$(python -c "import re; print(re.search(r'__version__\s*=\s*\"(.+?)\"', open('pymde/__init__.py').read()).group(1))")
+          # Increment patch
+          incremented=$(echo "$current" | awk -F. '{printf "%d.%d.%d", $1, $2, $3+1}')
+          # Commits since last tag (or all commits if no tags)
+          n_commits=$(git rev-list $(git describe --tags --abbrev=0 2>/dev/null || git rev-list --max-parents=0 HEAD)..HEAD --count)
+          version="${incremented}.dev${n_commits}"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "Dev version: $version"
+
+  build:
+    needs: compute_version
+    uses: ./.github/workflows/_build.yaml
+    with:
+      version: ${{ needs.compute_version.outputs.version }}
+
+  publish:
+    name: Publish to Test PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/pymde
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: cibw-*
+          path: dist
+          merge-multiple: true
+
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
