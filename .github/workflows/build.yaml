@@ -52,7 +52,7 @@ jobs:
           CIBW_BEFORE_BUILD_WINDOWS: "pip install delvewheel"
           CIBW_ENVIRONMENT_WINDOWS: 'OPENBLAS_LIB_DIR=C:\openblas\lib'
           CIBW_REPAIR_WHEEL_COMMAND_WINDOWS: "delvewheel repair --add-path C:\\openblas\\bin -w {dest_dir} {wheel}"
-          CIBW_TEST_COMMAND: "python -c \"from pymde._knn import knn_l2; print('ok')\""
+          CIBW_TEST_COMMAND: "python -c \"from pymde._native import knn_l2; print('ok')\""
 
       - uses: actions/upload-artifact@v4
         with:

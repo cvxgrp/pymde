@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 
-from pymde._knn import knn_l2
+from pymde._native import knn_l2
 
 
 def _brute_force_knn(data, k):
