@@ -45,7 +45,6 @@ jobs:
           7z x C:\openblas.zip -oC:\openblas
           copy C:\openblas\lib\libopenblas.dll.a C:\openblas\lib\openblas.lib
           echo "OPENBLAS_LIB_DIR=C:\openblas\lib" >> $env:GITHUB_ENV
-          echo "C:\openblas\bin" >> $env:GITHUB_PATH
 
       - name: Install build dependencies
         run: uv pip install --system setuptools setuptools-rust wheel "cython>=3.0" "numpy>=2.0"
@@ -64,6 +63,10 @@ jobs:
 
       - name: Install pymde
         run: uv pip install --system -e ".[dev]"
+
+      - name: Copy OpenBLAS DLL next to extension module (Windows)
+        if: matrix.os == 'windows-latest'
+        run: copy C:\openblas\bin\libopenblas.dll pymde\
 
       - name: Test with pytest
         run: pytest -v pymde/
