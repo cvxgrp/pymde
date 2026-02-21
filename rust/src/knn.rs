@@ -4,7 +4,7 @@ use numpy::{IntoPyArray, PyArray2, PyReadonlyArray2};
 use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
 use rayon::prelude::*;
-use std::os::raw::c_int;
+use core::ffi::c_int;
 
 const QUERY_BS: usize = 1024;
 const DB_BS: usize = 4096;
@@ -99,8 +99,9 @@ fn knn_blas_tiled(flat: &[f32], n: usize, d: usize, k: usize) -> (Vec<i64>, Vec<
     let cols = k + 1;
 
     // Precompute squared norms: ||x_i||^2
-    let norms: Vec<f32> = (0..n)
-        .map(|i| flat[i * d..(i + 1) * d].iter().map(|&v| v * v).sum())
+    let norms: Vec<f32> = flat
+        .chunks_exact(d)
+        .map(|row| row.iter().map(|&v| v * v).sum())
         .collect();
 
     // Top-k state: n rows of (dist, idx) pairs, sorted ascending.
@@ -162,12 +163,7 @@ fn knn_blas_tiled(flat: &[f32], n: usize, d: usize, k: usize) -> (Vec<i64>, Vec<
         });
 
     // Extract into separate arrays
-    let mut neighbors = vec![0i64; n * cols];
-    let mut sq_dists = vec![0.0f32; n * cols];
-    for (i, &(dist, idx)) in best.iter().enumerate() {
-        sq_dists[i] = dist;
-        neighbors[i] = idx;
-    }
+    let (sq_dists, neighbors): (Vec<f32>, Vec<i64>) = best.into_iter().unzip();
 
     (neighbors, sq_dists)
 }

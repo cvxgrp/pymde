@@ -1,32 +1,11 @@
-use std::os::raw::c_int;
+use core::ffi::c_int;
 
 const ROW_MAJOR: c_int = 101;
 const NO_TRANS: c_int = 111;
 const TRANS: c_int = 112;
 
-#[cfg(target_os = "macos")]
-#[link(name = "Accelerate", kind = "framework")]
-unsafe extern "C" {
-    fn cblas_sgemm(
-        order: c_int,
-        transa: c_int,
-        transb: c_int,
-        m: c_int,
-        n: c_int,
-        k: c_int,
-        alpha: f32,
-        a: *const f32,
-        lda: c_int,
-        b: *const f32,
-        ldb: c_int,
-        beta: f32,
-        c: *mut f32,
-        ldc: c_int,
-    );
-}
-
-#[cfg(not(target_os = "macos"))]
-#[link(name = "openblas")]
+#[cfg_attr(target_os = "macos", link(name = "Accelerate", kind = "framework"))]
+#[cfg_attr(not(target_os = "macos"), link(name = "openblas"))]
 unsafe extern "C" {
     fn cblas_sgemm(
         order: c_int,
