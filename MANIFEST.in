@@ -1,1 +1,1 @@
-recursive-include rust *.rs *.toml
+recursive-include rust *.rs *.toml *.lock

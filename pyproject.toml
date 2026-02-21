@@ -69,5 +69,10 @@ extend-ignore = ["E731"]
 [tool.ruff.format]
 quote-style = "double"
 
+[[tool.setuptools-rust.ext-modules]]
+target = "pymde._knn"
+path = "rust/Cargo.toml"
+binding = "PyO3"
+
 [tool.pytest.ini_options]
 testpaths = ["pymde"]

@@ -15,11 +15,11 @@ git clone https://github.com/cvxgrp/pymde.git
 cd pymde
 
 # Create a virtual environment
-python -m venv .venv
+uv venv
 source .venv/bin/activate
 
 # Install in editable mode with dev dependencies
-pip install -e ".[dev]"
+uv pip install -e ".[dev]"
 ```
 
 ## Running Tests
