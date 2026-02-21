@@ -1,5 +1,6 @@
 __version__ = "0.2.3"
 
+
 from pymde.problem import MDE
 
 from pymde.constraints import Centered, Anchored, Standardized

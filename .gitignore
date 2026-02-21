@@ -9,8 +9,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# C extensions
+# C / Rust extensions
 *.so
+*.dylib
+*.pyd
 
 # Distribution / packaging
 .Python
@@ -95,6 +97,9 @@ venv.bak/
 
 # Cython generated
 pymde/preprocess/_graph.c
+
+# Rust build artifacts
+rust/target/
 
 # editors
 *.swp

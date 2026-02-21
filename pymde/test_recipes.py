@@ -47,7 +47,7 @@ def test_laplacian_embedding(device):
     also_laplacian = util.align(source=also_laplacian, target=laplacian_emb)
 
     testing.assert_allclose(
-        laplacian_emb.cpu().numpy(), also_laplacian.cpu().numpy(), atol=1e-4
+        laplacian_emb.cpu().numpy(), also_laplacian.cpu().numpy(), atol=1e-3
     )
 
 

@@ -27,11 +27,22 @@ PyMDE has the following requirements:
 
 * Python >= 3.9
 * numpy >= 2.0
-* pynndescent
 * requests
 * scipy
 * torch >= 1.7.1
 * torchvision >= 0.8.2
+
+Optional dependencies
+---------------------
+
+* **pynndescent**: For efficient k-nearest neighbor computation on sparse
+  matrices. Without it, sparse data is converted to a dense matrix before
+  computing neighbors. For very large sparse matrices the conversion can be
+  memory-intensive.
+
+.. code::
+
+    pip install pynndescent
 
 GPU acceleration
 ----------------

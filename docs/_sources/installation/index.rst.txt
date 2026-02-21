@@ -27,7 +27,7 @@ PyMDE has the following requirements:
 
 * Python >= 3.9
 * numpy >= 2.0
-* pynndescent
+* faiss-cpu
 * requests
 * scipy
 * torch >= 1.7.1

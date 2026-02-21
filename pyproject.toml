@@ -1,6 +1,7 @@
 [build-system]
 requires = [
     "setuptools >= 68.0",
+    "setuptools-rust >= 1.9",
     "wheel",
     "cython >= 3.0",
     # Building against numpy 2.x yields wheels also compatible with 1.x at runtime
@@ -30,10 +31,6 @@ classifiers = [
 dependencies = [
     "matplotlib",
     "numpy >= 1.17.5",
-    "pynndescent >= 0.5",
-    # numba is a transitive dependency of pynndescent; included to appease uv:
-    # https://github.com/astral-sh/uv/issues/8863
-    "numba >= 0.59.0",
     "scipy",
     "torch >= 1.7.1",
     "torchvision >= 0.8.2",
@@ -71,6 +68,11 @@ extend-ignore = ["E731"]
 
 [tool.ruff.format]
 quote-style = "double"
+
+[[tool.setuptools-rust.ext-modules]]
+target = "pymde._knn"
+path = "rust/Cargo.toml"
+binding = "PyO3"
 
 [tool.pytest.ini_options]
 testpaths = ["pymde"]

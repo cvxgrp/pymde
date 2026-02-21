@@ -1,4 +1,4 @@
-"""Minimal setup.py for Cython ext_modules (all metadata is in pyproject.toml)."""
+"""Minimal setup.py for Cython extensions (all metadata is in pyproject.toml)."""
 
 from setuptools import setup, Extension
 import numpy as np
@@ -12,5 +12,5 @@ setup(
             extra_compile_args=["-O3"],
             include_dirs=[np.get_include()],
         )
-    ]
+    ],
 )

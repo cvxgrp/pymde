@@ -87,6 +87,43 @@ def distances(data, retain_fraction=1.0, verbose=False):
     return Graph.from_edges(edges, delta, n_items=n_items)
 
 
+def _has_pynndescent():
+    try:
+        import pynndescent  # noqa: F401
+
+        return True
+    except ImportError:
+        return False
+
+
+def _knn_pynndescent(data, k, verbose):
+    import pynndescent
+
+    if verbose:
+        problem.LOGGER.info(f"Computing {k}-nearest neighbors with pynndescent")
+    index = pynndescent.NNDescent(
+        data,
+        n_neighbors=k + 1,
+        verbose=verbose,
+        max_candidates=60,
+    )
+    return index.neighbor_graph
+
+
+def _knn_exact(data, k, verbose):
+    from pymde._knn import knn_l2
+
+    data = np.ascontiguousarray(data, dtype=np.float32)
+    n, d = data.shape
+    if verbose:
+        problem.LOGGER.info(
+            f"Computing {k}-nearest neighbors (n={n}, d={d})"
+        )
+    neighbors, sq_distances = knn_l2(data, k)
+    distances = np.sqrt(np.maximum(sq_distances, 0.0))
+    return neighbors, distances
+
+
 def k_nearest_neighbors(data, k, max_distance=None, verbose=False):
     """Compute k-nearest neighbors for each row in data matrix.
 
@@ -111,35 +148,24 @@ def k_nearest_neighbors(data, k, max_distance=None, verbose=False):
     pymde.Graph
         a neighborhood graph
     """
-    # lazy import, because importing pynndescent takes some time
-    import pynndescent
-
     if isinstance(data, torch.Tensor):
         device = data.device
         data = data.cpu().numpy()
     else:
         device = "cpu"
 
-    n = data.shape[0]
-    if n < 10000:
-        import sklearn.neighbors
-
-        if verbose:
-            problem.LOGGER.info("Exact nearest neighbors by brute force ")
-        nn = sklearn.neighbors.NearestNeighbors(
-            n_neighbors=k + 1, algorithm="brute"
-        )
-        nn.fit(data)
-        distances, neighbors = nn.kneighbors(data)
+    if sp.issparse(data) and _has_pynndescent():
+        neighbors, distances = _knn_pynndescent(data, k, verbose)
     else:
-        # TODO default params (n_trees, max_candidates)
-        index = pynndescent.NNDescent(
-            data,
-            n_neighbors=k + 1,
-            verbose=verbose,
-            max_candidates=60,
-        )
-        neighbors, distances = index.neighbor_graph
+        if sp.issparse(data):
+            problem.LOGGER.warning(
+                "Converting sparse data to dense for kNN. "
+                "Install pynndescent for better performance with "
+                "sparse matrices: pip install pynndescent"
+            )
+            data = np.asarray(data.todense())
+        neighbors, distances = _knn_exact(data, k, verbose)
+
     neighbors = neighbors[:, 1:]
     distances = distances[:, 1:]
 
