@@ -3,7 +3,6 @@ requires = [
     "setuptools >= 68.0",
     "setuptools-rust >= 1.9",
     "wheel",
-    "cython >= 3.0",
     # Building against numpy 2.x yields wheels also compatible with 1.x at runtime
     "numpy >= 2.0.0",
 ]
@@ -47,7 +46,6 @@ Issues = "https://github.com/cvxgrp/pymde/issues"
 dev = [
     "pytest",
     "ruff",
-    "cython >= 3.0",
 ]
 
 [tool.setuptools]
@@ -70,7 +68,7 @@ extend-ignore = ["E731"]
 quote-style = "double"
 
 [[tool.setuptools-rust.ext-modules]]
-target = "pymde._knn"
+target = "pymde._native"
 path = "rust/Cargo.toml"
 binding = "PyO3"
 

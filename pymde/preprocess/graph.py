@@ -9,7 +9,7 @@ from pymde import constraints
 from pymde import problem
 from pymde import util
 from pymde.functions import penalties, losses
-from pymde.preprocess import _graph
+from pymde._native import breadth_first_directed as _breadth_first_directed
 
 
 __this_module = sys.modules[__name__]
@@ -295,7 +295,7 @@ def breadth_first_order(
     predecessors.fill(-9999)
 
     if directed:
-        _graph._breadth_first_directed(
+        _breadth_first_directed(
             i_start,
             csgraph.indices,
             csgraph.indptr,

@@ -111,7 +111,7 @@ def _knn_pynndescent(data, k, verbose):
 
 
 def _knn_exact(data, k, verbose):
-    from pymde._knn import knn_l2
+    from pymde._native import knn_l2
 
     data = np.ascontiguousarray(data, dtype=np.float32)
     n, d = data.shape
