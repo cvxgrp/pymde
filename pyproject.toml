@@ -3,8 +3,6 @@ requires = [
     "setuptools >= 68.0",
     "setuptools-rust >= 1.9",
     "wheel",
-    # Building against numpy 2.x yields wheels also compatible with 1.x at runtime
-    "numpy >= 2.0.0",
 ]
 build-backend = "setuptools.build_meta"
 
