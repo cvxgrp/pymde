@@ -50,6 +50,11 @@ pub(crate) fn breadth_first_directed<'py>(
 }
 
 /// Pure-Rust BFS on a CSR graph. Mirrors the Cython `_breadth_first_directed`.
+///
+/// # Panics
+///
+/// Panics if `head_node >= predecessors.len()` or if the CSR data is malformed
+/// (e.g. `indptr` too short, `indices` values out of range).
 fn bfs_directed(
     head_node: usize,
     indices: &[i32],
@@ -58,35 +63,39 @@ fn bfs_directed(
     lengths: &mut [i32],
     predecessors: &mut [i32],
 ) -> usize {
+    let n = predecessors.len();
+    assert!(head_node < n, "head_node ({head_node}) out of bounds for graph with {n} nodes");
+
     node_list[0] = head_node as i32;
     lengths[head_node] = 0;
+    predecessors[head_node] = head_node as i32; // mark visited
 
-    let mut i_nl: usize = 0;
-    let mut i_nl_end: usize = 1;
+    let mut queue_head: usize = 0;
+    let mut queue_tail: usize = 1;
 
-    while i_nl < i_nl_end {
-        let pnode = node_list[i_nl] as usize;
-        let curr_length = lengths[pnode];
+    while queue_head < queue_tail {
+        let parent = node_list[queue_head] as usize;
+        let depth = lengths[parent];
 
-        let start = indptr[pnode] as usize;
-        let end = indptr[pnode + 1] as usize;
+        let start = indptr[parent] as usize;
+        let end = indptr[parent + 1] as usize;
         for i in start..end {
-            let cnode = indices[i] as usize;
-            if cnode == head_node {
-                continue;
-            }
-            if predecessors[cnode] == NULL_IDX {
-                node_list[i_nl_end] = cnode as i32;
-                predecessors[cnode] = pnode as i32;
-                lengths[cnode] = curr_length + 1;
-                i_nl_end += 1;
+            let neighbor = indices[i] as usize;
+            if predecessors[neighbor] == NULL_IDX {
+                node_list[queue_tail] = neighbor as i32;
+                predecessors[neighbor] = parent as i32;
+                lengths[neighbor] = depth + 1;
+                queue_tail += 1;
             }
         }
 
-        i_nl += 1;
+        queue_head += 1;
     }
 
-    i_nl
+    // Restore head's predecessor to NULL_IDX (head has no predecessor).
+    predecessors[head_node] = NULL_IDX;
+
+    queue_tail
 }
 
 #[cfg(test)]
@@ -183,5 +192,39 @@ mod tests {
         assert_eq!(count, 1);
         assert_eq!(node_list[0], 0);
         assert_eq!(lengths[0], 0);
+    }
+
+    #[test]
+    fn bfs_from_middle_node() {
+        // 0 -> 1 -> 2 -> 3, start BFS from node 1
+        let indptr = vec![0, 1, 2, 3, 3];
+        let indices = vec![1, 2, 3];
+        let (count, node_list, lengths, predecessors) = run_bfs(1, &indices, &indptr, 4);
+        assert_eq!(count, 3); // visits 1, 2, 3; node 0 unreachable
+        assert_eq!(node_list[0], 1);
+        assert_eq!(node_list[1], 2);
+        assert_eq!(node_list[2], 3);
+        assert_eq!(lengths[1], 0);
+        assert_eq!(lengths[2], 1);
+        assert_eq!(lengths[3], 2);
+        assert_eq!(lengths[0], NULL_IDX);
+        assert_eq!(predecessors[1], NULL_IDX); // head has no predecessor
+        assert_eq!(predecessors[2], 1);
+        assert_eq!(predecessors[3], 2);
+    }
+
+    #[test]
+    fn bfs_self_loop_on_head() {
+        // 0 -> 0, 0 -> 1 (self-loop on head node)
+        let indptr = vec![0, 2, 2];
+        let indices = vec![0, 1];
+        let (count, node_list, lengths, predecessors) = run_bfs(0, &indices, &indptr, 2);
+        assert_eq!(count, 2);
+        assert_eq!(node_list[0], 0);
+        assert_eq!(node_list[1], 1);
+        assert_eq!(lengths[0], 0);
+        assert_eq!(lengths[1], 1);
+        assert_eq!(predecessors[0], NULL_IDX); // head predecessor restored
+        assert_eq!(predecessors[1], 0);
     }
 }
