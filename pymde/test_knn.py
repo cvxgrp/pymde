@@ -8,7 +8,6 @@ from pymde._knn import knn_l2
 
 def _brute_force_knn(data, k):
     """NumPy brute-force kNN for reference."""
-    n = data.shape[0]
     # Pairwise squared distances via broadcasting
     diff = data[:, None, :] - data[None, :, :]
     sq_dists = (diff * diff).sum(axis=2)
