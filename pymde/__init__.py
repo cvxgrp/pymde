@@ -1,9 +1,5 @@
 __version__ = "0.2.3"
 
-import os as _os
-_os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
-del _os
-
 
 from pymde.problem import MDE
 

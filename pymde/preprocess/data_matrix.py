@@ -1,4 +1,3 @@
-import faiss
 import numpy as np
 import scipy.sparse as sp
 import torch
@@ -111,16 +110,16 @@ def _knn_pynndescent(data, k, verbose):
     return index.neighbor_graph
 
 
-def _knn_faiss(data, k, verbose):
+def _knn_exact(data, k, verbose):
+    from pymde._knn import knn_l2
+
     data = np.ascontiguousarray(data, dtype=np.float32)
     n, d = data.shape
     if verbose:
         problem.LOGGER.info(
-            f"Computing {k}-nearest neighbors with faiss (n={n}, d={d})"
+            f"Computing {k}-nearest neighbors (n={n}, d={d})"
         )
-    index = faiss.IndexFlatL2(d)
-    index.add(data)
-    sq_distances, neighbors = index.search(data, k + 1)
+    neighbors, sq_distances = knn_l2(data, k)
     distances = np.sqrt(np.maximum(sq_distances, 0.0))
     return neighbors, distances
 
@@ -160,12 +159,12 @@ def k_nearest_neighbors(data, k, max_distance=None, verbose=False):
     else:
         if sp.issparse(data):
             problem.LOGGER.warning(
-                "Converting sparse data to dense for faiss. "
+                "Converting sparse data to dense for kNN. "
                 "Install pynndescent for better performance with "
                 "sparse matrices: pip install pynndescent"
             )
             data = np.asarray(data.todense())
-        neighbors, distances = _knn_faiss(data, k, verbose)
+        neighbors, distances = _knn_exact(data, k, verbose)
 
     neighbors = neighbors[:, 1:]
     distances = distances[:, 1:]
