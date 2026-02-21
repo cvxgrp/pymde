@@ -25,15 +25,24 @@ jobs:
             aarch64-apple-darwin,
             x86_64-apple-darwin
 
+      - name: Set up QEMU
+        if: matrix.os == 'ubuntu-latest'
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.3
         env:
           CIBW_BUILD: "cp310-* cp311-* cp312-* cp313-*"
           CIBW_SKIP: "*-win32 *-manylinux_i686 *-musllinux*"
+          CIBW_ARCHS_LINUX: "x86_64 aarch64"
           CIBW_ARCHS_MACOS: "x86_64 arm64"
+          CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
+          CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_28
           CIBW_BEFORE_ALL_LINUX: >-
-            yum install -y epel-release &&
-            yum install -y openblas-devel &&
+            dnf install -y epel-release &&
+            dnf install -y openblas-devel &&
             curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain stable
           CIBW_ENVIRONMENT_LINUX: 'PATH="$HOME/.cargo/bin:$PATH"'
           CIBW_BEFORE_ALL_WINDOWS: >-

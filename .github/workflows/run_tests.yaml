@@ -38,6 +38,14 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install -y libopenblas-dev
 
+      - name: Install OpenBLAS (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          curl -L -o C:\openblas.zip https://github.com/OpenMathLib/OpenBLAS/releases/download/v0.3.28/OpenBLAS-0.3.28-x64.zip
+          7z x C:\openblas.zip -oC:\openblas
+          copy C:\openblas\lib\libopenblas.dll.a C:\openblas\lib\openblas.lib
+          echo "OPENBLAS_LIB_DIR=C:\openblas\lib" >> $env:GITHUB_ENV
+
       - name: Install build dependencies
         run: uv pip install --system setuptools setuptools-rust wheel "cython>=3.0" "numpy>=2.0"
 
