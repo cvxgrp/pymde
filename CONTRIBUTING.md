@@ -2,9 +2,9 @@
 
 ## Project Structure
 
-- `pymde/` — source code (includes a Cython extension at `pymde/preprocess/_graph.pyx`)
+- `pymde/` — Python source code
+- `rust/` — Rust extension (kNN and BFS, built via setuptools-rust + PyO3)
 - `pyproject.toml` — all project metadata, dependencies, and tool configuration
-- `setup.py` — minimal file defining only the Cython extension module
 - `scripts/release.sh` — interactive release script
 
 ## Development Setup
@@ -45,6 +45,18 @@ ruff format --check pymde/
 # Apply formatting
 ruff format pymde/
 ```
+
+## Testing a Release (Test PyPI)
+
+To test wheels before cutting an official release, trigger the **Publish to Test PyPI** workflow manually from the Actions tab (any branch). It builds wheels for all platforms and uploads them with an auto-incremented dev version.
+
+Install the test release with:
+
+```bash
+pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ pymde
+```
+
+The `--extra-index-url` is needed so dependencies (torch, numpy, etc.) resolve from the real PyPI.
 
 ## Making a Release
 
