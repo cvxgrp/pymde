@@ -6,7 +6,7 @@ const TRANS: c_int = 112;
 
 #[cfg(target_os = "macos")]
 #[link(name = "Accelerate", kind = "framework")]
-extern "C" {
+unsafe extern "C" {
     fn cblas_sgemm(
         order: c_int,
         transa: c_int,
@@ -27,7 +27,7 @@ extern "C" {
 
 #[cfg(not(target_os = "macos"))]
 #[link(name = "openblas")]
-extern "C" {
+unsafe extern "C" {
     fn cblas_sgemm(
         order: c_int,
         transa: c_int,
@@ -59,22 +59,24 @@ pub(crate) unsafe fn sgemm_nn_t(
     beta: f32,
     c: *mut f32,
 ) {
-    cblas_sgemm(
-        ROW_MAJOR,
-        NO_TRANS,
-        TRANS,
-        m as c_int,
-        n as c_int,
-        k as c_int,
-        alpha,
-        a,
-        k as c_int, // lda = number of columns of A
-        b,
-        k as c_int, // ldb = number of columns of B
-        beta,
-        c,
-        n as c_int, // ldc = number of columns of C
-    );
+    unsafe {
+        cblas_sgemm(
+            ROW_MAJOR,
+            NO_TRANS,
+            TRANS,
+            m as c_int,
+            n as c_int,
+            k as c_int,
+            alpha,
+            a,
+            k as c_int, // lda = number of columns of A
+            b,
+            k as c_int, // ldb = number of columns of B
+            beta,
+            c,
+            n as c_int, // ldc = number of columns of C
+        );
+    }
 }
 
 #[cfg(test)]

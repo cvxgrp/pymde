@@ -47,7 +47,7 @@ dev = [
 ]
 
 [tool.setuptools]
-packages = { find = {} }
+packages = { find = { exclude = ["rust*"] } }
 
 [tool.setuptools.dynamic]
 version = { attr = "pymde.__version__" }
