@@ -108,6 +108,14 @@ def _knn_pynndescent(data, k, verbose):
     return index.neighbor_graph
 
 
+def _knn_nndescent(data, k, verbose):
+    from pymde._native import nn_descent
+
+    data = np.ascontiguousarray(data, dtype=np.float32)
+    neighbors, distances = nn_descent(data, k, verbose=verbose)
+    return neighbors, distances
+
+
 def _knn_exact(data, k, verbose):
     from pymde._native import knn_l2
 
@@ -157,7 +165,11 @@ def k_nearest_neighbors(data, k, max_distance=None, verbose=False):
                 "sparse matrices: pip install pynndescent"
             )
             data = np.asarray(data.todense())
-        neighbors, distances = _knn_exact(data, k, verbose)
+        n = data.shape[0]
+        if n >= 100000:
+            neighbors, distances = _knn_nndescent(data, k, verbose)
+        else:
+            neighbors, distances = _knn_exact(data, k, verbose)
 
     neighbors = neighbors[:, 1:]
     distances = distances[:, 1:]

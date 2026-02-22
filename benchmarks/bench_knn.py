@@ -17,7 +17,7 @@ import numpy as np
 
 def _ground_truth(data, k):
     """Brute-force exact kNN using Rust extension for recall computation."""
-    from pymde._knn import knn_l2
+    from pymde._native import knn_l2
 
     neighbors, _ = knn_l2(data, k)
     return neighbors[:, 1:]  # drop self
@@ -34,7 +34,7 @@ def recall_at_k(neighbors, gt_neighbors):
 
 
 def bench_rust_knn(data, k):
-    from pymde._knn import knn_l2
+    from pymde._native import knn_l2
 
     tracemalloc.start()
     t0 = time.perf_counter()
@@ -44,6 +44,18 @@ def bench_rust_knn(data, k):
     tracemalloc.stop()
     distances = np.sqrt(np.maximum(sq_distances[:, 1:], 0.0))
     return neighbors[:, 1:], distances, elapsed, peak_mem
+
+
+def bench_rust_nndescent(data, k):
+    from pymde._native import nn_descent
+
+    tracemalloc.start()
+    t0 = time.perf_counter()
+    neighbors, distances = nn_descent(data, k)
+    elapsed = time.perf_counter() - t0
+    _, peak_mem = tracemalloc.get_traced_memory()
+    tracemalloc.stop()
+    return neighbors[:, 1:], distances[:, 1:], elapsed, peak_mem
 
 
 def bench_pynndescent(data, k):
@@ -114,6 +126,7 @@ def bench_faiss_ivf(data, k):
 # Always-available methods
 METHODS = {
     "rust-knn": bench_rust_knn,
+    "rust-nndescent": bench_rust_nndescent,
 }
 
 # Conditionally add faiss methods
