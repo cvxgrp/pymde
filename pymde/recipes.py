@@ -227,6 +227,7 @@ def preserve_neighbors(
     n_neighbors=None,
     repulsive_fraction=None,
     max_distance=None,
+    knn_method=None,
     init="quadratic",
     device="cpu",
     verbose=False,
@@ -291,6 +292,11 @@ def preserve_neighbors(
     max_distance: float (optional)
         If not None, neighborhoods are restricted to have a radius
         no greater than ``max_distance``.
+    knn_method: str (optional)
+        Which algorithm to use for k-nearest neighbor computation.
+        ``'exact'`` uses brute-force exact search, ``'approximate'``
+        uses NN-Descent. If ``None`` (the default), the method is chosen
+        automatically based on dataset size.
     init: str
         Initialization strategy; 'quadratic' or 'random'. If the quadratic
         initialization takes too much time, try a random initialization.
@@ -348,6 +354,7 @@ def preserve_neighbors(
         data,
         k=n_neighbors,
         max_distance=max_distance,
+        knn_method=knn_method,
         verbose=verbose,
     )
     edges = knn_graph.edges.to(device)

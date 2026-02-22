@@ -57,7 +57,9 @@ def distances(data, retain_fraction=1.0, verbose=False):
         )
 
 
-def k_nearest_neighbors(data, k, max_distance=None, verbose=False):
+def k_nearest_neighbors(
+    data, k, max_distance=None, knn_method=None, verbose=False
+):
     """Compute k-nearest neighbors, given data matrix or graph.
 
     This function computes a k-nearest neighbor graph, given either
@@ -84,6 +86,12 @@ def k_nearest_neighbors(data, k, max_distance=None, verbose=False):
     max_distance: float (optional)
         If not ``None``, neighborhoods are restricted to have a radius
         no greater than `max_distance`.
+    knn_method: str (optional)
+        Which algorithm to use for k-nearest neighbor computation.
+        ``'exact'`` uses brute-force exact search, ``'approximate'``
+        uses NN-Descent. If ``None`` (the default), the method is chosen
+        automatically based on dataset size. Only applies to data matrices,
+        not graphs.
     verbose: bool
         If ``True``, print verbose output.
 
@@ -96,7 +104,8 @@ def k_nearest_neighbors(data, k, max_distance=None, verbose=False):
 
     if _is_data_matrix(data):
         return data_matrix.k_nearest_neighbors(
-            data, k=k, max_distance=max_distance, verbose=verbose
+            data, k=k, max_distance=max_distance, knn_method=knn_method,
+            verbose=verbose,
         )
     else:
         return graph.k_nearest_neighbors(

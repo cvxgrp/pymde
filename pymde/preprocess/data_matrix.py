@@ -8,6 +8,9 @@ from pymde.preprocess.preprocess import sample_edges
 from pymde import util
 
 
+KNN_APPROXIMATE_THRESHOLD = 10000
+
+
 def distances(data, retain_fraction=1.0, verbose=False):
     """Compute distances, given data matrix.
 
@@ -125,7 +128,9 @@ def _knn_exact(data, k, verbose):
     return neighbors, distances
 
 
-def k_nearest_neighbors(data, k, max_distance=None, verbose=False):
+def k_nearest_neighbors(
+    data, k, max_distance=None, knn_method=None, verbose=False
+):
     """Compute k-nearest neighbors for each row in data matrix.
 
     Computes the k-nearest neighbor graph of data matrix, under
@@ -140,7 +145,14 @@ def k_nearest_neighbors(data, k, max_distance=None, verbose=False):
         The number of nearest neighbors per item
     max_distance: float (optional)
         If not None, neighborhoods are restricted to have a radius
-        no greater than `max_distance`.
+        no greater than ``max_distance``.
+    knn_method: str (optional)
+        Which algorithm to use for k-nearest neighbor computation.
+        ``'exact'`` uses brute-force exact search, ``'approximate'``
+        uses NN-Descent. If ``None`` (the default), the method is chosen
+        automatically based on a heuristic. For modern machines with many
+        cores, ``'exact'`` can be competitive with or even faster than
+        ``'approximate'``, depending on problem size.
     verbose: bool
         If True, print verbose output.
 
@@ -149,32 +161,45 @@ def k_nearest_neighbors(data, k, max_distance=None, verbose=False):
     pymde.Graph
         a neighborhood graph
     """
+    if knn_method is not None and knn_method not in ("exact", "approximate"):
+        raise ValueError(
+            f"knn_method must be 'exact', 'approximate', or None, "
+            f"got '{knn_method}'"
+        )
+
     if isinstance(data, torch.Tensor):
         device = data.device
         data = data.cpu().numpy()
     else:
         device = "cpu"
 
-    if sp.issparse(data) and _has_pynndescent():
+    n = data.shape[0]
+    knn_method = (
+        ("approximate" if n >= KNN_APPROXIMATE_THRESHOLD else "exact")
+        if knn_method is None
+        else knn_method
+    )
+
+    if sp.issparse(data) and knn_method == "approximate" and _has_pynndescent():
         neighbors, distances = _knn_pynndescent(data, k, verbose)
     else:
         if sp.issparse(data):
-            problem.LOGGER.warning(
-                "Converting sparse data to dense for kNN. "
-                "Install pynndescent for better performance with "
-                "sparse matrices: pip install pynndescent"
-            )
+            if knn_method == "approximate" and not _has_pynndescent():
+                problem.LOGGER.warning(
+                    "Converting sparse data to dense for neighborhood "
+                    "preprocessing. Install pynndescent for better "
+                    "performance with sparse matrices: pip install "
+                    "pynndescent"
+                )
             data = np.asarray(data.todense())
-        n = data.shape[0]
-        if n >= 100000:
-            neighbors, distances = _knn_nndescent(data, k, verbose)
-        else:
+        if knn_method == "exact":
             neighbors, distances = _knn_exact(data, k, verbose)
+        else:
+            neighbors, distances = _knn_nndescent(data, k, verbose)
 
     neighbors = neighbors[:, 1:]
     distances = distances[:, 1:]
 
-    n = data.shape[0]
     items = np.arange(n)
     items = np.repeat(items, k)
     edges = np.stack([items, neighbors.flatten()], axis=1)
