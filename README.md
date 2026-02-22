@@ -14,14 +14,20 @@ simple but general framework for embedding, called _Minimum-Distortion
 Embedding_ (MDE). With MDE, it is easy to recreate well-known embeddings and to
 create new ones, tailored to your particular application.
 
-**Fast on CPU, faster on GPU.** PyMDE is competitive in runtime with more specialized embedding methods. With a
-GPU, embedding computation can be even faster.
+**Fast on CPU, faster on GPU.** PyMDE is competitive in runtime with more
+specialized embedding methods. With a GPU, embedding computation can be even
+faster.
 
-**Fast preprocessing, implemented in Rust.** PyMDE preprocesses original data matrices
+**Fast preprocessing in Rust.** PyMDE preprocesses original data matrices
 using fast routines implemented in Rust:
 
-* an exact k-nearest neighbor algorithm accelerated with Rayon and BLAS, which in simple
-benchmarks is faster than `faiss` and `pynndescent`;
+* an approximate k-nearest neighbor algorithm implementing nndescent, with
+Rayon for parallelism and SIMD kernels; in simple benchmarks this is
+competitive with pynndescent, but without the overhead of Numba's JIT;
+* an exact k-nearest neighbor algorithm accelerated with Rayon and BLAS; on
+modern machines
+with multiple cores, this implementation is faster than `faiss` and competitive with
+popular approximate k-nearest neighbor algorithms;
 * a breadth-first search for computing all-pairs shortest paths.
 
 ## Overview
