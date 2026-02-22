@@ -21,13 +21,9 @@ faster.
 **Fast preprocessing in Rust.** PyMDE preprocesses original data matrices
 using fast routines implemented in Rust:
 
-* an approximate k-nearest neighbor algorithm implementing nndescent, with
-Rayon for parallelism and SIMD kernels; in simple benchmarks this is
-competitive with pynndescent, but without the overhead of Numba's JIT;
-* an exact k-nearest neighbor algorithm accelerated with Rayon and BLAS; on
-modern machines
-with multiple cores, this implementation is faster than `faiss` and competitive with
-popular approximate k-nearest neighbor algorithms;
+* an approximate k-nearest neighbor algorithm implementing nndescent,
+competitive with pynndescent but without the overhead of Numba's JIT;
+* an exact k-nearest neighbor algorithm, which is often extremely fast on modern machines;
 * a breadth-first search for computing all-pairs shortest paths.
 
 ## Overview
