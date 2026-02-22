@@ -9,15 +9,20 @@ PyMDE is a Python library for computing vector embeddings for finite sets of
 items, such as images, biological cells, nodes in a network, or any other
 abstract object.
 
-What sets PyMDE apart from other embedding libraries is that it provides a
+**A general framework.** What sets PyMDE apart from other embedding libraries is that it provides a
 simple but general framework for embedding, called _Minimum-Distortion
 Embedding_ (MDE). With MDE, it is easy to recreate well-known embeddings and to
 create new ones, tailored to your particular application.
 
-PyMDE is competitive in runtime with more specialized embedding methods. With a
-GPU, embedding computation can be even faster. For neighbor-preserving
-embeddings, it uses a custom exact k-nearest neighbor algorithm implemented in
-Rust, accelerated with Rayon and BLAS.
+**Fast on CPU, faster on GPU.** PyMDE is competitive in runtime with more specialized embedding methods. With a
+GPU, embedding computation can be even faster.
+
+**Fast preprocessing, implemented in Rust.** PyMDE preprocesses original data matrices
+using fast routines implemented in Rust:
+
+* an exact k-nearest neighbor algorithm accelerated with Rayon and BLAS, which in simple
+benchmarks is faster than `faiss` and `pynndescent`;
+* a breadth-first search for computing all-pairs shortest paths.
 
 ## Overview
 PyMDE can be enjoyed by beginners and experts alike. It can be used to:
