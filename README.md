@@ -75,10 +75,8 @@ PyMDE has the following requirements:
 
 ### Optional dependencies
 
-* **pynndescent** -- For efficient k-nearest neighbor computation on sparse
-matrices. Without it, sparse data is converted to a dense matrix before
-computing neighbors. For very large sparse matrices the conversion can be
-memory-intensive. Install with `pip install pynndescent`.
+* **pynndescent.** For efficient approximate k-nearest neighbor computation on sparse
+matrices.
 
 ## Getting started
 Getting started with PyMDE is easy. For embeddings that work out-of-the box, we provide two main functions:
