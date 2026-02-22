@@ -59,7 +59,7 @@ jobs:
             7z x C:\openblas.zip -oC:\openblas &&
             copy C:\openblas\lib\libopenblas.dll.a C:\openblas\lib\openblas.lib
           CIBW_BEFORE_BUILD_WINDOWS: "pip install delvewheel"
-          CIBW_ENVIRONMENT_WINDOWS: 'OPENBLAS_LIB_DIR=C:\openblas\lib'
+          CIBW_ENVIRONMENT_WINDOWS: 'OPENBLAS_LIB_DIR=C:\\openblas\\lib'
           CIBW_REPAIR_WHEEL_COMMAND_WINDOWS: "delvewheel repair --add-path C:\\openblas\\bin -w {dest_dir} {wheel}"
           CIBW_TEST_COMMAND: "python -c \"from pymde._native import knn_l2; print('ok')\""
 
