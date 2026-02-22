@@ -1,7 +1,6 @@
 """Tests for Rust NN-Descent implementation."""
 
 import numpy as np
-import pytest
 
 from pymde._native import nn_descent, knn_l2
 
