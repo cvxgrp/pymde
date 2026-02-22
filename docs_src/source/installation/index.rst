@@ -36,13 +36,8 @@ Optional dependencies
 ---------------------
 
 * **pynndescent**: For efficient k-nearest neighbor computation on sparse
-  matrices. Without it, sparse data is converted to a dense matrix before
-  computing neighbors. For very large sparse matrices the conversion can be
-  memory-intensive.
+  matrices. In the majority of cases this is not needed.
 
-.. code::
-
-    pip install pynndescent
 
 GPU acceleration
 ----------------
