@@ -3,9 +3,9 @@
 # dependencies = [
 #     "marimo",
 #     "matplotlib==3.10.8",
-#     "numpy==2.3.0",
-#     "plotly",
-#     "pymde==0.2.3",
+#     "numpy==2.4.2",
+#     "plotly==6.5.2",
+#     "pymde==0.3.0",
 #     "torch==2.10.0",
 # ]
 # ///

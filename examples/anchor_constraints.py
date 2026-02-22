@@ -2,7 +2,7 @@
 # requires-python = ">=3.10"
 # dependencies = [
 #     "marimo",
-#     "pymde==0.2.3",
+#     "pymde==0.3.0",
 #     "torch==2.10.0",
 # ]
 # ///

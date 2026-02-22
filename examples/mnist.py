@@ -1,11 +1,11 @@
 # /// script
 # requires-python = ">=3.10"
 # dependencies = [
-#     "marimo>=0.20.0",
-#     "matplotlib",
-#     "pandas",
-#     "pymde==0.2.3",
-#     "torch",
+#     "marimo",
+#     "matplotlib==3.10.8",
+#     "pandas==3.0.1",
+#     "pymde==0.3.0",
+#     "torch==2.10.0",
 # ]
 # ///
 

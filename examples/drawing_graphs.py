@@ -1,10 +1,10 @@
 # /// script
 # requires-python = ">=3.10"
 # dependencies = [
-#     "ipython==9.10.0",
+#     "ipython",
 #     "marimo",
-#     "numpy==2.3.5",
-#     "pymde==0.2.3",
+#     "numpy==2.4.2",
+#     "pymde==0.3.0",
 #     "scipy==1.17.0",
 #     "torch==2.10.0",
 # ]

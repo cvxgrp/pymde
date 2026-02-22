@@ -2,8 +2,10 @@
 # requires-python = ">=3.10"
 # dependencies = [
 #     "marimo",
-#     "pymde",
-#     "matplotlib",
+#     "pymde==0.3.0",
+#     "matplotlib==3.10.8",
+#     "numpy==2.4.2",
+#     "torch==2.10.0",
 # ]
 # ///
 

@@ -1,18 +1,18 @@
 # /// script
 # requires-python = ">=3.10"
 # dependencies = [
-#     "marimo>=0.20.0",
-#     "matplotlib",
-#     "numpy",
+#     "marimo",
+#     "matplotlib==3.10.8",
+#     "numpy==2.4.2",
 #     "pandas",
-#     "pymde==0.2.3",
-#     "torch",
+#     "pymde==0.3.0",
+#     "torch==2.10.0",
 # ]
 # ///
 
 import marimo
 
-__generated_with = "0.19.11"
+__generated_with = "0.20.2"
 app = marimo.App(
     width="medium",
     css_file="/usr/local/_marimo/custom.css",
@@ -103,7 +103,6 @@ def _(coauthorship_graph):
 def _(distance_preserving_mde):
     plt.figure(figsize=(12, 3))
     original_distances = np.sort(distance_preserving_mde.distortion_function.deviations.cpu().numpy())
-    ax = plt.gca()
     plt.hist(original_distances, histtype='step', bins=np.arange(1, 11), density=True, cumulative=True)
     plt.xlim(1, 10)
     plt.xticks(np.arange(1, 11))
@@ -129,14 +128,14 @@ def _(solved_mde):
 
 @app.cell
 def _(gscholar, solved_mde):
-    solved_mde.plot(
+    ax = solved_mde.plot(
         color_by=gscholar.attributes["coauthors"],
         color_map="viridis",
         figsize_inches=(12.0, 12.0),
         background_color="k",
     )
-    fig = plt.gcf()
-    return (fig,)
+    ax
+    return (ax,)
 
 
 @app.cell
@@ -180,8 +179,8 @@ def _(scholar_disciplines_df, solved_mde, topic_colors):
 
 
 @app.cell
-def _(fig):
-    select = mo.ui.matplotlib(fig)
+def _(ax):
+    select = mo.ui.matplotlib(ax)
     select
     return (select,)
 
