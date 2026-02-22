@@ -1,15 +1,12 @@
 # /// script
-# requires-python = "==3.13"
+# requires-python = ">=3.10"
 # dependencies = [
-#     "marimo",
-#     "matplotlib==3.10.8",
-#     "numpy==2.3.5",
-#     "openai==2.20.0",
-#     "pandas==3.0.0",
-#     "pydantic-ai-slim==1.58.0",
+#     "marimo>=0.20.0",
+#     "matplotlib",
+#     "numpy",
+#     "pandas",
 #     "pymde==0.2.3",
-#     "torch==2.10.0",
-#     "wigglystuff==0.2.22",
+#     "torch",
 # ]
 # ///
 
@@ -30,7 +27,6 @@ with app.setup:
     import torch
 
     from matplotlib import colors
-    from wigglystuff import ChartSelect
 
     DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -185,7 +181,7 @@ def _(scholar_disciplines_df, solved_mde, topic_colors):
 
 @app.cell
 def _(fig):
-    select = mo.ui.anywidget(ChartSelect(fig))
+    select = mo.ui.matplotlib(fig)
     select
     return (select,)
 
@@ -193,7 +189,7 @@ def _(fig):
 @app.cell
 def _(scholars_df, select, solved_mde):
     _X = solved_mde.X.cpu()
-    mask = select.get_mask(_X[:, 0], _X[:, 1])
+    mask = select.value.get_mask(_X[:, 0], _X[:, 1])
     scholars_df.iloc[mask]
     return
 

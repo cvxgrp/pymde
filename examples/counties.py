@@ -1,25 +1,22 @@
 # /// script
 # requires-python = ">=3.10"
 # dependencies = [
-#     "marimo",
-#     "matplotlib==3.10.8",
+#     "marimo>=0.20.0",
+#     "matplotlib",
 #     "pandas",
 #     "pymde==0.2.3",
-#     "torch==2.10.0",
-#     "wigglystuff==0.2.27",
+#     "torch",
 # ]
 # ///
 
 import marimo
 
-__generated_with = "0.19.11"
+__generated_with = "0.20.1"
 app = marimo.App(width="medium")
 
 with app.setup:
     import matplotlib.pyplot as plt
     import pymde
-    import torch
-    from wigglystuff import ChartSelect
 
     import marimo as mo
 
@@ -72,6 +69,12 @@ def _():
 
 @app.cell
 def _(dataset):
+    dataset
+    return
+
+
+@app.cell
+def _(dataset):
     with mo.persistent_cache("counties"):
         mde = pymde.preserve_neighbors(data=dataset.data, verbose=True)
         embedding = mde.embed()
@@ -99,33 +102,7 @@ def _(dataset, embedding):
         marker_size=10,
     )
     plt.tight_layout()
-    chart = mo.ui.anywidget(ChartSelect(ax.figure))
-    chart
-    return chart, rotated_embedding
-
-
-@app.cell
-def _(chart, rotated_embedding):
-    selected_indices = chart.get_indices(rotated_embedding[:, 0], rotated_embedding[:, 1])
-    return (selected_indices,)
-
-
-@app.cell(hide_code=True)
-def _(dataset, selected_indices):
-    mo.stop(not selected_indices.size)
-
-    selected_counties = dataset.county_dataframe.iloc[selected_indices]
-    table = mo.ui.table(selected_counties)
-
-    mo.output.replace(
-        mo.md(
-            f"""
-        **You've selected {len(selected_indices)} counties.**
-
-        {table}
-        """
-        )
-    )
+    ax
     return
 
 
