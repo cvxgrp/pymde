@@ -62,12 +62,13 @@ git pull origin main
 
 # Read current version
 VERSION_FILE="pymde/__init__.py"
-CURRENT_VERSION=$(python -c "
-import re
-with open('$VERSION_FILE') as f:
-    match = re.search(r'__version__\s*=\s*[\"'\''](.*?)[\"'\'']', f.read())
+CURRENT_VERSION=$(python - "$VERSION_FILE" <<'PYEOF'
+import re, sys
+with open(sys.argv[1]) as f:
+    match = re.search(r'__version__\s*=\s*"(.*?)"', f.read())
     print(match.group(1))
-")
+PYEOF
+)
 
 IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT_VERSION"
 
