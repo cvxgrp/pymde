@@ -98,7 +98,16 @@ unsafe fn squared_euclidean_neon(a: &[f32], b: &[f32], n: usize) -> f32 {
         let sum = vaddq_f32(sum01, sum23);
         let mut result = vaddvq_f32(sum);
 
-        // Remainder
+        // 4-element tail
+        while i + 4 <= n {
+            let av = vld1q_f32(a.as_ptr().add(i));
+            let bv = vld1q_f32(b.as_ptr().add(i));
+            let dv = vsubq_f32(av, bv);
+            result += vaddvq_f32(vmulq_f32(dv, dv));
+            i += 4;
+        }
+
+        // Scalar remainder
         while i < n {
             let d = *a.get_unchecked(i) - *b.get_unchecked(i);
             result += d * d;
@@ -161,6 +170,16 @@ unsafe fn squared_euclidean_bounded_neon(
         let sum = vaddq_f32(sum01, sum23);
         let mut result = vaddvq_f32(sum);
 
+        // 4-element tail
+        while i + 4 <= n {
+            let av = vld1q_f32(a.as_ptr().add(i));
+            let bv = vld1q_f32(b.as_ptr().add(i));
+            let dv = vsubq_f32(av, bv);
+            result += vaddvq_f32(vmulq_f32(dv, dv));
+            i += 4;
+        }
+
+        // Scalar remainder
         while i < n {
             let d = *a.get_unchecked(i) - *b.get_unchecked(i);
             result += d * d;
@@ -206,6 +225,15 @@ unsafe fn dot_product_neon(a: &[f32], b: &[f32], n: usize) -> f32 {
         let sum = vaddq_f32(sum01, sum23);
         let mut result = vaddvq_f32(sum);
 
+        // 4-element tail
+        while i + 4 <= n {
+            let av = vld1q_f32(a.as_ptr().add(i));
+            let bv = vld1q_f32(b.as_ptr().add(i));
+            result += vaddvq_f32(vmulq_f32(av, bv));
+            i += 4;
+        }
+
+        // Scalar remainder
         while i < n {
             result += *a.get_unchecked(i) * *b.get_unchecked(i);
             i += 1;
@@ -387,6 +415,17 @@ mod tests {
     }
 
     #[test]
+    fn squared_euclidean_dim_20() {
+        // 20 = 16 + 4: exercises the 4-element SIMD tail exactly
+        let n = 20;
+        let a: Vec<f32> = (0..n).map(|i| i as f32 * 0.3).collect();
+        let b: Vec<f32> = (0..n).map(|i| i as f32 * 0.1).collect();
+        let expected: f32 = a.iter().zip(&b).map(|(x, y)| (x - y) * (x - y)).sum();
+        let d = squared_euclidean(&a, &b);
+        assert!((d - expected).abs() < 1e-3, "got {d}, expected {expected}");
+    }
+
+    #[test]
     fn bounded_agrees_with_unbounded() {
         let n = 64;
         let a: Vec<f32> = (0..n).map(|i| i as f32 * 0.3).collect();
@@ -436,6 +475,17 @@ mod tests {
     #[test]
     fn dot_product_odd_dim() {
         let n = 37;
+        let a: Vec<f32> = (0..n).map(|i| i as f32 * 0.1).collect();
+        let b: Vec<f32> = (0..n).map(|i| i as f32 * 0.2).collect();
+        let expected: f32 = a.iter().zip(&b).map(|(x, y)| x * y).sum();
+        let d = dot_product(&a, &b);
+        assert!((d - expected).abs() < 1e-2, "got {d}, expected {expected}");
+    }
+
+    #[test]
+    fn dot_product_dim_20() {
+        // 20 = 16 + 4: exercises the 4-element SIMD tail
+        let n = 20;
         let a: Vec<f32> = (0..n).map(|i| i as f32 * 0.1).collect();
         let b: Vec<f32> = (0..n).map(|i| i as f32 * 0.2).collect();
         let expected: f32 = a.iter().zip(&b).map(|(x, y)| x * y).sum();

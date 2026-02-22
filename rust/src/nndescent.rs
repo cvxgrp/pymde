@@ -26,12 +26,12 @@ use std::time::Instant;
 
 fn n_trees(n: usize) -> usize {
     let v = (2.0 * (n as f64).log10()).round() as usize;
-    v.max(3).min(12)
+    v.clamp(3, 12)
 }
 
 fn leaf_size(n_neighbors: usize) -> usize {
     let v = 5 * n_neighbors;
-    v.max(60).min(256)
+    v.clamp(60, 256)
 }
 
 fn n_iters(n: usize) -> usize {
@@ -126,7 +126,7 @@ fn nn_descent_impl(
 
     // Phase 1: RP-Tree initialization
     let mut heap = NeighborHeap::new(n, k);
-    rp_tree_init(data, n, d, k, num_trees, ls, seed, &mut heap, verbose);
+    rp_tree_init(data, n, d, num_trees, ls, seed, &mut heap, verbose);
 
     // Fill remaining empty slots with random neighbors
     random_fill(data, n, d, k, seed + 0xDEAD, &mut heap);
@@ -146,10 +146,9 @@ fn nn_descent_impl(
         old_candidates.clear();
 
         build_candidates(
-            &heap,
+            &mut heap,
             &mut new_candidates,
             &mut old_candidates,
-            max_candidates,
             &mut rng,
         );
 
@@ -168,7 +167,7 @@ fn nn_descent_impl(
     }
 
     // Phase 3: Finalize
-    finalize(data, n, d, k, heap)
+    finalize(n, k, heap)
 }
 
 // ───────────────────────────────────────────────────────────────────
@@ -184,7 +183,6 @@ fn rp_tree_init(
     data: &[f32],
     n: usize,
     d: usize,
-    _k: usize,
     num_trees: usize,
     leaf_size: usize,
     seed: u64,
@@ -198,10 +196,9 @@ fn rp_tree_init(
             let mut rng = Rng64::new(seed.wrapping_add((t as u64).wrapping_mul(0x9E3779B97F4A7C15)));
             let indices: Vec<usize> = (0..n).collect();
             let mut leaves = Vec::new();
-            // Pre-allocate buffers for hyperplane computation
+            // Pre-allocate buffer for hyperplane computation
             let mut diff = vec![0.0f32; d];
-            let mut proj = vec![0.0f32; n];
-            rp_tree_split(data, d, &indices, leaf_size, &mut rng, &mut leaves, &mut diff, &mut proj);
+            rp_tree_split(data, d, &indices, leaf_size, &mut rng, &mut leaves, &mut diff);
             RpTree { leaves }
         })
         .collect();
@@ -248,7 +245,6 @@ fn rp_tree_split(
     rng: &mut Rng64,
     leaves: &mut Vec<Vec<usize>>,
     diff: &mut [f32],
-    proj: &mut [f32],
 ) {
     if indices.len() <= leaf_size {
         leaves.push(indices.to_vec());
@@ -296,8 +292,8 @@ fn rp_tree_split(
         right = indices[mid..].to_vec();
     }
 
-    rp_tree_split(data, d, &left, leaf_size, rng, leaves, diff, proj);
-    rp_tree_split(data, d, &right, leaf_size, rng, leaves, diff, proj);
+    rp_tree_split(data, d, &left, leaf_size, rng, leaves, diff);
+    rp_tree_split(data, d, &right, leaf_size, rng, leaves, diff);
 }
 
 fn random_fill(data: &[f32], n: usize, d: usize, k: usize, seed: u64, heap: &mut NeighborHeap) {
@@ -307,7 +303,7 @@ fn random_fill(data: &[f32], n: usize, d: usize, k: usize, seed: u64, heap: &mut
         let base = i * k;
         let mut empty = 0;
         for j in 0..k {
-            if heap.indices[base + j] == -1 {
+            if heap.indices()[base + j] == -1 {
                 empty += 1;
             }
         }
@@ -333,10 +329,9 @@ fn random_fill(data: &[f32], n: usize, d: usize, k: usize, seed: u64, heap: &mut
 // ───────────────────────────────────────────────────────────────────
 
 fn build_candidates(
-    heap: &NeighborHeap,
+    heap: &mut NeighborHeap,
     new_candidates: &mut CandidateHeap,
     old_candidates: &mut CandidateHeap,
-    _max_candidates: usize,
     rng: &mut Rng64,
 ) {
     let n = heap.n;
@@ -345,44 +340,24 @@ fn build_candidates(
     for i in 0..n {
         let base = i * k;
         for j in 0..k {
-            let neighbor = heap.indices[base + j];
+            let neighbor = heap.indices()[base + j];
             if neighbor < 0 {
                 continue;
             }
             let nb = neighbor as usize;
             let priority = rng.rand_float();
 
-            if heap.is_new[base + j] {
+            if heap.is_new()[base + j] {
                 // Add to new_candidates: forward (i→neighbor) and reverse (neighbor→i)
-                new_candidates.push(i, neighbor, priority);
+                let sampled = new_candidates.push(i, neighbor, priority);
                 new_candidates.push(nb, i as i32, priority);
+                // Clear is_new inline when the forward direction was sampled
+                if sampled {
+                    heap.is_new_mut()[base + j] = false;
+                }
             } else {
                 old_candidates.push(i, neighbor, priority);
                 old_candidates.push(nb, i as i32, priority);
-            }
-        }
-    }
-
-    // Clear is_new flags only for neighbors that were sampled into new_candidates
-    // We need mutable access to heap.is_new, but heap is borrowed immutably above.
-    // We'll do this via unsafe since we know the layout.
-    for i in 0..n {
-        let base = i * k;
-        for j in 0..k {
-            let neighbor = heap.indices[base + j];
-            if neighbor < 0 {
-                continue;
-            }
-            if heap.is_new[base + j] {
-                // Check if this neighbor was actually sampled into new_candidates
-                let new_list = new_candidates.get(i);
-                if new_list.contains(&neighbor) {
-                    // Clear the is_new flag
-                    unsafe {
-                        let ptr = heap.is_new.as_ptr().add(base + j) as *mut bool;
-                        *ptr = false;
-                    }
-                }
             }
         }
     }
@@ -478,9 +453,7 @@ fn local_join(
 // ───────────────────────────────────────────────────────────────────
 
 fn finalize(
-    data: &[f32],
     n: usize,
-    d: usize,
     k: usize,
     mut heap: NeighborHeap,
 ) -> (Vec<i64>, Vec<f32>) {
@@ -489,6 +462,9 @@ fn finalize(
     let cols = k + 1;
     let mut neighbors = vec![0i64; n * cols];
     let mut distances = vec![0.0f32; n * cols];
+
+    let heap_indices = heap.indices();
+    let heap_distances = heap.distances();
 
     // Parallel finalization: each point fills its row
     let chunk_size = cols;
@@ -503,16 +479,12 @@ fn finalize(
 
             let base = i * k;
             for j in 0..k {
-                let idx = heap.indices[base + j];
-                let sq_dist = heap.distances[base + j];
+                let idx = heap_indices[base + j];
+                let sq_dist = heap_distances[base + j];
 
                 nb_row[j + 1] = idx as i64;
-                // Recompute exact distance for valid neighbors
                 if idx >= 0 && sq_dist < f32::INFINITY {
-                    let row_i = &data[i * d..(i + 1) * d];
-                    let row_j = &data[(idx as usize) * d..(idx as usize + 1) * d];
-                    let exact_sq = squared_euclidean(row_i, row_j);
-                    dist_row[j + 1] = exact_sq.max(0.0).sqrt();
+                    dist_row[j + 1] = sq_dist.max(0.0).sqrt();
                 } else {
                     dist_row[j + 1] = f32::INFINITY;
                 }

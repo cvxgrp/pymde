@@ -72,6 +72,7 @@ impl CandidateHeap {
     }
 
     /// Get the count of candidates for a point.
+    #[cfg(test)]
     pub fn count(&self, point: usize) -> usize {
         self.counts[point]
     }

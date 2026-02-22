@@ -4,42 +4,89 @@
 /// Each point's block is a max-heap (root = farthest neighbor).
 /// Per-point AtomicBool locks for concurrent access.
 
-use std::sync::atomic::{AtomicBool, Ordering};
+use std::cell::UnsafeCell;
+use std::sync::atomic::{AtomicBool, AtomicU32, Ordering};
 
 pub struct NeighborHeap {
     pub n: usize,
     pub k: usize,
-    pub distances: Vec<f32>,
-    pub indices: Vec<i32>,
-    pub is_new: Vec<bool>,
+    /// Mutable data behind UnsafeCell for sound interior mutation.
+    data: UnsafeCell<HeapData>,
+    /// Per-point root distance cached as AtomicU32 (bit-cast f32) for
+    /// data-race-free fast-path rejection in push_concurrent.
+    root_dists: Vec<AtomicU32>,
     locks: Vec<AtomicBool>,
 }
+
+struct HeapData {
+    distances: Vec<f32>,
+    indices: Vec<i32>,
+    is_new: Vec<bool>,
+}
+
+// SAFETY: All concurrent mutation goes through either:
+// - push_concurrent: protected by per-point TTAS spinlocks
+// - push_unlocked: caller guarantees exclusive per-row access
+// The AtomicU32 root_dists and AtomicBool locks handle cross-thread visibility.
+unsafe impl Send for NeighborHeap {}
+unsafe impl Sync for NeighborHeap {}
 
 impl NeighborHeap {
     pub fn new(n: usize, k: usize) -> Self {
         Self {
             n,
             k,
-            distances: vec![f32::INFINITY; n * k],
-            indices: vec![-1; n * k],
-            is_new: vec![false; n * k],
+            data: UnsafeCell::new(HeapData {
+                distances: vec![f32::INFINITY; n * k],
+                indices: vec![-1; n * k],
+                is_new: vec![false; n * k],
+            }),
+            root_dists: (0..n)
+                .map(|_| AtomicU32::new(f32::INFINITY.to_bits()))
+                .collect(),
             locks: (0..n).map(|_| AtomicBool::new(false)).collect(),
         }
     }
 
+    // ── Accessors ─────────────────────────────────────────────────
+
+    #[inline]
+    pub fn distances(&self) -> &[f32] {
+        // SAFETY: No mutable aliases exist; callers use this read-only
+        // outside of concurrent push regions.
+        unsafe { &(*self.data.get()).distances }
+    }
+
+    #[inline]
+    pub fn indices(&self) -> &[i32] {
+        unsafe { &(*self.data.get()).indices }
+    }
+
+    #[inline]
+    pub fn is_new(&self) -> &[bool] {
+        unsafe { &(*self.data.get()).is_new }
+    }
+
+    #[inline]
+    pub fn is_new_mut(&mut self) -> &mut [bool] {
+        &mut self.data.get_mut().is_new
+    }
+
     /// Largest distance (heap root) for point `row`.
+    /// Uses AtomicU32 for data-race-free access from concurrent threads.
     #[inline]
     pub fn largest_distance(&self, row: usize) -> f32 {
-        self.distances[row * self.k]
+        f32::from_bits(self.root_dists[row].load(Ordering::Relaxed))
     }
 
     /// Push with exclusive (mutable) access. For sequential initialization.
     pub fn push(&mut self, row: usize, dist: f32, idx: i32) -> bool {
         let k = self.k;
         let base = row * k;
+        let data = self.data.get_mut();
 
         // Reject if worse than root
-        if dist >= self.distances[base] {
+        if dist >= data.distances[base] {
             return false;
         }
         // Reject self-loops
@@ -48,28 +95,32 @@ impl NeighborHeap {
         }
         // Reject duplicates
         for j in 0..k {
-            if self.indices[base + j] == idx {
+            if data.indices[base + j] == idx {
                 return false;
             }
         }
         // Replace root and sift down
-        self.distances[base] = dist;
-        self.indices[base] = idx;
-        self.is_new[base] = true;
-        self.sift_down(base, k);
+        data.distances[base] = dist;
+        data.indices[base] = idx;
+        data.is_new[base] = true;
+        Self::sift_down_data(data, base, k);
+        self.root_dists[row].store(data.distances[base].to_bits(), Ordering::Relaxed);
         true
     }
 
     /// Push without any lock. For RP-tree leaf processing where each point
     /// appears in exactly one leaf per tree (no concurrent writes to same row).
     ///
-    /// Safety: caller must ensure no concurrent writes to the same `row`.
+    /// SAFETY: caller must ensure no concurrent writes to the same `row`.
     pub fn push_unlocked(&self, row: usize, dist: f32, idx: i32) -> bool {
         let k = self.k;
         let base = row * k;
 
+        // SAFETY: Caller guarantees exclusive access to this row.
+        let data = unsafe { &mut *self.data.get() };
+
         // Fast-path rejection
-        if dist >= self.distances[base] {
+        if dist >= data.distances[base] {
             return false;
         }
         if idx == row as i32 {
@@ -77,23 +128,16 @@ impl NeighborHeap {
         }
         // Duplicate check
         for j in 0..k {
-            if self.indices[base + j] == idx {
+            if data.indices[base + j] == idx {
                 return false;
             }
         }
 
-        // SAFETY: Caller guarantees no concurrent writes to this row.
-        // We use raw pointers to mutate through shared reference.
-        unsafe {
-            let dist_ptr = self.distances.as_ptr().add(base) as *mut f32;
-            let idx_ptr = self.indices.as_ptr().add(base) as *mut i32;
-            let new_ptr = self.is_new.as_ptr().add(base) as *mut bool;
-
-            *dist_ptr = dist;
-            *idx_ptr = idx;
-            *new_ptr = true;
-            Self::sift_down_raw(dist_ptr, idx_ptr, new_ptr, k);
-        }
+        data.distances[base] = dist;
+        data.indices[base] = idx;
+        data.is_new[base] = true;
+        Self::sift_down_data(data, base, k);
+        self.root_dists[row].store(data.distances[base].to_bits(), Ordering::Relaxed);
         true
     }
 
@@ -102,8 +146,9 @@ impl NeighborHeap {
         let k = self.k;
         let base = row * k;
 
-        // Fast-path rejection before acquiring lock (~90% rejected here)
-        if dist >= self.distances[base] {
+        // Fast-path rejection before acquiring lock (~90% rejected here).
+        // Uses AtomicU32 root_dists to avoid data races on non-atomic f32.
+        if dist >= self.largest_distance(row) {
             return false;
         }
 
@@ -124,8 +169,11 @@ impl NeighborHeap {
             }
         }
 
+        // SAFETY: We hold the per-row lock; no other thread can mutate this row.
+        let data = unsafe { &mut *self.data.get() };
+
         // Re-check after acquiring lock (dist may have changed)
-        let result = if dist >= self.distances[base] {
+        let result = if dist >= data.distances[base] {
             false
         } else if idx == row as i32 {
             false
@@ -133,7 +181,7 @@ impl NeighborHeap {
             // Duplicate check
             let mut dup = false;
             for j in 0..k {
-                if self.indices[base + j] == idx {
+                if data.indices[base + j] == idx {
                     dup = true;
                     break;
                 }
@@ -141,16 +189,11 @@ impl NeighborHeap {
             if dup {
                 false
             } else {
-                unsafe {
-                    let dist_ptr = self.distances.as_ptr().add(base) as *mut f32;
-                    let idx_ptr = self.indices.as_ptr().add(base) as *mut i32;
-                    let new_ptr = self.is_new.as_ptr().add(base) as *mut bool;
-
-                    *dist_ptr = dist;
-                    *idx_ptr = idx;
-                    *new_ptr = true;
-                    Self::sift_down_raw(dist_ptr, idx_ptr, new_ptr, k);
-                }
+                data.distances[base] = dist;
+                data.indices[base] = idx;
+                data.is_new[base] = true;
+                Self::sift_down_data(data, base, k);
+                self.root_dists[row].store(data.distances[base].to_bits(), Ordering::Relaxed);
                 true
             }
         };
@@ -159,25 +202,30 @@ impl NeighborHeap {
         result
     }
 
-    /// Sort each row ascending by distance for final output.
+    /// Sort each row ascending by distance for final output (in-place insertion sort).
     pub fn sort_by_distance(&mut self) {
         let k = self.k;
+        let data = self.data.get_mut();
         for row in 0..self.n {
             let base = row * k;
-            // Collect into sortable tuples
-            let mut entries: Vec<(f32, i32)> = (0..k)
-                .map(|j| (self.distances[base + j], self.indices[base + j]))
-                .collect();
-            entries.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap_or(std::cmp::Ordering::Equal));
-            for j in 0..k {
-                self.distances[base + j] = entries[j].0;
-                self.indices[base + j] = entries[j].1;
+            // Insertion sort — k is small (typically 10-30)
+            for i in 1..k {
+                let d = data.distances[base + i];
+                let idx = data.indices[base + i];
+                let mut j = i;
+                while j > 0 && data.distances[base + j - 1] > d {
+                    data.distances[base + j] = data.distances[base + j - 1];
+                    data.indices[base + j] = data.indices[base + j - 1];
+                    j -= 1;
+                }
+                data.distances[base + j] = d;
+                data.indices[base + j] = idx;
             }
         }
     }
 
-    /// Sift-down on mutable slice (for `push`).
-    fn sift_down(&mut self, base: usize, k: usize) {
+    /// Sift-down on HeapData (shared by all push variants).
+    fn sift_down_data(data: &mut HeapData, base: usize, k: usize) {
         let mut pos = 0;
         loop {
             let left = 2 * pos + 1;
@@ -186,70 +234,22 @@ impl NeighborHeap {
             }
             let right = left + 1;
             let mut largest = pos;
-            if self.distances[base + left] > self.distances[base + largest] {
+            if data.distances[base + left] > data.distances[base + largest] {
                 largest = left;
             }
-            if right < k && self.distances[base + right] > self.distances[base + largest] {
+            if right < k && data.distances[base + right] > data.distances[base + largest] {
                 largest = right;
             }
             if largest == pos {
                 break;
             }
-            self.distances.swap(base + pos, base + largest);
-            self.indices.swap(base + pos, base + largest);
-            self.is_new.swap(base + pos, base + largest);
+            data.distances.swap(base + pos, base + largest);
+            data.indices.swap(base + pos, base + largest);
+            data.is_new.swap(base + pos, base + largest);
             pos = largest;
         }
     }
-
-    /// Sift-down via raw pointers (for lock-free / concurrent push).
-    unsafe fn sift_down_raw(
-        distances: *mut f32,
-        indices: *mut i32,
-        is_new: *mut bool,
-        k: usize,
-    ) {
-        unsafe {
-            let mut pos = 0;
-            loop {
-                let left = 2 * pos + 1;
-                if left >= k {
-                    break;
-                }
-                let right = left + 1;
-                let mut largest = pos;
-                if *distances.add(left) > *distances.add(largest) {
-                    largest = left;
-                }
-                if right < k && *distances.add(right) > *distances.add(largest) {
-                    largest = right;
-                }
-                if largest == pos {
-                    break;
-                }
-                // Swap pos and largest
-                let tmp_d = *distances.add(pos);
-                *distances.add(pos) = *distances.add(largest);
-                *distances.add(largest) = tmp_d;
-
-                let tmp_i = *indices.add(pos);
-                *indices.add(pos) = *indices.add(largest);
-                *indices.add(largest) = tmp_i;
-
-                let tmp_n = *is_new.add(pos);
-                *is_new.add(pos) = *is_new.add(largest);
-                *is_new.add(largest) = tmp_n;
-
-                pos = largest;
-            }
-        }
-    }
 }
-
-// Send + Sync for use with rayon. The AtomicBool locks ensure thread safety
-// for push_concurrent, and push_unlocked requires caller guarantees.
-unsafe impl Send for NeighborHeap {}
-unsafe impl Sync for NeighborHeap {}
 
 #[cfg(test)]
 mod tests {
@@ -268,10 +268,10 @@ mod tests {
         assert!(heap.push(0, 2.0, 14));
         // Now heap should contain 2.0, 3.0, 4.0
         heap.sort_by_distance();
-        assert_eq!(heap.indices[0..3], [14, 11, 12]);
-        assert!((heap.distances[0] - 2.0).abs() < 1e-6);
-        assert!((heap.distances[1] - 3.0).abs() < 1e-6);
-        assert!((heap.distances[2] - 4.0).abs() < 1e-6);
+        assert_eq!(heap.indices()[0..3], [14, 11, 12]);
+        assert!((heap.distances()[0] - 2.0).abs() < 1e-6);
+        assert!((heap.distances()[1] - 3.0).abs() < 1e-6);
+        assert!((heap.distances()[2] - 4.0).abs() < 1e-6);
     }
 
     #[test]
@@ -293,11 +293,11 @@ mod tests {
         let mut heap = NeighborHeap::new(1, 3);
         heap.push(0, 5.0, 10);
         // Find where index 10 ended up and check is_new
-        let pos = heap.indices[0..3]
+        let pos = heap.indices()[0..3]
             .iter()
             .position(|&x| x == 10)
             .unwrap();
-        assert!(heap.is_new[pos]);
+        assert!(heap.is_new()[pos]);
     }
 
     #[test]
@@ -310,7 +310,7 @@ mod tests {
         heap.push(0, 5.0, 5);
         heap.sort_by_distance();
         for j in 1..5 {
-            assert!(heap.distances[j - 1] <= heap.distances[j]);
+            assert!(heap.distances()[j - 1] <= heap.distances()[j]);
         }
     }
 
@@ -351,7 +351,7 @@ mod tests {
         assert!(heap.largest_distance(0) <= 10.0);
 
         // Verify no duplicates
-        let indices: Vec<i32> = heap.indices[0..10].to_vec();
+        let indices: Vec<i32> = heap.indices()[0..10].to_vec();
         let mut sorted = indices.clone();
         sorted.sort();
         sorted.dedup();
@@ -369,8 +369,8 @@ mod tests {
         heap.push(2, 6.0, 1);
 
         heap.sort_by_distance();
-        assert_eq!(heap.indices[0..2], [1, 2]);
-        assert_eq!(heap.indices[2..4], [0, 2]);
-        assert_eq!(heap.indices[4..6], [0, 1]);
+        assert_eq!(heap.indices()[0..2], [1, 2]);
+        assert_eq!(heap.indices()[2..4], [0, 2]);
+        assert_eq!(heap.indices()[4..6], [0, 1]);
     }
 }

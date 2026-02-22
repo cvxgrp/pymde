@@ -27,6 +27,7 @@ impl Rng64 {
     }
 
     /// Raw u64 value.
+    #[cfg(test)]
     #[inline]
     pub fn next_u64(&mut self) -> u64 {
         self.inner.random::<u64>()
