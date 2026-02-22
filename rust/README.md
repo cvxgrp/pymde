@@ -3,12 +3,15 @@
 This directory contains Rust implementations of core pymde algorithms,
 exposed to Python via [PyO3](https://pyo3.rs):
 
-- **Exact KNN** (`knn_l2`): brute-force L2 k-nearest neighbor search using
-  platform-native BLAS (Accelerate on macOS, OpenBLAS on Linux).
-- **Approximate KNN** (`nn_descent`): NN-Descent algorithm for building
+- **Exact kNN** (`knn_l2`): brute-force L2 k-nearest neighbor search using
+  platform-native BLAS (Accelerate on macOS, OpenBLAS on Linux). Can be
+  extremely fast and competitive with approximate kNN algorithms on
+  machines with enough cores.
+- **Approximate kNN** (`nn_descent`): NN-Descent algorithm for building
   approximate k-nearest neighbor graphs. Uses RP-tree initialization and
-  iterative local joins to converge on high-recall neighbor graphs, much
-  faster than exact search for large datasets.
+  iterative local joins to converge on high-recall neighbor graphs. Originally
+  based on the pynndescent implementation. For machines with only a few cores,
+  or on very large datasets, this can be much faster than the exact alternative.
 - **BFS** (`breadth_first_directed`): breadth-first search on directed CSR
   graphs.
 
@@ -59,8 +62,8 @@ beyond the Rust toolchain is required.
 ### Python integration tests
 
 ```sh
-pytest pymde/test_knn.py -v                     # exact KNN
-pytest pymde/preprocess/test_nndescent.py -v    # approximate KNN
+pytest pymde/test_knn.py -v                     # exact kNN
+pytest pymde/preprocess/test_nndescent.py -v    # approximate kNN
 ```
 
 ## Project layout
@@ -71,9 +74,9 @@ rust/
 ├── Cargo.lock          # Pinned dependency versions (committed for reproducibility)
 └── src/
     ├── lib.rs          # PyO3 module definition and exports
-    ├── knn.rs          # Exact KNN (BLAS-accelerated brute force)
+    ├── knn.rs          # Exact kNN (BLAS-accelerated brute force)
     ├── blas.rs         # BLAS FFI bindings (sgemm)
-    ├── nndescent.rs    # NN-Descent approximate KNN algorithm
+    ├── nndescent.rs    # NN-Descent approximate kNN algorithm
     ├── heap.rs         # Thread-safe neighbor heaps with AtomicBool try-locks
     ├── candidates.rs   # Candidate tracking for NN-Descent iterations
     ├── distance.rs     # L2 distance kernels (with NEON intrinsics on aarch64)
@@ -83,7 +86,7 @@ rust/
 
 ## How it works
 
-### Exact KNN (`knn_l2`)
+### Exact kNN (`knn_l2`)
 
 `pymde._native.knn_l2(data, k)` — brute-force exact search.
 
@@ -95,7 +98,7 @@ rust/
 
 Query tiles are processed in parallel using [rayon](https://docs.rs/rayon).
 
-### Approximate KNN (`nn_descent`)
+### Approximate kNN (`nn_descent`)
 
 `pymde._native.nn_descent(data, n_neighbors)` — approximate search via
 NN-Descent, much faster than exact search for large datasets.
