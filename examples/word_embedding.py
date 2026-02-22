@@ -1,10 +1,9 @@
 # /// script
-# requires-python = ">=3.14"
+# requires-python = ">=3.10"
 # dependencies = [
 #     "marimo",
 #     "matplotlib==3.10.8",
 #     "numpy==2.4.2",
-#     "plotly==6.5.2",
 #     "pymde==0.3.0",
 #     "torch==2.10.0",
 # ]
@@ -12,14 +11,17 @@
 
 import marimo
 
-__generated_with = "0.19.11"
-app = marimo.App()
+__generated_with = "0.20.2"
+app = marimo.App(
+    width="medium",
+    css_file="/usr/local/_marimo/custom.css",
+    auto_download=["html"],
+)
 
 with app.setup:
     import matplotlib.pyplot as plt
     import marimo as mo
     import numpy as np
-    import plotly.graph_objects as go
     import pymde
     import torch
 
@@ -156,25 +158,6 @@ def _(dissimilarity_graph):
     return (shortest_path_graph,)
 
 
-@app.cell
-def _(interests):
-    def interactive(X):
-        if isinstance(X, torch.Tensor):
-            X = X.cpu().numpy()
-        fig = go.Figure(
-            data=go.Scatter(
-                x=X[:, 0],
-                y=X[:, 1],
-                marker_size=2.0,
-                mode="markers",
-                text=interests,
-            )
-        )
-        fig.show()
-
-    return (interactive,)
-
-
 @app.cell(hide_code=True)
 def _():
     mo.md(r"""
@@ -197,22 +180,26 @@ def _(mde):
 
 @app.cell
 def _(mde):
-    mde.plot(colors=["black"])
-    plt.gca()
-    return
+    ax = mde.plot(colors=["black"])
+    select = mo.ui.matplotlib(ax)
+    select
+    return (select,)
 
 
 @app.cell(hide_code=True)
 def _():
     mo.md(r"""
-    Try mousing over this embedding, to reveal the interest labels for each node. You'll find that the embedding has done a good job of clustering similar interests together.
+    Try selecting points in the embedding above to reveal the interest labels. You'll find that the embedding has done a good job of clustering similar interests together.
     """)
     return
 
 
 @app.cell
-def _(X, interactive):
-    interactive(X)
+def _(X, interests, select):
+    mask = select.value.get_mask(X[:, 0], X[:, 1])
+    mo.stop(not mask.any())
+    selected_interests = list(np.array(interests)[mask])
+    mo.ui.table({"interest": selected_interests})
     return
 
 
