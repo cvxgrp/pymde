@@ -59,6 +59,11 @@ pub(crate) fn knn_l2<'py>(
         eprintln!("knn_l2: computing exact {k}-nearest neighbors for {n} points in {d} dimensions");
     }
 
+    // Force single-threaded BLAS so it doesn't compete with rayon's
+    // parallelism across query tiles (e.g. 16 rayon threads × 16 OpenBLAS
+    // threads = 256 threads thrashing on 16 cores).
+    crate::blas::set_single_threaded();
+
     // Copy into a contiguous Vec so the data is owned and can cross into
     // py.detach() (which releases the GIL — no NumPy references allowed).
     let flat: Vec<f32> = if let Some(s) = data.as_slice() {

@@ -23,6 +23,19 @@ unsafe extern "C" {
         c: *mut f32,
         ldc: c_int,
     );
+
+    #[cfg(not(target_os = "macos"))]
+    fn openblas_set_num_threads(num_threads: c_int);
+}
+
+/// Pin BLAS to one thread so it doesn't compete with rayon parallelism.
+/// On macOS Accelerate this is a no-op (Accelerate respects GCD, not
+/// a thread-count knob).
+pub(crate) fn set_single_threaded() {
+    #[cfg(not(target_os = "macos"))]
+    unsafe {
+        openblas_set_num_threads(1);
+    }
 }
 
 /// Call sgemm: C = alpha * A @ B^T + beta * C
