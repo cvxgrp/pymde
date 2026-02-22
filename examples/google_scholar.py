@@ -1,21 +1,18 @@
 # /// script
-# requires-python = "==3.13"
+# requires-python = ">=3.10"
 # dependencies = [
 #     "marimo",
 #     "matplotlib==3.10.8",
-#     "numpy==2.3.5",
-#     "openai==2.20.0",
-#     "pandas==3.0.0",
-#     "pydantic-ai-slim==1.58.0",
-#     "pymde==0.2.3",
+#     "numpy==2.4.2",
+#     "pandas",
+#     "pymde==0.3.0",
 #     "torch==2.10.0",
-#     "wigglystuff==0.2.22",
 # ]
 # ///
 
 import marimo
 
-__generated_with = "0.19.11"
+__generated_with = "0.20.2"
 app = marimo.App(
     width="medium",
     css_file="/usr/local/_marimo/custom.css",
@@ -30,7 +27,6 @@ with app.setup:
     import torch
 
     from matplotlib import colors
-    from wigglystuff import ChartSelect
 
     DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -107,7 +103,6 @@ def _(coauthorship_graph):
 def _(distance_preserving_mde):
     plt.figure(figsize=(12, 3))
     original_distances = np.sort(distance_preserving_mde.distortion_function.deviations.cpu().numpy())
-    ax = plt.gca()
     plt.hist(original_distances, histtype='step', bins=np.arange(1, 11), density=True, cumulative=True)
     plt.xlim(1, 10)
     plt.xticks(np.arange(1, 11))
@@ -133,14 +128,14 @@ def _(solved_mde):
 
 @app.cell
 def _(gscholar, solved_mde):
-    solved_mde.plot(
+    ax = solved_mde.plot(
         color_by=gscholar.attributes["coauthors"],
         color_map="viridis",
         figsize_inches=(12.0, 12.0),
         background_color="k",
     )
-    fig = plt.gcf()
-    return (fig,)
+    ax
+    return (ax,)
 
 
 @app.cell
@@ -184,8 +179,8 @@ def _(scholar_disciplines_df, solved_mde, topic_colors):
 
 
 @app.cell
-def _(fig):
-    select = mo.ui.anywidget(ChartSelect(fig))
+def _(ax):
+    select = mo.ui.matplotlib(ax)
     select
     return (select,)
 
@@ -193,7 +188,7 @@ def _(fig):
 @app.cell
 def _(scholars_df, select, solved_mde):
     _X = solved_mde.X.cpu()
-    mask = select.get_mask(_X[:, 0], _X[:, 1])
+    mask = select.value.get_mask(_X[:, 0], _X[:, 1])
     scholars_df.iloc[mask]
     return
 

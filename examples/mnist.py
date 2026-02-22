@@ -1,19 +1,17 @@
 # /// script
-# requires-python = ">=3.12"
+# requires-python = ">=3.10"
 # dependencies = [
-#     "altair==6.0.0",
 #     "marimo",
 #     "matplotlib==3.10.8",
-#     "pandas==3.0.0",
-#     "pymde==0.2.3",
+#     "pandas==3.0.1",
+#     "pymde==0.3.0",
 #     "torch==2.10.0",
-#     "wigglystuff==0.2.27",
 # ]
 # ///
 
 import marimo
 
-__generated_with = "0.19.11"
+__generated_with = "0.20.1"
 app = marimo.App(
     width="medium",
     css_file="/usr/local/_marimo/custom.css",
@@ -25,8 +23,6 @@ with app.setup:
     import pandas as pd
     import pymde
     import torch
-    from wigglystuff import ChartSelect
-
     import marimo as mo
 
     mnist = pymde.datasets.MNIST()
@@ -104,28 +100,27 @@ def _():
 @app.cell
 def _(embedding):
     ax = pymde.plot(embedding, color_by=mnist.attributes["digits"])
-    plt.tight_layout()
-    fig = mo.ui.anywidget(ChartSelect(ax.figure))
+    fig = mo.ui.matplotlib(ax)
     fig
     return (fig,)
 
 
 @app.cell
 def _(embedding, fig):
-    selected_indices = fig.get_indices(embedding[:, 0], embedding[:, 1])
-    return (selected_indices,)
+    mask = fig.value.get_mask(embedding[:, 0], embedding[:, 1])
+    return (mask,)
 
 
 @app.cell(hide_code=True)
-def _(selected_indices, table):
+def _(mask, table):
     # mo.stop() prevents this cell from running if the chart has
     # no selection
-    mo.stop(not selected_indices.size)
+    mo.stop(not mask.any())
 
     # show 10 images: either the first 10 from the selection, or the first ten
     # selected in the table
     selected_images = (
-        show_images(list(selected_indices))
+        show_images(list(mask.nonzero()[0]))
         if not len(table.value)
         else show_images(list(table.value["index"]))
     )
@@ -145,8 +140,8 @@ def _(selected_indices, table):
 
 
 @app.cell
-def _(df, selected_indices):
-    table = mo.ui.table(df.iloc[selected_indices])
+def _(df, mask):
+    table = mo.ui.table(df[mask])
     return (table,)
 
 

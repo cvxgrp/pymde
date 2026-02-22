@@ -2,9 +2,9 @@
 # requires-python = ">=3.10"
 # dependencies = [
 #     "marimo",
-#     "pymde",
+#     "pymde>=0.3.0",
 #     "numpy",
-#     "pandas < 3.0",
+#     "pandas",
 #     "scikit-learn",
 # ]
 # ///
