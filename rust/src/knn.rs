@@ -5,6 +5,7 @@ use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
 use rayon::prelude::*;
 use core::ffi::c_int;
+use std::time::Instant;
 
 const QUERY_BS: usize = 1024;
 const DB_BS: usize = 4096;
@@ -28,10 +29,12 @@ const DB_BS: usize = 4096;
 ///     neighbors : int64, shape (n, k+1) — column 0 is self
 ///     sq_distances : float32, shape (n, k+1) — squared L2 distances
 #[pyfunction]
+#[pyo3(signature = (data, k, verbose=false))]
 pub(crate) fn knn_l2<'py>(
     py: Python<'py>,
     data: PyReadonlyArray2<'py, f32>,
     k: usize,
+    verbose: bool,
 ) -> PyResult<(Py<PyArray2<i64>>, Py<PyArray2<f32>>)> {
     let data = data.as_array();
     let n = data.nrows();
@@ -52,6 +55,10 @@ pub(crate) fn knn_l2<'py>(
 
     let cols = k + 1;
 
+    if verbose {
+        eprintln!("knn_l2: computing exact {k}-nearest neighbors for {n} points in {d} dimensions");
+    }
+
     // Copy into a contiguous Vec so the data is owned and can cross into
     // py.detach() (which releases the GIL — no NumPy references allowed).
     let flat: Vec<f32> = if let Some(s) = data.as_slice() {
@@ -60,7 +67,13 @@ pub(crate) fn knn_l2<'py>(
         data.iter().copied().collect()
     };
 
+    let start = Instant::now();
     let (neighbors, sq_distances) = py.detach(|| knn_blas_tiled(&flat, n, d, k));
+    let elapsed = start.elapsed();
+
+    if verbose {
+        eprintln!("knn_l2: done in {:.2}s", elapsed.as_secs_f64());
+    }
 
     let neighbors =
         Array2::from_shape_vec((n, cols), neighbors).expect("shape mismatch for neighbors");

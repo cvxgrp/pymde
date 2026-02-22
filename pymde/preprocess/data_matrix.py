@@ -99,8 +99,6 @@ def _has_pynndescent():
 def _knn_pynndescent(data, k, verbose):
     import pynndescent
 
-    if verbose:
-        problem.LOGGER.info(f"Computing {k}-nearest neighbors with pynndescent")
     index = pynndescent.NNDescent(
         data,
         n_neighbors=k + 1,
@@ -114,12 +112,7 @@ def _knn_exact(data, k, verbose):
     from pymde._native import knn_l2
 
     data = np.ascontiguousarray(data, dtype=np.float32)
-    n, d = data.shape
-    if verbose:
-        problem.LOGGER.info(
-            f"Computing {k}-nearest neighbors (n={n}, d={d})"
-        )
-    neighbors, sq_distances = knn_l2(data, k)
+    neighbors, sq_distances = knn_l2(data, k, verbose=verbose)
     distances = np.sqrt(np.maximum(sq_distances, 0.0))
     return neighbors, distances
 
