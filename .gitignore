@@ -107,3 +107,16 @@ rust/target/
 # misc
 .DS_Store
 
+# Examples data/output
+examples/.agents/
+examples/.claude/
+examples/FashionMNIST/
+examples/MNIST/
+examples/__marimo__/
+examples/assets/
+examples/counties/
+examples/foo.gif
+examples/interests/
+examples/scholar/
+examples/scrna_covid19_wilk/
+
