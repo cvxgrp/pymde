@@ -17,7 +17,7 @@ import numpy as np
 
 def _ground_truth(data, k):
     """Brute-force exact kNN using Rust extension for recall computation."""
-    from pymde._knn import knn_l2
+    from pymde._native import knn_l2
 
     neighbors, _ = knn_l2(data, k)
     return neighbors[:, 1:]  # drop self
@@ -34,7 +34,7 @@ def recall_at_k(neighbors, gt_neighbors):
 
 
 def bench_rust_knn(data, k):
-    from pymde._knn import knn_l2
+    from pymde._native import knn_l2
 
     tracemalloc.start()
     t0 = time.perf_counter()
@@ -44,6 +44,18 @@ def bench_rust_knn(data, k):
     tracemalloc.stop()
     distances = np.sqrt(np.maximum(sq_distances[:, 1:], 0.0))
     return neighbors[:, 1:], distances, elapsed, peak_mem
+
+
+def bench_rust_nndescent(data, k):
+    from pymde._native import nn_descent
+
+    tracemalloc.start()
+    t0 = time.perf_counter()
+    neighbors, distances = nn_descent(data, k)
+    elapsed = time.perf_counter() - t0
+    _, peak_mem = tracemalloc.get_traced_memory()
+    tracemalloc.stop()
+    return neighbors[:, 1:], distances[:, 1:], elapsed, peak_mem
 
 
 def bench_pynndescent(data, k):
@@ -59,6 +71,49 @@ def bench_pynndescent(data, k):
     _, peak_mem = tracemalloc.get_traced_memory()
     tracemalloc.stop()
     return neighbors[:, 1:], distances[:, 1:], elapsed, peak_mem
+
+
+def bench_instant_distance(data, k):
+    import instant_distance
+
+    n, d = data.shape
+    tracemalloc.start()
+    t0 = time.perf_counter()
+
+    config = instant_distance.Config()
+    config.ef_construction = 200
+    config.ef_search = 200
+    points = [data[i].tolist() for i in range(n)]
+    hnsw, ids = instant_distance.Hnsw.build(points, config)
+
+    # ids[i] = internal pid for original point i; build reverse map
+    pid_to_idx = {pid: idx for idx, pid in enumerate(ids)}
+
+    all_neighbors = np.empty((n, k), dtype=np.int64)
+    all_distances = np.empty((n, k), dtype=np.float32)
+    search = instant_distance.Search()
+
+    for i in range(n):
+        hnsw.search(points[i], search)
+        found = 0
+        for neighbor in search:
+            idx = pid_to_idx[neighbor.pid]
+            if idx == i:
+                continue
+            if found < k:
+                all_neighbors[i, found] = idx
+                all_distances[i, found] = neighbor.distance
+                found += 1
+            if found >= k:
+                break
+        for j in range(found, k):
+            all_neighbors[i, j] = -1
+            all_distances[i, j] = float("inf")
+
+    elapsed = time.perf_counter() - t0
+    _, peak_mem = tracemalloc.get_traced_memory()
+    tracemalloc.stop()
+    return all_neighbors, all_distances, elapsed, peak_mem
 
 
 def bench_faiss_flat(data, k):
@@ -114,6 +169,7 @@ def bench_faiss_ivf(data, k):
 # Always-available methods
 METHODS = {
     "rust-knn": bench_rust_knn,
+    "rust-nndescent": bench_rust_nndescent,
 }
 
 # Conditionally add faiss methods
@@ -130,6 +186,13 @@ try:
     import pynndescent
 
     METHODS["pynndescent"] = bench_pynndescent
+except ImportError:
+    pass
+
+try:
+    import instant_distance  # noqa: F401
+
+    METHODS["instant-distance"] = bench_instant_distance
 except ImportError:
     pass
 

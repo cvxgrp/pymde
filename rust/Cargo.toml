@@ -11,6 +11,8 @@ crate-type = ["cdylib"]
 pyo3 = { version = "0.28", features = ["extension-module"] }
 numpy = "0.28"
 rayon = "1.10"
+rand = "0.9"
+rand_chacha = "0.9"
 
 [profile.dev]
 opt-level = 3
