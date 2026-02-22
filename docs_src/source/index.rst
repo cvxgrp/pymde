@@ -116,7 +116,16 @@ UMAP, and can scale to datasets with millions of items. With a GPU, it can be
 even faster. PyMDE scales well with the embedding dimension, meaning that you
 can easily embed into dimensions such as 50, 100, or 250.
 
+PyMDE preprocesses original data matrices and constructs neighborhood graphs
+and shortest path distances using fast routines implemented in Rust, taking
+advantage of SIMD, BLAS, and basic parallelsim.
+
 PyMDE draws graphs orders of magnitude faster than NetworkX.
+
+**PyMDE is easy to install.** PyMDE does not depend on Numba, thanks to its
+Rust-based preprocessing. This means that it does not inherit the limitations
+that Numba imposes on NumPy and Python versions. Find wheels for all modern
+Python versions and all architectures on PyPI.
 
 .. toctree::
 	:hidden:
