@@ -1,20 +1,33 @@
 /// Squared Euclidean distance and dot product with SIMD acceleration.
 
+/// Dispatch to the best available SIMD implementation at runtime.
+macro_rules! dispatch {
+    (unsafe $neon:expr, unsafe $avx2:expr, $scalar:expr) => {{
+        #[cfg(target_arch = "aarch64")]
+        { unsafe { $neon } }
+        #[cfg(target_arch = "x86_64")]
+        {
+            if is_x86_feature_detected!("avx2") && is_x86_feature_detected!("fma") {
+                unsafe { $avx2 }
+            } else {
+                $scalar
+            }
+        }
+        #[cfg(not(any(target_arch = "aarch64", target_arch = "x86_64")))]
+        { $scalar }
+    }};
+}
+
 /// Squared Euclidean distance: sum((a_i - b_i)^2).
 #[inline]
 pub fn squared_euclidean(a: &[f32], b: &[f32]) -> f32 {
     debug_assert_eq!(a.len(), b.len());
     let n = a.len();
-
-    #[cfg(target_arch = "aarch64")]
-    {
-        unsafe { squared_euclidean_neon(a, b, n) }
-    }
-
-    #[cfg(not(target_arch = "aarch64"))]
-    {
+    dispatch!(
+        unsafe squared_euclidean_neon(a, b, n),
+        unsafe squared_euclidean_avx2(a, b, n),
         squared_euclidean_scalar(a, b, n)
-    }
+    )
 }
 
 /// Squared Euclidean distance with early exit when running sum >= bound.
@@ -23,16 +36,11 @@ pub fn squared_euclidean(a: &[f32], b: &[f32]) -> f32 {
 pub fn squared_euclidean_bounded(a: &[f32], b: &[f32], bound: f32) -> f32 {
     debug_assert_eq!(a.len(), b.len());
     let n = a.len();
-
-    #[cfg(target_arch = "aarch64")]
-    {
-        unsafe { squared_euclidean_bounded_neon(a, b, n, bound) }
-    }
-
-    #[cfg(not(target_arch = "aarch64"))]
-    {
+    dispatch!(
+        unsafe squared_euclidean_bounded_neon(a, b, n, bound),
+        unsafe squared_euclidean_bounded_avx2(a, b, n, bound),
         squared_euclidean_bounded_scalar(a, b, n, bound)
-    }
+    )
 }
 
 /// Dot product: sum(a_i * b_i).
@@ -40,16 +48,11 @@ pub fn squared_euclidean_bounded(a: &[f32], b: &[f32], bound: f32) -> f32 {
 pub fn dot_product(a: &[f32], b: &[f32]) -> f32 {
     debug_assert_eq!(a.len(), b.len());
     let n = a.len();
-
-    #[cfg(target_arch = "aarch64")]
-    {
-        unsafe { dot_product_neon(a, b, n) }
-    }
-
-    #[cfg(not(target_arch = "aarch64"))]
-    {
+    dispatch!(
+        unsafe dot_product_neon(a, b, n),
+        unsafe dot_product_avx2(a, b, n),
         dot_product_scalar(a, b, n)
-    }
+    )
 }
 
 // ---------------------------------------------------------------------------
@@ -240,6 +243,209 @@ unsafe fn dot_product_neon(a: &[f32], b: &[f32], n: usize) -> f32 {
         }
         result
     }
+}
+
+// ---------------------------------------------------------------------------
+// x86_64 AVX2+FMA implementations (runtime-detected)
+// ---------------------------------------------------------------------------
+#[cfg(target_arch = "x86_64")]
+use core::arch::x86_64::*;
+
+/// Horizontal sum of 8 f32 lanes in a __m256.
+#[cfg(target_arch = "x86_64")]
+#[inline]
+#[target_feature(enable = "avx2")]
+unsafe fn hsum_ps_256(v: __m256) -> f32 {
+    let hi = _mm256_extractf128_ps(v, 1);
+    let lo = _mm256_castps256_ps128(v);
+    let sum128 = _mm_add_ps(lo, hi);
+    let shuf = _mm_movehdup_ps(sum128);
+    let sums = _mm_add_ps(sum128, shuf);
+    let shuf2 = _mm_movehl_ps(sums, sums);
+    let result = _mm_add_ss(sums, shuf2);
+    _mm_cvtss_f32(result)
+}
+
+#[cfg(target_arch = "x86_64")]
+#[inline]
+#[target_feature(enable = "avx2,fma")]
+unsafe fn squared_euclidean_avx2(a: &[f32], b: &[f32], n: usize) -> f32 {
+    let mut sum0 = _mm256_setzero_ps();
+    let mut sum1 = _mm256_setzero_ps();
+    let mut sum2 = _mm256_setzero_ps();
+    let mut sum3 = _mm256_setzero_ps();
+
+    let chunks = n / 32;
+    let mut i = 0;
+    for _ in 0..chunks {
+        let a0 = _mm256_loadu_ps(a.as_ptr().add(i));
+        let b0 = _mm256_loadu_ps(b.as_ptr().add(i));
+        let d0 = _mm256_sub_ps(a0, b0);
+        sum0 = _mm256_fmadd_ps(d0, d0, sum0);
+
+        let a1 = _mm256_loadu_ps(a.as_ptr().add(i + 8));
+        let b1 = _mm256_loadu_ps(b.as_ptr().add(i + 8));
+        let d1 = _mm256_sub_ps(a1, b1);
+        sum1 = _mm256_fmadd_ps(d1, d1, sum1);
+
+        let a2 = _mm256_loadu_ps(a.as_ptr().add(i + 16));
+        let b2 = _mm256_loadu_ps(b.as_ptr().add(i + 16));
+        let d2 = _mm256_sub_ps(a2, b2);
+        sum2 = _mm256_fmadd_ps(d2, d2, sum2);
+
+        let a3 = _mm256_loadu_ps(a.as_ptr().add(i + 24));
+        let b3 = _mm256_loadu_ps(b.as_ptr().add(i + 24));
+        let d3 = _mm256_sub_ps(a3, b3);
+        sum3 = _mm256_fmadd_ps(d3, d3, sum3);
+
+        i += 32;
+    }
+
+    let sum01 = _mm256_add_ps(sum0, sum1);
+    let sum23 = _mm256_add_ps(sum2, sum3);
+    let sum = _mm256_add_ps(sum01, sum23);
+    let mut result = hsum_ps_256(sum);
+
+    // 8-element tail
+    while i + 8 <= n {
+        let av = _mm256_loadu_ps(a.as_ptr().add(i));
+        let bv = _mm256_loadu_ps(b.as_ptr().add(i));
+        let dv = _mm256_sub_ps(av, bv);
+        result += hsum_ps_256(_mm256_mul_ps(dv, dv));
+        i += 8;
+    }
+
+    // Scalar remainder
+    while i < n {
+        let d = *a.get_unchecked(i) - *b.get_unchecked(i);
+        result += d * d;
+        i += 1;
+    }
+    result
+}
+
+#[cfg(target_arch = "x86_64")]
+#[inline]
+#[target_feature(enable = "avx2,fma")]
+unsafe fn squared_euclidean_bounded_avx2(
+    a: &[f32],
+    b: &[f32],
+    n: usize,
+    bound: f32,
+) -> f32 {
+    let mut sum0 = _mm256_setzero_ps();
+    let mut sum1 = _mm256_setzero_ps();
+    let mut sum2 = _mm256_setzero_ps();
+    let mut sum3 = _mm256_setzero_ps();
+
+    let chunks = n / 32;
+    let mut i = 0;
+    for _ in 0..chunks {
+        let a0 = _mm256_loadu_ps(a.as_ptr().add(i));
+        let b0 = _mm256_loadu_ps(b.as_ptr().add(i));
+        let d0 = _mm256_sub_ps(a0, b0);
+        sum0 = _mm256_fmadd_ps(d0, d0, sum0);
+
+        let a1 = _mm256_loadu_ps(a.as_ptr().add(i + 8));
+        let b1 = _mm256_loadu_ps(b.as_ptr().add(i + 8));
+        let d1 = _mm256_sub_ps(a1, b1);
+        sum1 = _mm256_fmadd_ps(d1, d1, sum1);
+
+        let a2 = _mm256_loadu_ps(a.as_ptr().add(i + 16));
+        let b2 = _mm256_loadu_ps(b.as_ptr().add(i + 16));
+        let d2 = _mm256_sub_ps(a2, b2);
+        sum2 = _mm256_fmadd_ps(d2, d2, sum2);
+
+        let a3 = _mm256_loadu_ps(a.as_ptr().add(i + 24));
+        let b3 = _mm256_loadu_ps(b.as_ptr().add(i + 24));
+        let d3 = _mm256_sub_ps(a3, b3);
+        sum3 = _mm256_fmadd_ps(d3, d3, sum3);
+
+        i += 32;
+
+        // Early exit check every 32 elements
+        let s01 = _mm256_add_ps(sum0, sum1);
+        let s23 = _mm256_add_ps(sum2, sum3);
+        let s = _mm256_add_ps(s01, s23);
+        let partial = hsum_ps_256(s);
+        if partial >= bound {
+            return partial;
+        }
+    }
+
+    let sum01 = _mm256_add_ps(sum0, sum1);
+    let sum23 = _mm256_add_ps(sum2, sum3);
+    let sum = _mm256_add_ps(sum01, sum23);
+    let mut result = hsum_ps_256(sum);
+
+    // 8-element tail
+    while i + 8 <= n {
+        let av = _mm256_loadu_ps(a.as_ptr().add(i));
+        let bv = _mm256_loadu_ps(b.as_ptr().add(i));
+        let dv = _mm256_sub_ps(av, bv);
+        result += hsum_ps_256(_mm256_mul_ps(dv, dv));
+        i += 8;
+    }
+
+    // Scalar remainder
+    while i < n {
+        let d = *a.get_unchecked(i) - *b.get_unchecked(i);
+        result += d * d;
+        i += 1;
+    }
+    result
+}
+
+#[cfg(target_arch = "x86_64")]
+#[inline]
+#[target_feature(enable = "avx2,fma")]
+unsafe fn dot_product_avx2(a: &[f32], b: &[f32], n: usize) -> f32 {
+    let mut sum0 = _mm256_setzero_ps();
+    let mut sum1 = _mm256_setzero_ps();
+    let mut sum2 = _mm256_setzero_ps();
+    let mut sum3 = _mm256_setzero_ps();
+
+    let chunks = n / 32;
+    let mut i = 0;
+    for _ in 0..chunks {
+        let a0 = _mm256_loadu_ps(a.as_ptr().add(i));
+        let b0 = _mm256_loadu_ps(b.as_ptr().add(i));
+        sum0 = _mm256_fmadd_ps(a0, b0, sum0);
+
+        let a1 = _mm256_loadu_ps(a.as_ptr().add(i + 8));
+        let b1 = _mm256_loadu_ps(b.as_ptr().add(i + 8));
+        sum1 = _mm256_fmadd_ps(a1, b1, sum1);
+
+        let a2 = _mm256_loadu_ps(a.as_ptr().add(i + 16));
+        let b2 = _mm256_loadu_ps(b.as_ptr().add(i + 16));
+        sum2 = _mm256_fmadd_ps(a2, b2, sum2);
+
+        let a3 = _mm256_loadu_ps(a.as_ptr().add(i + 24));
+        let b3 = _mm256_loadu_ps(b.as_ptr().add(i + 24));
+        sum3 = _mm256_fmadd_ps(a3, b3, sum3);
+
+        i += 32;
+    }
+
+    let sum01 = _mm256_add_ps(sum0, sum1);
+    let sum23 = _mm256_add_ps(sum2, sum3);
+    let sum = _mm256_add_ps(sum01, sum23);
+    let mut result = hsum_ps_256(sum);
+
+    // 8-element tail
+    while i + 8 <= n {
+        let av = _mm256_loadu_ps(a.as_ptr().add(i));
+        let bv = _mm256_loadu_ps(b.as_ptr().add(i));
+        result += hsum_ps_256(_mm256_mul_ps(av, bv));
+        i += 8;
+    }
+
+    // Scalar remainder
+    while i < n {
+        result += *a.get_unchecked(i) * *b.get_unchecked(i);
+        i += 1;
+    }
+    result
 }
 
 // ---------------------------------------------------------------------------
