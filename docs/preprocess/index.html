@@ -5,8 +5,8 @@
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Datasets" href="../datasets/index.html"><link rel="prev" title="MDE" href="../mde/index.html">
 
-    <link rel="shortcut icon" href="../_static/favicon.ico"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
-        <title>Preprocessing - pymde 0.2.3 documentation</title>
+    <link rel="shortcut icon" href="../_static/favicon.ico"><!-- Generated with Sphinx 8.2.3 and Furo 2025.12.19 -->
+        <title>Preprocessing - pymde 0.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../_static/autoclasstoc.css?v=08871587" />
@@ -162,7 +162,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand">pymde 0.2.3 documentation</div></a>
+      <a href="../index.html"><div class="brand">pymde 0.3.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -183,7 +183,7 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
   
-  <span class="sidebar-brand-text">pymde 0.2.3 documentation</span>
+  <span class="sidebar-brand-text">pymde 0.3.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -303,10 +303,19 @@ in <a class="reference internal" href="../api/index.html#module-pymde.penalties"
 </pre></div>
 </div>
 <p>Preprocessing based on neighbors can be thought of as a “sparsifying”
-operation: they take data and return a sparse graph (the <code class="docutils literal notranslate"><span class="pre">knn_graph</span></code>).</p>
+operation: they take data and return a sparse graph (the <code class="docutils literal notranslate"><span class="pre">knn_graph</span></code>).
+For dense data, neighbor computation uses a custom exact k-nearest neighbor
+algorithm implemented in Rust, accelerated with Rayon and BLAS.</p>
+<p><strong>Sparse data.</strong> When the data matrix is a <code class="docutils literal notranslate"><span class="pre">scipy.sparse</span></code> matrix,
+<code class="docutils literal notranslate"><span class="pre">k_nearest_neighbors</span></code> will use <a class="reference external" href="https://github.com/lmcinnes/pynndescent">pynndescent</a>
+for neighbor computation if it is installed, avoiding conversion to a dense matrix.
+If <code class="docutils literal notranslate"><span class="pre">pynndescent</span></code> is not installed, the sparse data will be converted to dense
+before computing neighbors. For very large sparse matrices the conversion can
+be memory-intensive. Install it with
+<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">pynndescent</span></code>.</p>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">pymde.preprocess.</span></span><span class="sig-name descname"><span class="pre">k_nearest_neighbors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
+<span class="sig-prename descclassname"><span class="pre">pymde.preprocess.</span></span><span class="sig-name descname"><span class="pre">k_nearest_neighbors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">knn_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Compute k-nearest neighbors, given data matrix or graph.</p>
 <p>This function computes a k-nearest neighbor graph, given either
 a data matrix or an original graph.</p>
@@ -326,6 +335,11 @@ not be in the graph.</p>
 <li><p><strong>k</strong> (<em>int</em>) – The number of nearest neighbors per item</p></li>
 <li><p><strong>max_distance</strong> (<em>float</em><em> (</em><em>optional</em><em>)</em>) – If not <code class="docutils literal notranslate"><span class="pre">None</span></code>, neighborhoods are restricted to have a radius
 no greater than <cite>max_distance</cite>.</p></li>
+<li><p><strong>knn_method</strong> (<em>str</em><em> (</em><em>optional</em><em>)</em>) – Which algorithm to use for k-nearest neighbor computation.
+<code class="docutils literal notranslate"><span class="pre">'exact'</span></code> uses brute-force exact search, <code class="docutils literal notranslate"><span class="pre">'approximate'</span></code>
+uses NN-Descent. If <code class="docutils literal notranslate"><span class="pre">None</span></code> (the default), the method is chosen
+automatically based on dataset size. Only applies to data matrices,
+not graphs.</p></li>
 <li><p><strong>verbose</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, print verbose output.</p></li>
 </ul>
 </dd>
@@ -460,9 +474,9 @@ with <code class="docutils literal notranslate"><span class="pre">graph.edges</s
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=a47416a6"></script>
-    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
-    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+</div><script src="../_static/documentation_options.js?v=e259d695"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
     </body>
 </html>

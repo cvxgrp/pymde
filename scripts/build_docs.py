@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.10"
 # dependencies = [
-#     "sphinx",
+#     "sphinx<9",
 #     "furo",
 #     "autoclasstoc",
 #     "pymde",

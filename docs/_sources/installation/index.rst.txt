@@ -27,11 +27,17 @@ PyMDE has the following requirements:
 
 * Python >= 3.9
 * numpy >= 2.0
-* faiss-cpu
 * requests
 * scipy
 * torch >= 1.7.1
 * torchvision >= 0.8.2
+
+Optional dependencies
+---------------------
+
+* **pynndescent**: For efficient k-nearest neighbor computation on sparse
+  matrices. In the majority of cases this is not needed.
+
 
 GPU acceleration
 ----------------

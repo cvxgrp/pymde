@@ -5,8 +5,8 @@
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Installation" href="installation/index.html">
 
-    <link rel="shortcut icon" href="_static/favicon.ico"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
-        <title>pymde 0.2.3 documentation</title>
+    <link rel="shortcut icon" href="_static/favicon.ico"><!-- Generated with Sphinx 8.2.3 and Furo 2025.12.19 -->
+        <title>pymde 0.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/autoclasstoc.css?v=08871587" />
@@ -162,7 +162,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="#"><div class="brand">pymde 0.2.3 documentation</div></a>
+      <a href="#"><div class="brand">pymde 0.3.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -183,7 +183,7 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="#">
   
-  <span class="sidebar-brand-text">pymde 0.2.3 documentation</span>
+  <span class="sidebar-brand-text">pymde 0.3.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -320,12 +320,19 @@ The MDE framework provides principled methods to debug and analyze
 embeddings. These methods can be used to make your embeddings more faithful
 to your original data, and to search for anomalies and outliers in the original
 data.</p>
-<p><strong>PyMDE is fast.</strong>
+<p><strong>PyMDE is fast, thanks to vecotrization, GPU acceleration, and Rust.</strong>
 PyMDE is competitive in runtime with more specialized embedding methods, like
 UMAP, and can scale to datasets with millions of items. With a GPU, it can be
 even faster. PyMDE scales well with the embedding dimension, meaning that you
 can easily embed into dimensions such as 50, 100, or 250.</p>
+<p>PyMDE preprocesses original data matrices and constructs neighborhood graphs
+and shortest path distances using fast routines implemented in Rust, taking
+advantage of SIMD, BLAS, and basic parallelism.</p>
 <p>PyMDE draws graphs orders of magnitude faster than NetworkX.</p>
+<p><strong>PyMDE is easy to install.</strong> PyMDE does not depend on Numba, thanks to its
+Rust-based preprocessing. This means that it does not inherit the limitations
+that Numba imposes on NumPy and Python versions. Find wheels for all modern
+Python versions and all architectures on PyPI.</p>
 <div class="toctree-wrapper compound">
 </div>
 </section>
@@ -387,9 +394,9 @@ can easily embed into dimensions such as 50, 100, or 250.</p>
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=a47416a6"></script>
-    <script src="_static/doctools.js?v=fd6eb6e6"></script>
-    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+</div><script src="_static/documentation_options.js?v=e259d695"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>
     </body>
 </html>
