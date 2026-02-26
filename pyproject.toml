@@ -1,13 +1,6 @@
 [build-system]
-requires = [
-    "setuptools >= 68.0",
-    "setuptools-rust >= 1.9",
-    "wheel",
-    # The rust extension requires NumPy.
-    # Building against numpy 2.x yields wheels also compatible with 1.x at runtime
-    "numpy >= 2.0",
-]
-build-backend = "setuptools.build_meta"
+requires = ["maturin>=1.0,<2.0"]
+build-backend = "maturin"
 
 [project]
 name = "pymde"
@@ -49,11 +42,10 @@ dev = [
     "ruff",
 ]
 
-[tool.setuptools]
-packages = { find = { exclude = ["rust*"] } }
-
-[tool.setuptools.dynamic]
-version = { attr = "pymde.__version__" }
+[tool.maturin]
+manifest-path = "rust/Cargo.toml"
+module-name = "pymde._native"
+python-source = "."
 
 [tool.ruff]
 line-length = 80
@@ -67,11 +59,6 @@ extend-ignore = ["E731"]
 
 [tool.ruff.format]
 quote-style = "double"
-
-[[tool.setuptools-rust.ext-modules]]
-target = "pymde._native"
-path = "rust/Cargo.toml"
-binding = "PyO3"
 
 [tool.pytest.ini_options]
 testpaths = ["pymde"]
