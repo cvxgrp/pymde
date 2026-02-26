@@ -81,27 +81,30 @@ fi
 
 NEW_VERSION="$MAJOR.$MINOR.$PATCH"
 
-# Update version in file
+# Update version in files
 print_step "Updating version"
 sed -i.bak "s/__version__ = .*/__version__ = \"$NEW_VERSION\"/" "$VERSION_FILE"
 rm -f "${VERSION_FILE}.bak"
+CARGO_FILE="rust/Cargo.toml"
+sed -i.bak "s/^version = .*/version = \"$NEW_VERSION\"/" "$CARGO_FILE"
+rm -f "${CARGO_FILE}.bak"
 echo "  $CURRENT_VERSION -> $NEW_VERSION"
 
 # Summary
 echo -e "\n${BOLD}Release Summary:${NC}"
 echo "  Version: $CURRENT_VERSION -> $NEW_VERSION"
 echo "  Tag: v$NEW_VERSION"
-echo "  File: $VERSION_FILE"
+echo "  Files: $VERSION_FILE, $CARGO_FILE"
 
 if ! confirm "Proceed with release?"; then
-  git checkout "$VERSION_FILE"
+  git checkout "$VERSION_FILE" "$CARGO_FILE"
   print_warning "Release cancelled"
   exit 1
 fi
 
 # Commit
 print_step "Committing version change"
-git add "$VERSION_FILE"
+git add "$VERSION_FILE" "$CARGO_FILE"
 git commit -m "v$NEW_VERSION"
 
 # Push
